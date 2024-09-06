@@ -9,6 +9,8 @@ class QuestionnairePage extends StatefulWidget {
 class _QuestionnairePageState extends State<QuestionnairePage> {
   final PageController _pageController = PageController();
   final UserProfile _userProfile = UserProfile();
+  bool _hasAnsweredFirstQuestion =
+      false; // Track if the first question is answered
 
   void _onNextPage(String response) {
     // Store the response based on the current page
@@ -33,6 +35,12 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
         // e.g., save to Firebase or local storage
         break;
     }
+
+    setState(() {
+      if (pageIndex == 0) {
+        _hasAnsweredFirstQuestion = true;
+      }
+    });
 
     // Move to the next page
     _pageController.nextPage(
@@ -84,46 +92,60 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            question,
-            style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.yellow),
-          ),
-          SizedBox(height: 20.0),
-          TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: TextStyle(color: Colors.yellow),
-              border: OutlineInputBorder(),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  question,
+                  style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.yellow),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20.0),
+                TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    hintText: hint,
+                    hintStyle: TextStyle(color: Colors.yellow),
+                    border: OutlineInputBorder(),
+                  ),
+                  style: TextStyle(color: Colors.yellow), // Text color
+                ),
+              ],
             ),
-            style: TextStyle(color: Colors.yellow), // Text color
           ),
           SizedBox(height: 20.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  onPrevious();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow, // Button background color
+          Spacer(), // Push buttons to the bottom
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (_hasAnsweredFirstQuestion) // Show "Previous" button only if the first question is answered
+                  ElevatedButton(
+                    onPressed: () {
+                      onPrevious();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.yellow, // Button background color
+                    ),
+                    child: Text('Previous'),
+                  ),
+                SizedBox(width: 20.0), // Space between buttons
+                ElevatedButton(
+                  onPressed: () {
+                    onNext(controller.text.trim());
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.yellow, // Button background color
+                  ),
+                  child: Text('Next'),
                 ),
-                child: Text('Previous'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  onNext(controller.text.trim());
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow, // Button background color
-                ),
-                child: Text('Next'),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
