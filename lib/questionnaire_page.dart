@@ -11,6 +11,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
   final UserProfile _userProfile = UserProfile();
 
   void _onNextPage(String response) {
+    // Store the response based on the current page
     int pageIndex = _pageController.page!.toInt();
 
     switch (pageIndex) {
@@ -33,7 +34,16 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
         break;
     }
 
+    // Move to the next page
     _pageController.nextPage(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+    );
+  }
+
+  void _onPreviousPage() {
+    // Move to the previous page
+    _pageController.previousPage(
       duration: Duration(milliseconds: 300),
       curve: Curves.easeIn,
     );
@@ -42,30 +52,31 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Profile Setup')),
-      body: Container(
-        color: Colors.grey[800], // Background color
-        child: PageView(
-          controller: _pageController,
-          children: [
-            _buildQuestionPage(
-                'What is your age?', 'Enter your age', _onNextPage),
-            _buildQuestionPage(
-                'What is your height?', 'Enter your height', _onNextPage),
-            _buildQuestionPage('What is your body weight?',
-                'Enter your body weight', _onNextPage),
-            _buildQuestionPage(
-                'What is your gender?', 'Select your gender', _onNextPage),
-            _buildQuestionPage('How often do you go to the gym?',
-                'Select frequency', _onNextPage),
-          ],
-        ),
+      appBar: AppBar(
+        title: Text('Profile Setup'),
+        backgroundColor: Colors.grey[800], // AppBar background color
+      ),
+      backgroundColor: Colors.grey[800], // Background color
+      body: PageView(
+        controller: _pageController,
+        children: [
+          _buildQuestionPage('What is your age?', 'Enter your age', _onNextPage,
+              _onPreviousPage),
+          _buildQuestionPage('What is your height?', 'Enter your height',
+              _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your body weight?',
+              'Enter your body weight', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your gender?', 'Select your gender',
+              _onNextPage, _onPreviousPage),
+          _buildQuestionPage('How often do you go to the gym?',
+              'Select frequency', _onNextPage, _onPreviousPage),
+        ],
       ),
     );
   }
 
-  Widget _buildQuestionPage(
-      String question, String hint, void Function(String) onNext) {
+  Widget _buildQuestionPage(String question, String hint,
+      void Function(String) onNext, void Function() onPrevious) {
     TextEditingController controller = TextEditingController();
 
     return Padding(
@@ -76,35 +87,43 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
           Text(
             question,
             style: TextStyle(
-              fontSize: 24.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.yellow, // Yellow text color
-            ),
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.yellow),
           ),
           SizedBox(height: 20.0),
           TextField(
             controller: controller,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(color: Colors.yellow), // Yellow hint text
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.yellow), // Yellow border
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.yellow), // Yellow border
-              ),
+              hintStyle: TextStyle(color: Colors.yellow),
+              border: OutlineInputBorder(),
             ),
-            style: TextStyle(color: Colors.white), // White text color
+            style: TextStyle(color: Colors.yellow), // Text color
           ),
           SizedBox(height: 20.0),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.yellow, // Yellow button
-            ),
-            onPressed: () {
-              onNext(controller.text.trim());
-            },
-            child: Text('Next'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  onPrevious();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow, // Button background color
+                ),
+                child: Text('Previous'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  onNext(controller.text.trim());
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow, // Button background color
+                ),
+                child: Text('Next'),
+              ),
+            ],
           ),
         ],
       ),
