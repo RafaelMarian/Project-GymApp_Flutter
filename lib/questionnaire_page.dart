@@ -1,0 +1,98 @@
+import 'package:flutter/material.dart';
+import 'user_profile.dart';
+
+class QuestionnairePage extends StatefulWidget {
+  @override
+  _QuestionnairePageState createState() => _QuestionnairePageState();
+}
+
+class _QuestionnairePageState extends State<QuestionnairePage> {
+  final PageController _pageController = PageController();
+  final UserProfile _userProfile = UserProfile();
+
+  void _onNextPage(String response) {
+    // Store the response based on the current page
+    int pageIndex = _pageController.page!.toInt();
+
+    switch (pageIndex) {
+      case 0:
+        _userProfile.age = response;
+        break;
+      case 1:
+        _userProfile.height = response;
+        break;
+      case 2:
+        _userProfile.weight = response;
+        break;
+      case 3:
+        _userProfile.gender = response;
+        break;
+      case 4:
+        _userProfile.gymFrequency = response;
+        // Finalize and store profile data
+        // e.g., save to Firebase or local storage
+        break;
+    }
+
+    // Move to the next page
+    _pageController.nextPage(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Profile Setup')),
+      body: PageView(
+        controller: _pageController,
+        children: [
+          _buildQuestionPage(
+              'What is your age?', 'Enter your age', _onNextPage),
+          _buildQuestionPage(
+              'What is your height?', 'Enter your height', _onNextPage),
+          _buildQuestionPage('What is your body weight?',
+              'Enter your body weight', _onNextPage),
+          _buildQuestionPage(
+              'What is your gender?', 'Select your gender', _onNextPage),
+          _buildQuestionPage('How often do you go to the gym?',
+              'Select frequency', _onNextPage),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuestionPage(
+      String question, String hint, void Function(String) onNext) {
+    TextEditingController controller = TextEditingController();
+
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            question,
+            style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 20.0),
+          TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: hint,
+              border: OutlineInputBorder(),
+            ),
+          ),
+          SizedBox(height: 20.0),
+          ElevatedButton(
+            onPressed: () {
+              onNext(controller.text.trim());
+            },
+            child: Text('Next'),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'questionnaire_page.dart'; // Import the questionnaire page
 
 class LoginPage extends StatefulWidget {
   @override
@@ -18,8 +19,10 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Login Successful")),
+      // Successfully logged in, navigate to QuestionnairePage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => QuestionnairePage()),
       );
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -31,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900], // Dark gray background color
+      backgroundColor: Colors.grey[800], // Grey background color
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -57,8 +60,6 @@ class _LoginPageState extends State<LoginPage> {
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.yellow),
                 ),
-                fillColor: Colors.grey[800], // Darker gray for input fields
-                filled: true,
               ),
             ),
             const SizedBox(height: 20.0),
@@ -74,8 +75,6 @@ class _LoginPageState extends State<LoginPage> {
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.yellow),
                 ),
-                fillColor: Colors.grey[800], // Darker gray for input fields
-                filled: true,
               ),
             ),
             const SizedBox(height: 20.0),
