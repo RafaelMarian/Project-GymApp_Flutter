@@ -1,4 +1,5 @@
 class UserProfile {
+  String name = '';
   String age = '';
   String height = '';
   String weight = '';
@@ -6,6 +7,7 @@ class UserProfile {
   String gymFrequency = '';
 
   UserProfile({
+    this.name = '',
     this.age = '',
     this.height = '',
     this.weight = '',

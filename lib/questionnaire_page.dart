@@ -18,7 +18,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
 
     switch (pageIndex) {
       case 0:
-        _userProfile.age = response;
+        _userProfile.name = response;
         break;
       case 1:
         _userProfile.height = response;
@@ -31,6 +31,8 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
         break;
       case 4:
         _userProfile.gymFrequency = response;
+      case 5:
+        _userProfile.age = response;
         // Finalize and store profile data
         // e.g., save to Firebase or local storage
         break;
@@ -68,7 +70,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       body: PageView(
         controller: _pageController,
         children: [
-          _buildQuestionPage('What is your age?', 'Enter your age', _onNextPage,
+          _buildQuestionPage('What is your name?', 'Enter your name', _onNextPage,
               _onPreviousPage),
           _buildQuestionPage('What is your height?', 'Enter your height',
               _onNextPage, _onPreviousPage),
@@ -78,6 +80,8 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
               _onNextPage, _onPreviousPage),
           _buildQuestionPage('How often do you go to the gym?',
               'Select frequency', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your age?', 'Enter your age', _onNextPage,
+              _onPreviousPage),
         ],
       ),
     );
