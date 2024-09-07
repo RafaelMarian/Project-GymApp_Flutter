@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'user_profile.dart';
+import 'home_page.dart'; // Import HomePage
 
 class QuestionnairePage extends StatefulWidget {
   @override
@@ -13,7 +14,6 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       false; // Track if the first question is answered
 
   void _onNextPage(String response) {
-    // Store the response based on the current page
     int pageIndex = _pageController.page!.toInt();
 
     switch (pageIndex) {
@@ -31,11 +31,17 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
         break;
       case 4:
         _userProfile.gymFrequency = response;
+        break;
       case 5:
         _userProfile.age = response;
-        // Finalize and store profile data
-        // e.g., save to Firebase or local storage
-        break;
+        // Navigate to HomePage after the last question
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(userProfile: _userProfile),
+          ),
+        );
+        return;
     }
 
     setState(() {
@@ -70,8 +76,8 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       body: PageView(
         controller: _pageController,
         children: [
-          _buildQuestionPage('What is your name?', 'Enter your name', _onNextPage,
-              _onPreviousPage),
+          _buildQuestionPage('What is your name?', 'Enter your name',
+              _onNextPage, _onPreviousPage),
           _buildQuestionPage('What is your height?', 'Enter your height',
               _onNextPage, _onPreviousPage),
           _buildQuestionPage('What is your body weight?',
@@ -103,9 +109,10 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                 Text(
                   question,
                   style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.yellow),
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.yellow,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 20.0),
