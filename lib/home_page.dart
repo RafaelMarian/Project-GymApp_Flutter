@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'user_profile.dart';
+import 'gym_program_selection_page.dart'; // Import GymProgramSelectionPage
 
 class HomePage extends StatefulWidget {
   final UserProfile userProfile;
@@ -153,12 +154,23 @@ class _HomePageState extends State<HomePage> {
   Widget _buildWorkoutButton(String text, int index) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: _selectedWorkoutType == index ? Colors.yellow : Colors.grey[700],
+        backgroundColor:
+            _selectedWorkoutType == index ? Colors.yellow : Colors.grey[700],
       ),
       onPressed: () {
-        setState(() {
-          _selectedWorkoutType = index;
-        });
+        if (index == 0) {
+          // Gym button pressed
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GymProgramSelectionPage(),
+            ),
+          );
+        } else {
+          setState(() {
+            _selectedWorkoutType = index;
+          });
+        }
       },
       child: Text(text),
     );
@@ -175,11 +187,16 @@ class _HomePageState extends State<HomePage> {
 
   String _getWorkoutTypeName() {
     switch (_selectedWorkoutType) {
-      case 0: return 'Gym';
-      case 1: return 'Yoga';
-      case 2: return 'Cycling';
-      case 3: return 'Jogging';
-      default: return '';
+      case 0:
+        return 'Gym';
+      case 1:
+        return 'Yoga';
+      case 2:
+        return 'Cycling';
+      case 3:
+        return 'Jogging';
+      default:
+        return '';
     }
   }
 }
