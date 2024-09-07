@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'custom_gym_program_page.dart';
-import 'planned_gym_programs_page.dart';
+import 'custom_cycling_program_page.dart';
+import 'planned_cycling_programs_page.dart';
 
-class GymProgramSelectionPage extends StatefulWidget {
+class CyclingProgramSelectionPage extends StatefulWidget {
   @override
-  _GymProgramSelectionPageState createState() =>
-      _GymProgramSelectionPageState();
+  _CyclingProgramSelectionPageState createState() =>
+      _CyclingProgramSelectionPageState();
 }
 
-class _GymProgramSelectionPageState
-    extends State<GymProgramSelectionPage> {
+class _CyclingProgramSelectionPageState
+    extends State<CyclingProgramSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gym Program Selection'),
+        title: Text('Cycling Program Selection'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
@@ -26,7 +26,7 @@ class _GymProgramSelectionPageState
           Container(
             margin: EdgeInsets.symmetric(vertical: 20.0),
             child: Image.asset(
-              'assets/gym_logo.png', // Replace with your logo asset path
+              'assets/cycling_logo.png', // Replace with your logo asset path
               height: 100.0, // Adjust the height as needed
             ),
           ),
@@ -40,7 +40,7 @@ class _GymProgramSelectionPageState
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CustomGymProgramPage(),
+                        builder: (context) => CustomCyclingProgramPage(),
                       ),
                     );
                   },
@@ -55,11 +55,11 @@ class _GymProgramSelectionPageState
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PlannedGymProgramsPage(),
+                        builder: (context) => PlannedCyclingProgramsPage(),
                       ),
                     );
                   },
-                  child: Text('Planned Gym Programs'),
+                  child: Text('Planned Cycling Programs'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.yellow,
                   ),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'user_profile.dart';
 import 'gym_program_selection_page.dart'; // Import GymProgramSelectionPage
+import 'yoga_program_selection_page.dart'; // Import YogaProgramSelectionPage
+import 'cycling_program_selection_page.dart'; // Import CyclingProgramSelectionPage
+import 'jogging_program_selection_page.dart'; // Import JoggingProgramSelectionPage
 
 class HomePage extends StatefulWidget {
   final UserProfile userProfile;
@@ -143,36 +146,63 @@ class _HomePageState extends State<HomePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildWorkoutButton('Gym', 0),
-        _buildWorkoutButton('Yoga', 1),
-        _buildWorkoutButton('Cycling', 2),
-        _buildWorkoutButton('Jogging', 3),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => GymProgramSelectionPage(), // Navigate to Gym selection page
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.yellow,
+          ),
+          child: Text('Gym'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => YogaProgramSelectionPage(), // Navigate to Yoga selection page
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.yellow,
+          ),
+          child: Text('Yoga'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CyclingProgramSelectionPage(), // Navigate to Cycling selection page
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.yellow,
+          ),
+          child: Text('Cycling'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => JoggingProgramSelectionPage(), // Navigate to Jogging selection page
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.grey[700],
+          ),
+          child: Text('Jogging'),
+        ),
       ],
-    );
-  }
-
-  Widget _buildWorkoutButton(String text, int index) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor:
-            _selectedWorkoutType == index ? Colors.yellow : Colors.grey[700],
-      ),
-      onPressed: () {
-        if (index == 0) {
-          // Gym button pressed
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => GymProgramSelectionPage(),
-            ),
-          );
-        } else {
-          setState(() {
-            _selectedWorkoutType = index;
-          });
-        }
-      },
-      child: Text(text),
     );
   }
 
@@ -187,16 +217,11 @@ class _HomePageState extends State<HomePage> {
 
   String _getWorkoutTypeName() {
     switch (_selectedWorkoutType) {
-      case 0:
-        return 'Gym';
-      case 1:
-        return 'Yoga';
-      case 2:
-        return 'Cycling';
-      case 3:
-        return 'Jogging';
-      default:
-        return '';
+      case 0: return 'Gym';
+      case 1: return 'Yoga';
+      case 2: return 'Cycling';
+      case 3: return 'Jogging';
+      default: return '';
     }
   }
 }
