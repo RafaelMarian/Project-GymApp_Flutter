@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedWorkoutType = 0; // Index to keep track of selected workout type
+  int _selectedWorkoutType = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildWorkoutProgressBox(), // Make this box span the full width
+            _buildWorkoutProgressBox(),
             SizedBox(height: 10),
             Row(
               children: [
@@ -54,44 +54,54 @@ class _HomePageState extends State<HomePage> {
             SizedBox(height: 20),
             _buildWorkoutTypeButtons(),
             SizedBox(height: 20),
-            _buildExercisesSection(), // Move this here to be under the workout buttons
+            _buildExercisesSection(),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'A',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'B',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'C',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'D',
-          ),
-        ],
-        currentIndex: 0, // Set the initial index to 0 for Home
-        onTap: (index) {
-          // Handle navigation
-        },
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.grey[800], // Set the background color to grey
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+              icon: Icon(Icons.home, color: Colors.yellow),
+              onPressed: () {
+                // Handle home button press
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.search, color: Colors.white),
+              onPressed: () {
+                // Handle search button press
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.notifications, color: Colors.white),
+              onPressed: () {
+                // Handle notifications button press
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.settings, color: Colors.white),
+              onPressed: () {
+                // Handle settings button press
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.person, color: Colors.white),
+              onPressed: () {
+                // Handle profile button press
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildWorkoutProgressBox() {
     return Container(
-      width: double.infinity, // Make sure it spans the full width
+      width: double.infinity,
       child: Card(
         color: Colors.grey[700],
         child: Padding(
