@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'custom_yoga_program_page.dart';
 import 'planned_yoga_programs_page.dart';
+import 'my_personal_trainer_plan_yoga_page.dart'; // Import Personal Trainer Plan page
 
 class YogaProgramSelectionPage extends StatefulWidget {
   @override
@@ -8,8 +9,7 @@ class YogaProgramSelectionPage extends StatefulWidget {
       _YogaProgramSelectionPageState();
 }
 
-class _YogaProgramSelectionPageState
-    extends State<YogaProgramSelectionPage> {
+class _YogaProgramSelectionPageState extends State<YogaProgramSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,56 +18,59 @@ class _YogaProgramSelectionPageState
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Add your logo here
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 20.0),
-            child: Image.asset(
-              'assets/yoga_logo.png', // Replace with your logo asset path
-              height: 100.0, // Adjust the height as needed
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CustomYogaProgramPage(),
-                      ),
-                    );
-                  },
-                  child: Text('Custom'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.yellow,
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CustomYogaProgramPage(),
                   ),
-                ),
-                SizedBox(width: 20), // Space between buttons
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PlannedYogaProgramsPage(),
-                      ),
-                    );
-                  },
-                  child: Text('Planned Yoga Programs'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.yellow,
-                  ),
-                ),
-              ],
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.yellow,
+                minimumSize: Size(200, 50),
+              ),
+              child: Text('Custom Program'),
             ),
-          ),
-        ],
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PlannedYogaProgramsPage(),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.yellow,
+                minimumSize: Size(200, 50),
+              ),
+              child: Text('Planned Programs'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyPersonalTrainerPlanYogaPage(), // Navigate to "My Personal Trainer Plan"
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.yellow,
+                minimumSize: Size(200, 50),
+              ),
+              child: Text('My Personal Trainer Plan'),
+            ),
+          ],
+        ),
       ),
     );
   }

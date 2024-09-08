@@ -74,29 +74,29 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             IconButton(
-              icon: Icon(Icons.search, color: Colors.white),
+              icon: Icon(Icons.search, color: Colors.yellow),
               onPressed: () {
                 // Handle search button press
               },
             ),
             IconButton(
-              icon: Icon(Icons.notifications, color: Colors.white),
+              icon: Icon(Icons.notifications, color: Colors.yellow),
               onPressed: () {
                 // Handle notifications button press
               },
             ),
             IconButton(
-              icon: Icon(Icons.settings, color: Colors.white),
+              icon: Icon(Icons.settings, color: Colors.yellow),
               onPressed: () {
                 // Handle settings button press
               },
             ),
             IconButton(
-              icon: Icon(Icons.person, color: Colors.white),
+              icon: Icon(Icons.person, color: Colors.yellow),
               onPressed: () {
                 // Handle profile button press
               },
-            ),
+            ), 
           ],
         ),
       ),
@@ -107,12 +107,12 @@ class _HomePageState extends State<HomePage> {
     return Container(
       width: double.infinity,
       child: Card(
-        color: Colors.grey[700],
+        color: Colors.yellow,
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
             'Workout Progress',
-            style: TextStyle(fontSize: 18, color: Colors.yellow),
+            style: TextStyle(fontSize: 18, color: Colors.black),
           ),
         ),
       ),
@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage> {
             );
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.grey[700],
+            backgroundColor: Colors.yellow,
           ),
           child: Text('Jogging'),
         ),
