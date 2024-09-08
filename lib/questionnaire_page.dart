@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'user_profile.dart';
+import 'user_profile.dart'; // Import UserProfile from the correct file
 import 'home_page.dart'; // Import HomePage
 
 class QuestionnairePage extends StatefulWidget {
@@ -9,9 +9,9 @@ class QuestionnairePage extends StatefulWidget {
 
 class _QuestionnairePageState extends State<QuestionnairePage> {
   final PageController _pageController = PageController();
-  final UserProfile _userProfile = UserProfile();
-  bool _hasAnsweredFirstQuestion =
-      false; // Track if the first question is answered
+  final UserProfile _userProfile = UserProfile(); // Use UserProfile
+
+  bool _hasAnsweredFirstQuestion = false; // Track if the first question is answered
 
   void _onNextPage(String response) {
     int pageIndex = _pageController.page!.toInt();
@@ -76,25 +76,18 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       body: PageView(
         controller: _pageController,
         children: [
-          _buildQuestionPage('What is your name?', 'Enter your name',
-              _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your height?', 'Enter your height',
-              _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your body weight?',
-              'Enter your body weight', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your gender?', 'Select your gender',
-              _onNextPage, _onPreviousPage),
-          _buildQuestionPage('How often do you go to the gym?',
-              'Select frequency', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your age?', 'Enter your age', _onNextPage,
-              _onPreviousPage),
+          _buildQuestionPage('What is your name?', 'Enter your name', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your height?', 'Enter your height', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your body weight?', 'Enter your body weight', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your gender?', 'Select your gender', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('How often do you go to the gym?', 'Select frequency', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your age?', 'Enter your age', _onNextPage, _onPreviousPage),
         ],
       ),
     );
   }
 
-  Widget _buildQuestionPage(String question, String hint,
-      void Function(String) onNext, void Function() onPrevious) {
+  Widget _buildQuestionPage(String question, String hint, void Function(String) onNext, void Function() onPrevious) {
     TextEditingController controller = TextEditingController();
 
     return Padding(
@@ -138,7 +131,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                 if (_hasAnsweredFirstQuestion) // Show "Previous" button only if the first question is answered
                   ElevatedButton(
                     onPressed: () {
-                      onPrevious();
+                      _onPreviousPage();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.yellow, // Button background color
@@ -148,7 +141,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                 SizedBox(width: 20.0), // Space between buttons
                 ElevatedButton(
                   onPressed: () {
-                    onNext(controller.text.trim());
+                    _onNextPage(controller.text.trim());
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.yellow, // Button background color

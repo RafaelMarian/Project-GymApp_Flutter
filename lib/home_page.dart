@@ -4,6 +4,10 @@ import 'gym_program_selection_page.dart'; // Import GymProgramSelectionPage
 import 'yoga_program_selection_page.dart'; // Import YogaProgramSelectionPage
 import 'cycling_program_selection_page.dart'; // Import CyclingProgramSelectionPage
 import 'jogging_program_selection_page.dart'; // Import JoggingProgramSelectionPage
+import 'sleep_input_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart'; // Ensure Firebase is initialized
+
 
 class HomePage extends StatefulWidget {
   final UserProfile userProfile;
@@ -16,6 +20,140 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedWorkoutType = 0;
+  String _sleepDuration = 'Not available';
+  double _sleepRating = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchSleepData();
+  }
+
+  Future<void> _fetchSleepData() async {
+    final now = DateTime.now();
+    final startDate = now.subtract(Duration(days: 7));
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection('sleep_data')
+        .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+        .orderBy('timestamp', descending: true)
+        .limit(7)
+        .get();
+
+    List<int> sleepDurations = [];
+    int totalSleep = 0;
+    int count = 0;
+
+    for (var doc in snapshot.docs) {
+      final data = doc.data();
+      final duration = data['sleep_duration'] as String?;
+      
+      if (duration != null) {
+        final parts = duration.split(':');
+        final hours = int.parse(parts[0]);
+        final minutes = int.parse(parts[1]);
+        final totalMinutes = (hours * 60) + minutes;
+        
+        sleepDurations.add(totalMinutes);
+        totalSleep += totalMinutes;
+        count++;
+      }
+    }
+
+    if (count > 0) {
+      final averageSleep = totalSleep / count / 60; // Convert minutes to hours
+      _sleepDuration = '${averageSleep.toStringAsFixed(2)} hours';
+      _sleepRating = _calculateSleepRating(sleepDurations);
+    }
+    
+    setState(() {});
+  }
+
+  double _calculateSleepRating(List<int> durations) {
+    if (durations.isEmpty) return 0.0;
+
+    int idealSleepMinutes = 8 * 60; // 8 hours in minutes
+    int totalMinutes = durations.reduce((a, b) => a + b);
+    double averageSleep = totalMinutes / durations.length;
+
+    double rating = (averageSleep / idealSleepMinutes) * 100;
+    if (averageSleep > idealSleepMinutes) {
+      rating -= (averageSleep - idealSleepMinutes) * 0.5;
+    }
+    return rating.clamp(0, 100);
+  }
+
+  Widget _buildSleepTrackingBox() {
+    Color lineColor;
+    final double sleepHours = _parseSleepDuration(_sleepDuration);
+
+    if (sleepHours >= 8) {
+      lineColor = Colors.red;
+    } else if (sleepHours >= 7) {
+      lineColor = Colors.green;
+    } else if (sleepHours >= 6) {
+      lineColor = Colors.orange;
+    } else {
+      lineColor = Colors.red;
+    }
+
+    return GestureDetector(
+      onTap: () async {
+        final sleepDuration = await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SleepInputPage()), // Navigate to SleepInputPage
+        );
+
+        if (sleepDuration != null) {
+          _fetchSleepData(); // Refresh sleep data
+        }
+      },
+      child: Container(
+      width: double.infinity,
+      child: Card(
+        color: Colors.yellow,
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Sleep Tracking',
+                style: TextStyle(fontSize: 18, color: Colors.black),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Duration: $_sleepDuration',
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
+              SizedBox(height: 10),
+              Container(
+                height: 20,
+                color: lineColor,
+                width: double.infinity * (sleepHours / 8),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Sleep Rating: ${_sleepRating.toStringAsFixed(1)}%',
+                style: TextStyle(fontSize: 16, color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  double _parseSleepDuration(String duration) {
+    final parts = duration.split(' ');
+    if (parts.length > 1) {
+      final hours = double.tryParse(parts[0]) ?? 0;
+      final minutes = double.tryParse(parts[1]) ?? 0;
+      return hours + minutes / 60;
+    }
+    return 0.0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SizedBox(width: 10),
                 Expanded(
-                  child: _buildBox('Sleep Tracking', 'Details here'),
+                  child: _buildSleepTrackingBox(),
                 ),
               ],
             ),
@@ -207,21 +345,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildExercisesSection() {
-    return Center(
-      child: Text(
-        'Exercises for ${_getWorkoutTypeName()}',
-        style: TextStyle(fontSize: 18, color: Colors.yellow),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Exercises',
+          style: TextStyle(fontSize: 18, color: Colors.yellow),
+        ),
+        SizedBox(height: 10),
+        // Add your exercise widgets here
+      ],
     );
   }
-
-  String _getWorkoutTypeName() {
-    switch (_selectedWorkoutType) {
-      case 0: return 'Gym';
-      case 1: return 'Yoga';
-      case 2: return 'Cycling';
-      case 3: return 'Jogging';
-      default: return '';
-    }
-  }
 }
+
