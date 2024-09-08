@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 
 class SleepInputPage extends StatefulWidget {
   @override
@@ -75,20 +74,19 @@ class _SleepInputPageState extends State<SleepInputPage> {
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Center( // Center the content
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min, // Center the column vertically
           children: [
             ElevatedButton(
               onPressed: () => _selectSleepTime(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow, // Button color
-                minimumSize: Size(250, 60), // Larger button size
+                minimumSize: Size(200, 50), // Smaller button size
               ),
               child: Text(
                 sleepTime == null ? 'Set Sleep Time' : 'Sleep Time: ${sleepTime?.format(context)}',
-                style: TextStyle(color: Colors.black, fontSize: 18), // Larger text
+                style: TextStyle(color: Colors.black, fontSize: 16), // Adjusted text size
               ),
             ),
             SizedBox(height: 20),
@@ -96,11 +94,11 @@ class _SleepInputPageState extends State<SleepInputPage> {
               onPressed: () => _selectWakeUpTime(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow, // Button color
-                minimumSize: Size(250, 60), // Larger button size
+                minimumSize: Size(200, 50), // Smaller button size
               ),
               child: Text(
                 wakeUpTime == null ? 'Set Wake Up Time' : 'Wake Up Time: ${wakeUpTime?.format(context)}',
-                style: TextStyle(color: Colors.black, fontSize: 18), // Larger text
+                style: TextStyle(color: Colors.black, fontSize: 16), // Adjusted text size
               ),
             ),
             SizedBox(height: 20),
@@ -108,11 +106,11 @@ class _SleepInputPageState extends State<SleepInputPage> {
               onPressed: _saveSleepData,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow, // Button color
-                minimumSize: Size(250, 60), // Larger button size
+                minimumSize: Size(200, 50), // Smaller button size
               ),
               child: Text(
                 'Save Sleep Data',
-                style: TextStyle(color: Colors.black, fontSize: 18), // Larger text
+                style: TextStyle(color: Colors.black, fontSize: 16), // Adjusted text size
               ),
             ),
           ],
