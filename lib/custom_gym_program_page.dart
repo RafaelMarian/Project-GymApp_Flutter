@@ -8,7 +8,8 @@ class CustomGymProgramPage extends StatefulWidget {
 
 class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
   String? selectedMuscleGroup;
-  List<Map<String, dynamic>> allExercises = [];
+  List<Map<String, dynamic>> defaultExercises = [];
+  List<Map<String, dynamic>> userExercises = [];
   Map<String, Map<String, String>> userInput = {}; // Store user input for reps and kg
 
   void _selectMuscleGroup(String group) {
@@ -31,20 +32,17 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
           .get();
 
       setState(() {
-        allExercises = [
-          ...defaultExercisesSnapshot.docs.map((doc) {
-            final data = doc.data() as Map<String, dynamic>;
-            data['id'] = doc.id; // Add document ID to the data
-            data['isDefault'] = true; // Mark as default exercise
-            return data;
-          }).toList(),
-          ...userExercisesSnapshot.docs.map((doc) {
-            final data = doc.data() as Map<String, dynamic>;
-            data['id'] = doc.id; // Add document ID to the data
-            data['isDefault'] = false; // Mark as user-created exercise
-            return data;
-          }).toList()
-        ];
+        defaultExercises = defaultExercisesSnapshot.docs.map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          data['id'] = doc.id; // Add document ID to the data
+          return data;
+        }).toList();
+
+        userExercises = userExercisesSnapshot.docs.map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          data['id'] = doc.id; // Add document ID to the data
+          return data;
+        }).toList();
       });
     }
   }
@@ -52,40 +50,42 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
   Future<void> _updateExercisesInFirestore() async {
     final batch = FirebaseFirestore.instance.batch();
 
-    for (var exercise in allExercises) {
+    for (var exercise in [...defaultExercises, ...userExercises]) {
+      final exerciseName = exercise['name'] as String;
       final exerciseId = exercise['id'] as String;
-      final isDefault = exercise['isDefault'] as bool;
-      final collection = isDefault ? 'default-gym-exercises' : 'exercises';
+      final collection = defaultExercises.contains(exercise) ? 'default-gym-exercises' : 'exercises';
 
-      if (userInput.containsKey(exercise['name'])) {
+      if (userInput.containsKey(exerciseName)) {
         final docRef = FirebaseFirestore.instance
             .collection(collection)
-            .doc(exerciseId);
+            .doc(exerciseId); // Reference document by its ID
 
-        final updatedReps = userInput[exercise['name']]?['reps'];
-        final updatedKg = userInput[exercise['name']]?['kg'];
-
-        final repsInt = int.tryParse(updatedReps ?? '') ?? exercise['reps'] as int;
-        final kgInt = int.tryParse(updatedKg ?? '') ?? exercise['kg'] as int;
-
-        print('Updating ${exercise['name']} in $collection with reps: $repsInt and kg: $kgInt'); // Debug log
+        final updatedReps = userInput[exerciseName]?['reps'];
+        final updatedKg = userInput[exerciseName]?['kg'];
 
         batch.update(docRef, {
-          'reps': repsInt,
-          'kg': kgInt,
+          'reps': int.tryParse(updatedReps ?? '') ?? exercise['reps'] as int,
+          'kg': int.tryParse(updatedKg ?? '') ?? exercise['kg'] as int,
         });
       }
     }
 
+    await batch.commit();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Exercises updated successfully')),
+    );
+  }
+
+  Future<void> _deleteExercise(String exerciseId) async {
     try {
-      await batch.commit();
+      await FirebaseFirestore.instance.collection('exercises').doc(exerciseId).delete();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Exercises updated successfully')),
+        SnackBar(content: Text('Exercise deleted successfully')),
       );
+      _fetchExercisesForGroup(); // Refresh the list
     } catch (e) {
-      print('Error updating exercises: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update exercises')),
+        SnackBar(content: Text('Failed to delete exercise: $e')),
       );
     }
   }
@@ -117,9 +117,10 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: allExercises.length,
+              itemCount: defaultExercises.length + userExercises.length,
               itemBuilder: (context, index) {
-                final exercise = allExercises[index];
+                final isDefault = index < defaultExercises.length;
+                final exercise = isDefault ? defaultExercises[index] : userExercises[index - defaultExercises.length];
                 final exerciseName = exercise['name'] as String;
                 final exerciseDescription = exercise['description'] as String;
                 final defaultKg = exercise['kg'] as int;
@@ -181,6 +182,16 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
                                 });
                               },
                             ),
+                            SizedBox(height: 10),
+                            // Delete button for user-added exercises
+                            if (!isDefault)
+                              ElevatedButton(
+                                onPressed: () => _deleteExercise(exercise['id']),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                ),
+                                child: Text('Delete'),
+                              ),
                           ],
                         ),
                       ),
