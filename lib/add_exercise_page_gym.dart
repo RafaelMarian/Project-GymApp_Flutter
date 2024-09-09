@@ -14,19 +14,24 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
   String? _selectedMuscleGroup;
 
   Future<void> _addExercise() async {
-    final name = _nameController.text;
-    final description = _descriptionController.text;
-    final reps = _repsController.text;
-    final kg = _kgController.text;
-    final muscleGroup = _selectedMuscleGroup;
+  final name = _nameController.text;
+  final description = _descriptionController.text;
+  final repsString = _repsController.text;
+  final kgString = _kgController.text;
+  final muscleGroup = _selectedMuscleGroup;
 
-    if (name.isNotEmpty && description.isNotEmpty && reps.isNotEmpty && kg.isNotEmpty && muscleGroup != null) {
+  if (name.isNotEmpty && description.isNotEmpty && repsString.isNotEmpty && kgString.isNotEmpty && muscleGroup != null) {
+    // Convert reps and kg to integers
+    final reps = int.tryParse(repsString);
+    final kg = int.tryParse(kgString);
+
+    if (reps != null && kg != null) {
       await FirebaseFirestore.instance.collection('exercises').add({
         'name': name,
         'description': description,
-        'reps': reps,
-        'kg': kg,
-        'muscle_group': muscleGroup, // Add muscle group to Firestore
+        'reps': reps,  // Store as integer
+        'kg': kg,      // Store as integer
+        'muscle_group': muscleGroup,
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Exercise added successfully')),
@@ -40,10 +45,15 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill in all fields')),
+        SnackBar(content: Text('Please enter valid numbers for reps and weight')),
       );
     }
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Please fill in all fields')),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {

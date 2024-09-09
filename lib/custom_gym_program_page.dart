@@ -8,31 +8,43 @@ class CustomGymProgramPage extends StatefulWidget {
 
 class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
   String? selectedMuscleGroup;
-  List<Map<String, dynamic>> defaultExercises = [];
+  List<Map<String, dynamic>> allExercises = [];
   Map<String, Map<String, String>> userInput = {}; // Store user input for reps and kg
 
   void _selectMuscleGroup(String group) {
     setState(() {
       selectedMuscleGroup = group;
-      _fetchDefaultExercisesForGroup(); // Fetch default exercises for the selected group
+      _fetchExercisesForGroup(); // Fetch exercises for the selected group
     });
   }
 
-  Future<void> _fetchDefaultExercisesForGroup() async {
+  Future<void> _fetchExercisesForGroup() async {
     if (selectedMuscleGroup != null) {
-      final querySnapshot = await FirebaseFirestore.instance
+      final defaultExercisesSnapshot = await FirebaseFirestore.instance
           .collection('default-gym-exercises')
           .where('muscle_group', isEqualTo: selectedMuscleGroup)
           .get();
 
+      final userExercisesSnapshot = await FirebaseFirestore.instance
+          .collection('exercises')
+          .where('muscle_group', isEqualTo: selectedMuscleGroup)
+          .get();
+
       setState(() {
-        defaultExercises = querySnapshot.docs
-            .map((doc) {
-              final data = doc.data() as Map<String, dynamic>;
-              data['id'] = doc.id; // Add document ID to the data
-              return data;
-            })
-            .toList();
+        allExercises = [
+          ...defaultExercisesSnapshot.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            data['id'] = doc.id; // Add document ID to the data
+            data['isDefault'] = true; // Mark as default exercise
+            return data;
+          }).toList(),
+          ...userExercisesSnapshot.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            data['id'] = doc.id; // Add document ID to the data
+            data['isDefault'] = false; // Mark as user-created exercise
+            return data;
+          }).toList()
+        ];
       });
     }
   }
@@ -40,29 +52,42 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
   Future<void> _updateExercisesInFirestore() async {
     final batch = FirebaseFirestore.instance.batch();
 
-    for (var exercise in defaultExercises) {
-      final exerciseName = exercise['name'] as String;
+    for (var exercise in allExercises) {
       final exerciseId = exercise['id'] as String;
+      final isDefault = exercise['isDefault'] as bool;
+      final collection = isDefault ? 'default-gym-exercises' : 'exercises';
 
-      if (userInput.containsKey(exerciseName)) {
+      if (userInput.containsKey(exercise['name'])) {
         final docRef = FirebaseFirestore.instance
-            .collection('default-gym-exercises')
-            .doc(exerciseId); // Reference document by its ID
+            .collection(collection)
+            .doc(exerciseId);
 
-        final updatedReps = userInput[exerciseName]?['reps'];
-        final updatedKg = userInput[exerciseName]?['kg'];
+        final updatedReps = userInput[exercise['name']]?['reps'];
+        final updatedKg = userInput[exercise['name']]?['kg'];
+
+        final repsInt = int.tryParse(updatedReps ?? '') ?? exercise['reps'] as int;
+        final kgInt = int.tryParse(updatedKg ?? '') ?? exercise['kg'] as int;
+
+        print('Updating ${exercise['name']} in $collection with reps: $repsInt and kg: $kgInt'); // Debug log
 
         batch.update(docRef, {
-          'reps': int.tryParse(updatedReps ?? '') ?? exercise['reps'] as int,
-          'kg': int.tryParse(updatedKg ?? '') ?? exercise['kg'] as int,
+          'reps': repsInt,
+          'kg': kgInt,
         });
       }
     }
 
-    await batch.commit();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Exercises updated successfully')),
-    );
+    try {
+      await batch.commit();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Exercises updated successfully')),
+      );
+    } catch (e) {
+      print('Error updating exercises: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update exercises')),
+      );
+    }
   }
 
   @override
@@ -92,9 +117,9 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: defaultExercises.length,
+              itemCount: allExercises.length,
               itemBuilder: (context, index) {
-                final exercise = defaultExercises[index];
+                final exercise = allExercises[index];
                 final exerciseName = exercise['name'] as String;
                 final exerciseDescription = exercise['description'] as String;
                 final defaultKg = exercise['kg'] as int;
