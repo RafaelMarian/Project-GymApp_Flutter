@@ -3,6 +3,7 @@ import 'custom_gym_program_page.dart';
 import 'planned_gym_programs_page.dart';
 import 'my_personal_trainer_plan_gym_page.dart'; // Import Personal Trainer Plan page
 import 'add_exercise_page_gym.dart'; // Import AddExercisePage
+import 'create_training_plan_gym.dart'; // Import CreateTrainingPlanGymPage
 
 class GymProgramSelectionPage extends StatefulWidget {
   @override
@@ -60,7 +61,7 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyPersonalTrainerPlanGymPage(), // Navigate to "My Personal Trainer Plan"
+                    builder: (context) => MyPersonalTrainerPlanPageGym(), // Navigate to "My Personal Trainer Plan"
                   ),
                 );
               },
@@ -71,7 +72,7 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
               child: Text('My Personal Trainer Plan'),
             ),
             SizedBox(height: 20),
-            ElevatedButton( // New button for adding an exercise
+            ElevatedButton( // Button for adding an exercise
               onPressed: () {
                 Navigator.push(
                   context,
@@ -85,6 +86,22 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 minimumSize: Size(200, 50),
               ),
               child: Text('Add Exercise'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton( // New button for Create Training Plan
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateTrainingPlanPageGym(), // Navigate to CreateTrainingPlanGymPage
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.yellow,
+                minimumSize: Size(200, 50),
+              ),
+              child: Text('Create Training Plan'),
             ),
           ],
         ),

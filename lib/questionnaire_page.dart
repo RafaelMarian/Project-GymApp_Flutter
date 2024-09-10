@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'user_profile.dart'; // Import UserProfile from the correct file
 import 'home_page.dart'; // Import HomePage
+import 'user_profile_service.dart';
 
 class QuestionnairePage extends StatefulWidget {
   @override
@@ -9,11 +10,32 @@ class QuestionnairePage extends StatefulWidget {
 
 class _QuestionnairePageState extends State<QuestionnairePage> {
   final PageController _pageController = PageController();
-  final UserProfile _userProfile = UserProfile(); // Use UserProfile
+  late UserProfile _userProfile; // Declare the UserProfile but initialize later
+  bool _hasAnsweredFirstQuestion =
+      false; // Track if the first question is answered
+  final UserProfileService _userProfileService = UserProfileService();
 
-  bool _hasAnsweredFirstQuestion = false; // Track if the first question is answered
+  @override
+  void initState() {
+    super.initState();
+    _initializeUserProfile();
+  }
+
+  Future<void> _initializeUserProfile() async {
+    String? userId = await _userProfileService.getUserId();
+    if (userId != null) {
+      setState(() {
+        _userProfile = UserProfile(
+            id: userId); // Initialize UserProfile with the fetched ID
+      });
+    } else {
+      // Handle the case where the user is not logged in or ID is null
+      print("Error: User ID is null.");
+    }
+  }
 
   void _onNextPage(String response) {
+    if (_pageController.page == null) return; // Safeguard against null page
     int pageIndex = _pageController.page!.toInt();
 
     switch (pageIndex) {
@@ -67,27 +89,42 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_userProfile == null) {
+      // Show a loading screen or handle uninitialized UserProfile
+      return Scaffold(
+        appBar: AppBar(title: Text('Loading...')),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile Setup'),
-        backgroundColor: Colors.grey[800], // AppBar background color
+        backgroundColor: Colors.grey[800],
       ),
-      backgroundColor: Colors.grey[800], // Background color
+      backgroundColor: Colors.grey[800],
       body: PageView(
         controller: _pageController,
         children: [
-          _buildQuestionPage('What is your name?', 'Enter your name', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your height?', 'Enter your height', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your body weight?', 'Enter your body weight', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your gender?', 'Select your gender', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('How often do you go to the gym?', 'Select frequency', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your age?', 'Enter your age', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your name?', 'Enter your name',
+              _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your height?', 'Enter your height',
+              _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your body weight?',
+              'Enter your body weight', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your gender?', 'Select your gender',
+              _onNextPage, _onPreviousPage),
+          _buildQuestionPage('How often do you go to the gym?',
+              'Select frequency', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your age?', 'Enter your age', _onNextPage,
+              _onPreviousPage),
         ],
       ),
     );
   }
 
-  Widget _buildQuestionPage(String question, String hint, void Function(String) onNext, void Function() onPrevious) {
+  Widget _buildQuestionPage(String question, String hint,
+      void Function(String) onNext, void Function() onPrevious) {
     TextEditingController controller = TextEditingController();
 
     return Padding(
@@ -116,35 +153,33 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                     hintStyle: TextStyle(color: Colors.yellow),
                     border: OutlineInputBorder(),
                   ),
-                  style: TextStyle(color: Colors.yellow), // Text color
+                  style: TextStyle(color: Colors.yellow),
                 ),
               ],
             ),
           ),
           SizedBox(height: 20.0),
-          Spacer(), // Push buttons to the bottom
+          Spacer(),
           Align(
             alignment: Alignment.bottomCenter,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (_hasAnsweredFirstQuestion) // Show "Previous" button only if the first question is answered
+                if (_hasAnsweredFirstQuestion)
                   ElevatedButton(
-                    onPressed: () {
-                      _onPreviousPage();
-                    },
+                    onPressed: _onPreviousPage,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellow, // Button background color
+                      backgroundColor: Colors.yellow,
                     ),
                     child: Text('Previous'),
                   ),
-                SizedBox(width: 20.0), // Space between buttons
+                SizedBox(width: 20.0),
                 ElevatedButton(
                   onPressed: () {
                     _onNextPage(controller.text.trim());
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.yellow, // Button background color
+                    backgroundColor: Colors.yellow,
                   ),
                   child: Text('Next'),
                 ),

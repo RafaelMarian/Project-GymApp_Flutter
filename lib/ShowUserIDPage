@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class ShowUserIdPage extends StatefulWidget {
+  @override
+  _ShowUserIdPageState createState() => _ShowUserIdPageState();
+}
+
+class _ShowUserIdPageState extends State<ShowUserIdPage> {
+  String? userId;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserId();
+  }
+
+  // Method to get the UID of the current user
+  void _getUserId() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        userId = user.uid;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('User ID'),
+        backgroundColor: Colors.grey[800],
+      ),
+      backgroundColor: Colors.grey[800],
+      body: Center(
+        child: userId != null
+            ? Text(
+                'Your User ID: $userId',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              )
+            : Text(
+                'No user logged in.',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+      ),
+    );
+  }
+}

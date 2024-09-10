@@ -7,7 +7,7 @@ import 'jogging_program_selection_page.dart'; // Import JoggingProgramSelectionP
 import 'sleep_input_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart'; // Ensure Firebase is initialized
-
+import 'user_id_page.dart'; // Import the new User ID page
 
 class HomePage extends StatefulWidget {
   final UserProfile userProfile;
@@ -155,6 +155,16 @@ class _HomePageState extends State<HomePage> {
     return 0.0;
   }
 
+  void _showUserId() {
+    final userId = widget.userProfile.id;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UserIdPage(userId: userId), // Navigate to the UserIdPage
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -197,6 +207,16 @@ class _HomePageState extends State<HomePage> {
             _buildWorkoutTypeButtons(),
             SizedBox(height: 20),
             _buildExercisesSection(),
+            SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                onPressed: _showUserId,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                ),
+                child: Text('Show User ID'),
+              ),
+            ),
           ],
         ),
       ),
@@ -296,7 +316,10 @@ class _HomePageState extends State<HomePage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.yellow,
           ),
-          child: Text('Gym'),
+          child: Text(
+            'Gym',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         ElevatedButton(
           onPressed: () {
@@ -310,7 +333,10 @@ class _HomePageState extends State<HomePage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.yellow,
           ),
-          child: Text('Yoga'),
+          child: Text(
+            'Yoga',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         ElevatedButton(
           onPressed: () {
@@ -324,7 +350,10 @@ class _HomePageState extends State<HomePage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.yellow,
           ),
-          child: Text('Cycling'),
+          child: Text(
+            'Cycling',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         ElevatedButton(
           onPressed: () {
@@ -338,24 +367,39 @@ class _HomePageState extends State<HomePage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.yellow,
           ),
-          child: Text('Jogging'),
+          child: Text(
+            'Jogging',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
       ],
     );
   }
 
   Widget _buildExercisesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Exercises',
-          style: TextStyle(fontSize: 18, color: Colors.yellow),
+    return Container(
+      width: double.infinity,
+      child: Card(
+        color: Colors.yellow,
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Exercises',
+                style: TextStyle(fontSize: 18, color: Colors.black),
+              ),
+              SizedBox(height: 10),
+              // Add your exercise list or content here
+              Text(
+                'List of exercises will be displayed here.',
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
+            ],
+          ),
         ),
-        SizedBox(height: 10),
-        // Add your exercise widgets here
-      ],
+      ),
     );
   }
 }
-
