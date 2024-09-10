@@ -10,13 +10,15 @@ class CreateTrainingPlanPageGym extends StatefulWidget {
 
 class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
   String? clientID;
-  String? clientName; // Separate variable for client name
+  String? clientName;
+  String? trainerName; // New field for Trainer Name
+  String? muscleGroup; // New field for Muscle Group Trained
   String? difficulty;
   String? workoutType;
   String? gender;
-  Map<String, dynamic> days = {}; // Use this to build the daily plan
+  Map<String, dynamic> days = {};
   String selectedDay = 'Monday'; // Default selected day
-  List<Map<String, dynamic>> exercises = []; // Exercises for the selected day
+  List<Map<String, dynamic>> exercises = [];
 
   @override
   void initState() {
@@ -45,14 +47,15 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
       return;
     }
 
-    // Populate the days map with exercises for each day
     days[selectedDay] = exercises;
 
     try {
       await FirebaseFirestore.instance.collection('training-plans').add({
         'trainerID': 'current_trainer_id', // Replace with actual trainer ID
-        'clientID': clientID, // Use clientID not clientName
-        'clientName': clientName, // Store clientName separately
+        'clientID': clientID,
+        'clientName': clientName,
+        'trainerName': trainerName, // Store trainer name in Firebase
+        'muscleGroup': muscleGroup, // Store muscle group in Firebase
         'difficulty': difficulty,
         'workoutType': workoutType,
         'gender': gender,
@@ -88,10 +91,34 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
   }
 
   void _deleteAllExercises() {
-    setState(() {
-      exercises.clear();
-      _saveExercises();
-    });
+    // Show confirmation dialog before deleting all exercises
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Are you sure?'),
+          content: Text('Do you want to delete all exercises?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Go back without deleting
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  exercises.clear();
+                  _saveExercises();
+                });
+                Navigator.of(context).pop(); // Close dialog after deleting
+              },
+              child: Text('Delete', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -115,9 +142,25 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
             ),
             SizedBox(height: 10),
             TextField(
-              onChanged: (value) => clientName = value, // Update clientName, not clientID
+              onChanged: (value) => clientName = value,
               decoration: InputDecoration(
                 labelText: 'Client Name',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10),
+            TextField(
+              onChanged: (value) => trainerName = value, // Trainer Name field
+              decoration: InputDecoration(
+                labelText: 'Trainer Name',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10),
+            TextField(
+              onChanged: (value) => muscleGroup = value, // Muscle Group field
+              decoration: InputDecoration(
+                labelText: 'Muscle Group Trained',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -201,14 +244,6 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
               },
             ),
             SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _deleteAllExercises,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
-              ),
-              child: Text('Delete All Exercises'),
-            ),
-            SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
                 itemCount: exercises.length,
@@ -226,79 +261,97 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                 },
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                // Add a new exercise dialog
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    String exerciseName = '';
-                    int reps = 0;
-                    double weight = 0.0;
-                    int restTime = 0;
-                    return AlertDialog(
-                      title: Text('Add Exercise'),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextField(
-                            onChanged: (value) => exerciseName = value,
-                            decoration: InputDecoration(
-                              labelText: 'Exercise Name',
-                              border: OutlineInputBorder(),
-                            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: _deleteAllExercises,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red, // Make the button red
+                    minimumSize: Size(100, 50), // Make it smaller
+                  ),
+                  child: Text('Delete All'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Add a new exercise dialog
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        String exerciseName = '';
+                        int reps = 0;
+                        double weight = 0.0;
+                        int restTime = 0;
+                        return AlertDialog(
+                          title: Text('Add Exercise'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                onChanged: (value) => exerciseName = value,
+                                decoration: InputDecoration(
+                                  labelText: 'Exercise Name',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                              TextField(
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) =>
+                                    reps = int.tryParse(value) ?? 0,
+                                decoration: InputDecoration(
+                                  labelText: 'Reps',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                              TextField(
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
+                                onChanged: (value) =>
+                                    weight = double.tryParse(value) ?? 0.0,
+                                decoration: InputDecoration(
+                                  labelText: 'Weight (kg)',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                              TextField(
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) =>
+                                    restTime = int.tryParse(value) ?? 0,
+                                decoration: InputDecoration(
+                                  labelText: 'Rest Time (s)',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ],
                           ),
-                          TextField(
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) => reps = int.tryParse(value) ?? 0,
-                            decoration: InputDecoration(
-                              labelText: 'Reps',
-                              border: OutlineInputBorder(),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                _addExercise(exerciseName, reps, weight,
+                                    restTime);
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Add'),
                             ),
-                          ),
-                          TextField(
-                            keyboardType: TextInputType.numberWithOptions(decimal: true),
-                            onChanged: (value) => weight = double.tryParse(value) ?? 0.0,
-                            decoration: InputDecoration(
-                              labelText: 'Weight (kg)',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                          TextField(
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) => restTime = int.tryParse(value) ?? 0,
-                            decoration: InputDecoration(
-                              labelText: 'Rest Time (s)',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ],
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            _addExercise(exerciseName, reps, weight, restTime);
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('Add'),
-                        ),
-                      ],
+                          ],
+                        );
+                      },
                     );
                   },
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
-              ),
-              child: Text('Add Exercise'),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _submitPlan,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
-              ),
-              child: Text('Submit Plan'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.yellow,
+                  ),
+                  child: Text('Add Exercise'),
+                ),
+                ElevatedButton(
+                  onPressed: _submitPlan,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                  ),
+                  child: Text('Submit Plan'),
+                ),
+              ],
             ),
           ],
         ),
