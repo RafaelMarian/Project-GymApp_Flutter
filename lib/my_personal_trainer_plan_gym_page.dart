@@ -46,6 +46,41 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
     }
   }
 
+  Future<void> _confirmDeleteTrainingPlan(String planID) async {
+    // Show a confirmation dialog
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Plan'),
+          content: Text('Are you sure you want to delete this training plan? This action cannot be undone.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Cancel deletion
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Confirm deletion
+              },
+              child: Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    // If confirmed, proceed with deletion
+    if (shouldDelete == true) {
+      await _deleteTrainingPlan(planID);
+    }
+  }
+
   Future<void> _deleteTrainingPlan(String planID) async {
     try {
       await FirebaseFirestore.instance.collection('training-plans').doc(planID).delete();
@@ -76,17 +111,18 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
                   itemBuilder: (context, index) {
                     final plan = plans[index];
                     final planID = plan.id;
-                    final clientID = plan['clientID'] ?? 'Unknown Client';
+                    final clientName = plan['clientName'] ?? 'Unknown Client';
+                    final trainerName = plan['trainerName'] ?? 'Unknown Trainer';
+                    final muscleGroup = plan['muscleGroup'] ?? 'Unknown Muscle Group';
                     final difficulty = plan['difficulty'] ?? 'No Difficulty';
                     final workoutType = plan['workoutType'] ?? 'No Workout Type';
-                    final gender = plan['gender'] ?? 'No Gender';
                     final days = plan['days'] as Map<String, dynamic>? ?? {};
 
                     return Card(
                       margin: EdgeInsets.all(8.0),
                       child: ExpansionTile(
                         title: Text(
-                          'Client: $clientID',
+                          '$muscleGroup by $trainerName for $clientName',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text('Workout Type: $workoutType, Difficulty: $difficulty'),
@@ -115,7 +151,7 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
                             );
                           }).toList(),
                           ElevatedButton(
-                            onPressed: () => _deleteTrainingPlan(planID),
+                            onPressed: () => _confirmDeleteTrainingPlan(planID),
                             child: Text('Delete Plan'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
