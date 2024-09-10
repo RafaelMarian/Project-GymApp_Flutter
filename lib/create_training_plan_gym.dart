@@ -10,6 +10,7 @@ class CreateTrainingPlanPageGym extends StatefulWidget {
 
 class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
   String? clientID;
+  String? clientName; // Separate variable for client name
   String? difficulty;
   String? workoutType;
   String? gender;
@@ -50,7 +51,8 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
     try {
       await FirebaseFirestore.instance.collection('training-plans').add({
         'trainerID': 'current_trainer_id', // Replace with actual trainer ID
-        'clientID': clientID,
+        'clientID': clientID, // Use clientID not clientName
+        'clientName': clientName, // Store clientName separately
         'difficulty': difficulty,
         'workoutType': workoutType,
         'gender': gender,
@@ -113,7 +115,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
             ),
             SizedBox(height: 10),
             TextField(
-              onChanged: (value) => clientID = value,
+              onChanged: (value) => clientName = value, // Update clientName, not clientID
               decoration: InputDecoration(
                 labelText: 'Client Name',
                 border: OutlineInputBorder(),
