@@ -109,33 +109,33 @@ class _HomePageState extends State<HomePage> {
         }
       },
       child: Container(
-      width: double.infinity,
-      child: Card(
-        color: Colors.yellow,
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Sleep Tracking',
-                style: TextStyle(fontSize: 18, color: Colors.black),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Duration: $_sleepDuration',
-                style: TextStyle(fontSize: 16, color: Colors.black),
-              ),
-              SizedBox(height: 10),
-              Container(
-                height: 20,
-                color: lineColor,
-                width: double.infinity * (sleepHours / 8),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Sleep Rating: ${_sleepRating.toStringAsFixed(1)}%',
-                style: TextStyle(fontSize: 16, color: Colors.black),
+        width: double.infinity,
+        child: Card(
+          color: Colors.yellow,
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Sleep Tracking',
+                  style: TextStyle(fontSize: 18, color: Colors.black),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Duration: $_sleepDuration',
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  height: 20,
+                  color: lineColor,
+                  width: double.infinity * (sleepHours / 8),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Sleep Rating: ${_sleepRating.toStringAsFixed(1)}%',
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
               ],
             ),
@@ -169,7 +169,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.userProfile.name),
+        title: Text(widget.userProfile.name ?? 'User Profile'), // Use default text if name is null
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],

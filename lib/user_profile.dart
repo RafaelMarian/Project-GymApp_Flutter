@@ -1,19 +1,25 @@
 class UserProfile {
-  String id;
-  String name;
-  String age;
-  String height;
-  String weight;
-  String gender;
-  String gymFrequency;
+  final String id;
+  String? name;
+  String? height;
+  String? weight;
+  String? gender;
+  String? dateOfBirth;
+  String? gymFrequency;
+  String? goals;
+  bool notifyInApp;
+  bool notifyEmail;
 
   UserProfile({
-    required this.id, // Require the Firebase user ID
-    this.name = '',
-    this.age = '',
-    this.height = '',
-    this.weight = '',
-    this.gender = '',
-    this.gymFrequency = '',
+    required this.id,
+    this.name,
+    this.height,
+    this.weight,
+    this.gender,
+    this.dateOfBirth,
+    this.gymFrequency,
+    this.goals,
+    this.notifyInApp = false,
+    this.notifyEmail = false,
   });
 }

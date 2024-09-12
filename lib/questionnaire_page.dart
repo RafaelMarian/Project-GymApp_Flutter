@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'user_profile.dart'; // Import UserProfile from the correct file
 import 'home_page.dart'; // Import HomePage
 import 'user_profile_service.dart';
+import 'setup_page.dart';
 
 class QuestionnairePage extends StatefulWidget {
   @override
@@ -10,10 +11,12 @@ class QuestionnairePage extends StatefulWidget {
 
 class _QuestionnairePageState extends State<QuestionnairePage> {
   final PageController _pageController = PageController();
-  late UserProfile _userProfile;
-  bool _hasAnsweredFirstQuestion = false;
+  late UserProfile _userProfile; // Declare the UserProfile but initialize later
+  bool _hasAnsweredFirstQuestion =
+      false; // Track if the first question is answered
   final UserProfileService _userProfileService = UserProfileService();
-  bool _isNavigating = false; // Flag to prevent multiple navigations
+  bool _notifyInApp = false;
+  bool _notifyEmail = false;
 
   @override
   void initState() {
@@ -25,15 +28,17 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     String? userId = await _userProfileService.getUserId();
     if (userId != null) {
       setState(() {
-        _userProfile = UserProfile(id: userId);
+        _userProfile = UserProfile(
+            id: userId); // Initialize UserProfile with the fetched ID
       });
     } else {
+      // Handle the case where the user is not logged in or ID is null
       print("Error: User ID is null.");
     }
   }
 
   void _onNextPage(String response) {
-    if (_pageController.page == null || _isNavigating) return; // Prevent multiple navigations
+    if (_pageController.page == null) return; // Safeguard against null page
     int pageIndex = _pageController.page!.toInt();
 
     switch (pageIndex) {
@@ -50,11 +55,23 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
         _userProfile.gender = response;
         break;
       case 4:
-        _userProfile.gymFrequency = response;
+        _userProfile.dateOfBirth = response;
         break;
       case 5:
-        _userProfile.age = response;
-        _navigateToHomePage(); // Navigate to HomePage after the last question
+        _userProfile.gymFrequency = response;
+        break;
+      case 6:
+        _userProfile.goals = response;
+        break;
+      case 7:
+        _userProfile.notifyInApp = _notifyInApp;
+        _userProfile.notifyEmail = _notifyEmail;
+        // Navigate to SetupPage after the last question
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SetupPage(userProfile: _userProfile)),
+        );
         return;
     }
 
@@ -64,48 +81,25 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       }
     });
 
+    // Move to the next page
     _pageController.nextPage(
       duration: Duration(milliseconds: 300),
       curve: Curves.easeIn,
     );
   }
 
-  Future<void> _navigateToHomePage() async {
-    if (_isNavigating) return; // Prevent multiple calls to this function
-
-    setState(() {
-      _isNavigating = true; // Set the flag to true to prevent further navigation
-    });
-
-    await Future.delayed(Duration(milliseconds: 300)); // Optional delay to ensure smooth transition
-
-    // Wait for any ongoing PageView animation to finish before navigating
-    if (_pageController.hasClients && _pageController.page!.round() == _pageController.page) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(userProfile: _userProfile),
-        ),
-      );
-    }
-
-    setState(() {
-      _isNavigating = false; // Reset flag after navigation
-    });
-  }
-
   void _onPreviousPage() {
-    if (!_isNavigating) {
-      _pageController.previousPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
-    }
+    // Move to the previous page
+    _pageController.previousPage(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     if (_userProfile == null) {
+      // Show a loading screen or handle uninitialized UserProfile
       return Scaffold(
         appBar: AppBar(title: Text('Loading...')),
         body: Center(child: CircularProgressIndicator()),
@@ -121,18 +115,28 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       body: PageView(
         controller: _pageController,
         children: [
-          _buildQuestionPage('What is your name?', 'Enter your name', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your height?', 'Enter your height', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your body weight?', 'Enter your body weight', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your gender?', 'Select your gender', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('How often do you go to the gym?', 'Select frequency', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your age?', 'Enter your age', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your name?', 'Enter your name',
+              _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your height?', 'Enter your height',
+              _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your body weight?',
+              'Enter your body weight', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your gender?', 'Select your gender',
+              _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your date of birth?',
+              'Enter your date of birth', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('How often do you go to the gym?',
+              'Select frequency', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What are your goals?', 'Enter your goals',
+              _onNextPage, _onPreviousPage),
+          _buildNotificationPage(_onNextPage, _onPreviousPage),
         ],
       ),
     );
   }
 
-  Widget _buildQuestionPage(String question, String hint, void Function(String) onNext, void Function() onPrevious) {
+  Widget _buildQuestionPage(String question, String hint,
+      void Function(String) onNext, void Function() onPrevious) {
     TextEditingController controller = TextEditingController();
 
     return Padding(
@@ -185,6 +189,81 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                 ElevatedButton(
                   onPressed: () {
                     _onNextPage(controller.text.trim());
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.yellow,
+                  ),
+                  child: Text('Next'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotificationPage(
+      void Function(String) onNext, void Function() onPrevious) {
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Do you agree to receive notifications from the app?',
+            style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.yellow,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          Row(
+            children: [
+              Checkbox(
+                value: _notifyInApp,
+                onChanged: (value) {
+                  setState(() {
+                    _notifyInApp = value ?? false;
+                  });
+                },
+              ),
+              Text('In-App Notifications'),
+            ],
+          ),
+          Row(
+            children: [
+              Checkbox(
+                value: _notifyEmail,
+                onChanged: (value) {
+                  setState(() {
+                    _notifyEmail = value ?? false;
+                  });
+                },
+              ),
+              Text('Email Notifications'),
+            ],
+          ),
+          SizedBox(height: 20.0),
+          Spacer(),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _onPreviousPage,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.yellow,
+                  ),
+                  child: Text('Previous'),
+                ),
+                SizedBox(width: 20.0),
+                ElevatedButton(
+                  onPressed: () {
+                    _onNextPage(
+                        ''); // Passing empty response for notifications page
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.yellow,
