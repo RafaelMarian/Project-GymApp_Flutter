@@ -211,7 +211,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Do you agree to receive notifications from the app?',
+            'How would you like to receive notifications?',
             style: TextStyle(
               fontSize: 24.0,
               fontWeight: FontWeight.bold,
@@ -243,6 +243,22 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                 },
               ),
               Text('Email Notifications'),
+            ],
+          ),
+          Row(
+            children: [
+              Checkbox(
+                value: !(_notifyInApp || _notifyEmail),
+                onChanged: (value) {
+                  setState(() {
+                    if (value ?? false) {
+                      _notifyInApp = false;
+                      _notifyEmail = false;
+                    }
+                  });
+                },
+              ),
+              Text('No Notifications'),
             ],
           ),
           SizedBox(height: 20.0),
