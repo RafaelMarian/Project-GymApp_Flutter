@@ -10,10 +10,10 @@ class QuestionnairePage extends StatefulWidget {
 
 class _QuestionnairePageState extends State<QuestionnairePage> {
   final PageController _pageController = PageController();
-  late UserProfile _userProfile; // Declare the UserProfile but initialize later
-  bool _hasAnsweredFirstQuestion =
-      false; // Track if the first question is answered
+  late UserProfile _userProfile;
+  bool _hasAnsweredFirstQuestion = false;
   final UserProfileService _userProfileService = UserProfileService();
+  bool _isNavigating = false; // Flag to prevent multiple navigations
 
   @override
   void initState() {
@@ -25,17 +25,15 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     String? userId = await _userProfileService.getUserId();
     if (userId != null) {
       setState(() {
-        _userProfile = UserProfile(
-            id: userId); // Initialize UserProfile with the fetched ID
+        _userProfile = UserProfile(id: userId);
       });
     } else {
-      // Handle the case where the user is not logged in or ID is null
       print("Error: User ID is null.");
     }
   }
 
   void _onNextPage(String response) {
-    if (_pageController.page == null) return; // Safeguard against null page
+    if (_pageController.page == null || _isNavigating) return; // Prevent multiple navigations
     int pageIndex = _pageController.page!.toInt();
 
     switch (pageIndex) {
@@ -56,13 +54,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
         break;
       case 5:
         _userProfile.age = response;
-        // Navigate to HomePage after the last question
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(userProfile: _userProfile),
-          ),
-        );
+        _navigateToHomePage(); // Navigate to HomePage after the last question
         return;
     }
 
@@ -72,25 +64,48 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       }
     });
 
-    // Move to the next page
     _pageController.nextPage(
       duration: Duration(milliseconds: 300),
       curve: Curves.easeIn,
     );
   }
 
+  Future<void> _navigateToHomePage() async {
+    if (_isNavigating) return; // Prevent multiple calls to this function
+
+    setState(() {
+      _isNavigating = true; // Set the flag to true to prevent further navigation
+    });
+
+    await Future.delayed(Duration(milliseconds: 300)); // Optional delay to ensure smooth transition
+
+    // Wait for any ongoing PageView animation to finish before navigating
+    if (_pageController.hasClients && _pageController.page!.round() == _pageController.page) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(userProfile: _userProfile),
+        ),
+      );
+    }
+
+    setState(() {
+      _isNavigating = false; // Reset flag after navigation
+    });
+  }
+
   void _onPreviousPage() {
-    // Move to the previous page
-    _pageController.previousPage(
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeIn,
-    );
+    if (!_isNavigating) {
+      _pageController.previousPage(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     if (_userProfile == null) {
-      // Show a loading screen or handle uninitialized UserProfile
       return Scaffold(
         appBar: AppBar(title: Text('Loading...')),
         body: Center(child: CircularProgressIndicator()),
@@ -106,25 +121,18 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
       body: PageView(
         controller: _pageController,
         children: [
-          _buildQuestionPage('What is your name?', 'Enter your name',
-              _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your height?', 'Enter your height',
-              _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your body weight?',
-              'Enter your body weight', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your gender?', 'Select your gender',
-              _onNextPage, _onPreviousPage),
-          _buildQuestionPage('How often do you go to the gym?',
-              'Select frequency', _onNextPage, _onPreviousPage),
-          _buildQuestionPage('What is your age?', 'Enter your age', _onNextPage,
-              _onPreviousPage),
+          _buildQuestionPage('What is your name?', 'Enter your name', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your height?', 'Enter your height', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your body weight?', 'Enter your body weight', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your gender?', 'Select your gender', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('How often do you go to the gym?', 'Select frequency', _onNextPage, _onPreviousPage),
+          _buildQuestionPage('What is your age?', 'Enter your age', _onNextPage, _onPreviousPage),
         ],
       ),
     );
   }
 
-  Widget _buildQuestionPage(String question, String hint,
-      void Function(String) onNext, void Function() onPrevious) {
+  Widget _buildQuestionPage(String question, String hint, void Function(String) onNext, void Function() onPrevious) {
     TextEditingController controller = TextEditingController();
 
     return Padding(
