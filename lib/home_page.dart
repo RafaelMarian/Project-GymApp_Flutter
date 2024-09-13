@@ -189,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => StepsTrackingPage()), // Navigate to StepsTrackingPage
+                        MaterialPageRoute(builder: (context) => StepsCounterPage()), // Navigate to StepsTrackingPage
                       );
                     },
                     child: _buildBox('Steps Counted', 'Track your steps'),
