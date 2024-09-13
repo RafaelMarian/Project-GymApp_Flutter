@@ -6,6 +6,7 @@ import 'cycling_program_selection_page.dart';
 import 'jogging_program_selection_page.dart';
 import 'sleep_input_page.dart';
 import 'water_tracking_page.dart'; // Import WaterTrackingPage
+import 'steps_counter.dart'; // Import StepsTrackingPage
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'user_id_page.dart'; // Import the new User ID page
 
@@ -184,7 +185,15 @@ class _HomePageState extends State<HomePage> {
             Row(
               children: [
                 Expanded(
-                  child: _buildBox('Steps Counted', 'Details here'),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => StepsTrackingPage()), // Navigate to StepsTrackingPage
+                      );
+                    },
+                    child: _buildBox('Steps Counted', 'Track your steps'),
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -311,63 +320,57 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildWorkoutTypeButtons() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => GymProgramSelectionPage(),
-              ),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.yellow,
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () {
+                            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => GymProgramSelectionPage()),
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
+            child: const Text('Gym'),
           ),
-          child: const Text('Gym'),
         ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => YogaProgramSelectionPage(),
-              ),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.yellow,
+        const SizedBox(width: 10),
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => YogaProgramSelectionPage()),
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
+            child: const Text('Yoga'),
           ),
-          child: const Text('Yoga'),
         ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CyclingProgramSelectionPage(),
-              ),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.yellow,
+        const SizedBox(width: 10),
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CyclingProgramSelectionPage()),
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
+            child: const Text('Cycling'),
           ),
-          child: const Text('Cycling'),
         ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => JoggingProgramSelectionPage(),
-              ),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.yellow,
+        const SizedBox(width: 10),
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => JoggingProgramSelectionPage()),
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
+            child: const Text('Jogging'),
           ),
-          child: const Text('Jogging'),
         ),
       ],
     );
@@ -376,17 +379,27 @@ class _HomePageState extends State<HomePage> {
   Widget _buildExercisesSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        Text(
-          'Exercises for Today',
+      children: [
+        const Text(
+          'Exercises',
           style: TextStyle(fontSize: 18, color: Colors.yellow),
         ),
-        SizedBox(height: 10),
-        Text(
-          'Details here...',
-          style: TextStyle(fontSize: 16, color: Colors.yellow),
+        const SizedBox(height: 10),
+        SizedBox(
+          height: 150,
+          child: Card(
+            color: Colors.grey[700],
+            child: const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Your exercises will appear here',
+                style: TextStyle(fontSize: 16, color: Colors.yellow),
+              ),
+            ),
+          ),
         ),
       ],
     );
   }
 }
+
