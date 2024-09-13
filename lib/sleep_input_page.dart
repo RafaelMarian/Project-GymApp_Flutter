@@ -72,50 +72,57 @@ class _SleepInputPageState extends State<SleepInputPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sleep Tracking'),
+        title: const Text(
+          'Sleep Tracking',
+          style: TextStyle(color: Colors.white), // Text color to white
+        ),
         backgroundColor: Colors.grey[800],
+        centerTitle: true, // Center the title
       ),
-      backgroundColor: Colors.grey[800],
-      body: Center( // Center the content
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // Center the column vertically
-          children: [
-            ElevatedButton(
-              onPressed: () => _selectSleepTime(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow, // Button color
-                minimumSize: const Size(200, 50), // Smaller button size
+      backgroundColor: Colors.black, // Set the background color of the entire page to black
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () => _selectSleepTime(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow, // Button color
+                  minimumSize: const Size(200, 50), // Button size
+                ),
+                child: Text(
+                  sleepTime == null ? 'Set Sleep Time' : 'Sleep Time: ${sleepTime?.format(context)}',
+                  style: const TextStyle(color: Colors.black, fontSize: 16), // Text size
+                ),
               ),
-              child: Text(
-                sleepTime == null ? 'Set Sleep Time' : 'Sleep Time: ${sleepTime?.format(context)}',
-                style: const TextStyle(color: Colors.black, fontSize: 16), // Adjusted text size
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => _selectWakeUpTime(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow, // Button color
+                  minimumSize: const Size(200, 50), // Button size
+                ),
+                child: Text(
+                  wakeUpTime == null ? 'Set Wake Up Time' : 'Wake Up Time: ${wakeUpTime?.format(context)}',
+                  style: const TextStyle(color: Colors.black, fontSize: 16), // Text size
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _selectWakeUpTime(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow, // Button color
-                minimumSize: const Size(200, 50), // Smaller button size
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _saveSleepData,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow, // Button color
+                  minimumSize: const Size(200, 50), // Button size
+                ),
+                child: const Text(
+                  'Save Sleep Data',
+                  style: TextStyle(color: Colors.black, fontSize: 16), // Text size
+                ),
               ),
-              child: Text(
-                wakeUpTime == null ? 'Set Wake Up Time' : 'Wake Up Time: ${wakeUpTime?.format(context)}',
-                style: const TextStyle(color: Colors.black, fontSize: 16), // Adjusted text size
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _saveSleepData,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow, // Button color
-                minimumSize: const Size(200, 50), // Smaller button size
-              ),
-              child: const Text(
-                'Save Sleep Data',
-                style: TextStyle(color: Colors.black, fontSize: 16), // Adjusted text size
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
