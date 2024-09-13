@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'user_profile.dart';
-import 'gym_program_selection_page.dart'; // Import GymProgramSelectionPage
-import 'yoga_program_selection_page.dart'; // Import YogaProgramSelectionPage
-import 'cycling_program_selection_page.dart'; // Import CyclingProgramSelectionPage
-import 'jogging_program_selection_page.dart'; // Import JoggingProgramSelectionPage
+import 'gym_program_selection_page.dart';
+import 'yoga_program_selection_page.dart';
+import 'cycling_program_selection_page.dart';
+import 'jogging_program_selection_page.dart';
 import 'sleep_input_page.dart';
+import 'water_tracking_page.dart'; // Import WaterTrackingPage
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart'; // Ensure Firebase is initialized
 import 'user_id_page.dart'; // Import the new User ID page
 
 class HomePage extends StatefulWidget {
@@ -48,13 +48,13 @@ class _HomePageState extends State<HomePage> {
       for (var doc in snapshot.docs) {
         final data = doc.data();
         final duration = data['sleep_duration'] as String?;
-        
+
         if (duration != null) {
           final parts = duration.split(':');
           final hours = int.parse(parts[0]);
           final minutes = int.parse(parts[1]);
           final totalMinutes = (hours * 60) + minutes;
-          
+
           sleepDurations.add(totalMinutes);
           totalSleep += totalMinutes;
           count++;
@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
       onTap: () async {
         final sleepDuration = await Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SleepInputPage()), // Navigate to SleepInputPage
+          MaterialPageRoute(builder: (context) => SleepInputPage()),
         );
 
         if (sleepDuration != null) {
@@ -161,7 +161,7 @@ class _HomePageState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => UserIdPage(userId: userId), // Navigate to the UserIdPage
+        builder: (context) => UserIdPage(userId: userId),
       ),
     );
   }
@@ -200,7 +200,15 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: _buildBox('Fitness News', 'Latest news here'),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => WaterTrackingPage()), // Navigate to WaterTrackingPage
+                      );
+                    },
+                    child: _buildBox('Water Tracking', 'Set and track your goal'),
+                  ),
                 ),
               ],
             ),
@@ -222,7 +230,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.grey[800], // Set the background color to grey
+        color: Colors.grey[800],
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -255,7 +263,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 // Handle profile button press
               },
-            ), 
+            ),
           ],
         ),
       ),
@@ -310,7 +318,7 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => GymProgramSelectionPage(), // Navigate to Gym selection page
+                builder: (context) => GymProgramSelectionPage(),
               ),
             );
           },
@@ -324,7 +332,7 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => YogaProgramSelectionPage(), // Navigate to Yoga selection page
+                builder: (context) => YogaProgramSelectionPage(),
               ),
             );
           },
@@ -338,7 +346,7 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CyclingProgramSelectionPage(), // Navigate to Cycling selection page
+                builder: (context) => CyclingProgramSelectionPage(),
               ),
             );
           },
@@ -352,7 +360,7 @@ class _HomePageState extends State<HomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => JoggingProgramSelectionPage(), // Navigate to Jogging selection page
+                builder: (context) => JoggingProgramSelectionPage(),
               ),
             );
           },
@@ -366,17 +374,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildExercisesSection() {
-    return Container(
-      child: const Card(
-        color: Colors.yellow,
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
-            'Exercises',
-            style: TextStyle(fontSize: 18, color: Colors.black),
-          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        Text(
+          'Exercises for Today',
+          style: TextStyle(fontSize: 18, color: Colors.yellow),
         ),
-      ),
+        SizedBox(height: 10),
+        Text(
+          'Details here...',
+          style: TextStyle(fontSize: 16, color: Colors.yellow),
+        ),
+      ],
     );
   }
 }
