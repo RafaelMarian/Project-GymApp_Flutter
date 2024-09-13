@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddExerciseGymPage extends StatefulWidget {
+  const AddExerciseGymPage({super.key});
+
   @override
   _AddExerciseGymPageState createState() => _AddExerciseGymPageState();
 }
@@ -34,7 +36,7 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
         'muscle_group': muscleGroup,
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Exercise added successfully')),
+        const SnackBar(content: Text('Exercise added successfully')),
       );
       _nameController.clear();
       _descriptionController.clear();
@@ -45,12 +47,12 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter valid numbers for reps and weight')),
+        const SnackBar(content: Text('Please enter valid numbers for reps and weight')),
       );
     }
   } else {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Please fill in all fields')),
+      const SnackBar(content: Text('Please fill in all fields')),
     );
   }
 }
@@ -59,7 +61,7 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Exercise'),
+        title: const Text('Add Exercise'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
@@ -69,39 +71,39 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Exercise Name'),
-              style: TextStyle(color: Colors.white),
+              decoration: const InputDecoration(labelText: 'Exercise Name'),
+              style: const TextStyle(color: Colors.white),
               cursorColor: Colors.yellow,
             ),
             TextField(
               controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Description'),
-              style: TextStyle(color: Colors.white),
+              decoration: const InputDecoration(labelText: 'Description'),
+              style: const TextStyle(color: Colors.white),
               cursorColor: Colors.yellow,
             ),
             TextField(
               controller: _repsController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Number of Reps'),
-              style: TextStyle(color: Colors.white),
+              decoration: const InputDecoration(labelText: 'Number of Reps'),
+              style: const TextStyle(color: Colors.white),
               cursorColor: Colors.yellow,
             ),
             TextField(
               controller: _kgController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Weight (kg)'),
-              style: TextStyle(color: Colors.white),
+              decoration: const InputDecoration(labelText: 'Weight (kg)'),
+              style: const TextStyle(color: Colors.white),
               cursorColor: Colors.yellow,
             ),
             DropdownButton<String>(
               value: _selectedMuscleGroup,
-              hint: Text('Select Muscle Group', style: TextStyle(color: Colors.white)),
+              hint: const Text('Select Muscle Group', style: TextStyle(color: Colors.white)),
               dropdownColor: Colors.grey[800],
               items: <String>['Chest', 'Back', 'Biceps', 'Triceps', 'Legs', 'Abs', 'Shoulders']
                   .map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value, style: TextStyle(color: Colors.white)),
+                  child: Text(value, style: const TextStyle(color: Colors.white)),
                 );
               }).toList(),
               onChanged: (newValue) {
@@ -110,13 +112,13 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
                 });
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _addExercise,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
               ),
-              child: Text('Add Exercise'),
+              child: const Text('Add Exercise'),
             ),
           ],
         ),

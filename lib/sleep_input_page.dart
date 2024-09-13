@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SleepInputPage extends StatefulWidget {
+  const SleepInputPage({super.key});
+
   @override
   _SleepInputPageState createState() => _SleepInputPageState();
 }
@@ -63,14 +65,14 @@ class _SleepInputPageState extends State<SleepInputPage> {
     final wakeUpDateTime = DateTime(now.year, now.month, now.day, wakeUp.hour, wakeUp.minute);
 
     final duration = wakeUpDateTime.difference(sleepDateTime);
-    return duration.inHours.toString().padLeft(2, '0') + ':' + (duration.inMinutes % 60).toString().padLeft(2, '0');
+    return '${duration.inHours.toString().padLeft(2, '0')}:${(duration.inMinutes % 60).toString().padLeft(2, '0')}';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sleep Tracking'),
+        title: const Text('Sleep Tracking'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
@@ -82,33 +84,33 @@ class _SleepInputPageState extends State<SleepInputPage> {
               onPressed: () => _selectSleepTime(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow, // Button color
-                minimumSize: Size(200, 50), // Smaller button size
+                minimumSize: const Size(200, 50), // Smaller button size
               ),
               child: Text(
                 sleepTime == null ? 'Set Sleep Time' : 'Sleep Time: ${sleepTime?.format(context)}',
-                style: TextStyle(color: Colors.black, fontSize: 16), // Adjusted text size
+                style: const TextStyle(color: Colors.black, fontSize: 16), // Adjusted text size
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _selectWakeUpTime(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow, // Button color
-                minimumSize: Size(200, 50), // Smaller button size
+                minimumSize: const Size(200, 50), // Smaller button size
               ),
               child: Text(
                 wakeUpTime == null ? 'Set Wake Up Time' : 'Wake Up Time: ${wakeUpTime?.format(context)}',
-                style: TextStyle(color: Colors.black, fontSize: 16), // Adjusted text size
+                style: const TextStyle(color: Colors.black, fontSize: 16), // Adjusted text size
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _saveSleepData,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow, // Button color
-                minimumSize: Size(200, 50), // Smaller button size
+                minimumSize: const Size(200, 50), // Smaller button size
               ),
-              child: Text(
+              child: const Text(
                 'Save Sleep Data',
                 style: TextStyle(color: Colors.black, fontSize: 16), // Adjusted text size
               ),

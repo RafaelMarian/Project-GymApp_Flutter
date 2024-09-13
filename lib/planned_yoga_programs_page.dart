@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PlannedYogaProgramsPage extends StatefulWidget {
+  const PlannedYogaProgramsPage({super.key});
+
   @override
   _PlannedYogaProgramsPageState createState() =>
       _PlannedYogaProgramsPageState();
@@ -11,12 +13,12 @@ class _PlannedYogaProgramsPageState extends State<PlannedYogaProgramsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Planned Yoga Programs'),
+        title: const Text('Planned Yoga Programs'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
       body: ListView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         children: [
           _buildProgramCard('Beginner Yoga'),
           _buildProgramCard('Intermediate Yoga'),
@@ -35,7 +37,7 @@ class _PlannedYogaProgramsPageState extends State<PlannedYogaProgramsPage> {
       child: ListTile(
         title: Text(
           programName,
-          style: TextStyle(fontSize: 18, color: Colors.yellow),
+          style: const TextStyle(fontSize: 18, color: Colors.yellow),
         ),
         onTap: () {
           // Handle program selection

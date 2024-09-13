@@ -4,6 +4,8 @@ import 'planned_cycling_programs_page.dart';
 import 'my_personal_trainer_plan_cycling_page.dart'; // Import Personal Trainer Plan page
 
 class CyclingProgramSelectionPage extends StatefulWidget {
+  const CyclingProgramSelectionPage({super.key});
+
   @override
   _CyclingProgramSelectionPageState createState() =>
       _CyclingProgramSelectionPageState();
@@ -14,7 +16,7 @@ class _CyclingProgramSelectionPageState extends State<CyclingProgramSelectionPag
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cycling Program Selection'),
+        title: const Text('Cycling Program Selection'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
@@ -33,11 +35,11 @@ class _CyclingProgramSelectionPageState extends State<CyclingProgramSelectionPag
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50),
+                minimumSize: const Size(200, 50),
               ),
-              child: Text('Custom Program'),
+              child: const Text('Custom Program'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -49,11 +51,11 @@ class _CyclingProgramSelectionPageState extends State<CyclingProgramSelectionPag
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50),
+                minimumSize: const Size(200, 50),
               ),
-              child: Text('Planned Programs'),
+              child: const Text('Planned Programs'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -65,9 +67,9 @@ class _CyclingProgramSelectionPageState extends State<CyclingProgramSelectionPag
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50),
+                minimumSize: const Size(200, 50),
               ),
-              child: Text('My Personal Trainer Plan'),
+              child: const Text('My Personal Trainer Plan'),
             ),
           ],
         ),

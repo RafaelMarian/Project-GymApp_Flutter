@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CustomYogaProgramPage extends StatefulWidget {
+  const CustomYogaProgramPage({super.key});
+
   @override
   _CustomYogaProgramPageState createState() => _CustomYogaProgramPageState();
 }
@@ -10,12 +12,12 @@ class _CustomYogaProgramPageState extends State<CustomYogaProgramPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Custom Yoga Program'),
+        title: const Text('Custom Yoga Program'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

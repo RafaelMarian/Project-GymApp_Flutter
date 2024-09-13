@@ -4,6 +4,8 @@ import 'planned_yoga_programs_page.dart';
 import 'my_personal_trainer_plan_yoga_page.dart'; // Import Personal Trainer Plan page
 
 class YogaProgramSelectionPage extends StatefulWidget {
+  const YogaProgramSelectionPage({super.key});
+
   @override
   _YogaProgramSelectionPageState createState() =>
       _YogaProgramSelectionPageState();
@@ -14,7 +16,7 @@ class _YogaProgramSelectionPageState extends State<YogaProgramSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Yoga Program Selection'),
+        title: const Text('Yoga Program Selection'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
@@ -33,11 +35,11 @@ class _YogaProgramSelectionPageState extends State<YogaProgramSelectionPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50),
+                minimumSize: const Size(200, 50),
               ),
-              child: Text('Custom Program'),
+              child: const Text('Custom Program'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -49,11 +51,11 @@ class _YogaProgramSelectionPageState extends State<YogaProgramSelectionPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50),
+                minimumSize: const Size(200, 50),
               ),
-              child: Text('Planned Programs'),
+              child: const Text('Planned Programs'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -65,9 +67,9 @@ class _YogaProgramSelectionPageState extends State<YogaProgramSelectionPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50),
+                minimumSize: const Size(200, 50),
               ),
-              child: Text('My Personal Trainer Plan'),
+              child: const Text('My Personal Trainer Plan'),
             ),
           ],
         ),

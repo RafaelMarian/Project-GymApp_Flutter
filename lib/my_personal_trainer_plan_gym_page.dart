@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyPersonalTrainerPlanPageGym extends StatefulWidget {
+  const MyPersonalTrainerPlanPageGym({super.key});
+
   @override
   _AllTrainingPlansPageState createState() => _AllTrainingPlansPageState();
 }
@@ -52,20 +54,20 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete Plan'),
-          content: Text('Are you sure you want to delete this training plan? This action cannot be undone.'),
+          title: const Text('Delete Plan'),
+          content: const Text('Are you sure you want to delete this training plan? This action cannot be undone.'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false); // Cancel deletion
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true); // Confirm deletion
               },
-              child: Text(
+              child: const Text(
                 'Delete',
                 style: TextStyle(color: Colors.red),
               ),
@@ -85,7 +87,7 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
     try {
       await FirebaseFirestore.instance.collection('training-plans').doc(planID).delete();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Training plan deleted successfully')),
+        const SnackBar(content: Text('Training plan deleted successfully')),
       );
 
       // Re-fetch the plans after deletion to update the list
@@ -101,10 +103,10 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Training Plans'),
+        title: const Text('All Training Plans'),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : plans.isNotEmpty
               ? ListView.builder(
                   itemCount: plans.length,
@@ -119,11 +121,11 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
                     final days = plan['days'] as Map<String, dynamic>? ?? {};
 
                     return Card(
-                      margin: EdgeInsets.all(8.0),
+                      margin: const EdgeInsets.all(8.0),
                       child: ExpansionTile(
                         title: Text(
                           '$muscleGroup by $trainerName for $clientName',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text('Workout Type: $workoutType, Difficulty: $difficulty'),
                         children: [
@@ -136,7 +138,7 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     '$day:',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 ...exercises.map((exercise) {
@@ -146,16 +148,16 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
                                       'Reps: ${exercise['reps']}, Weight: ${exercise['weight']}kg, Rest: ${exercise['restTime']}s',
                                     ),
                                   );
-                                }).toList(),
+                                }),
                               ],
                             );
-                          }).toList(),
+                          }),
                           ElevatedButton(
                             onPressed: () => _confirmDeleteTrainingPlan(planID),
-                            child: Text('Delete Plan'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
                             ),
+                            child: Text('Delete Plan'),
                           ),
                         ],
                       ),
@@ -167,7 +169,7 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
                     errorMessage.isNotEmpty
                         ? errorMessage
                         : 'No training plans available.',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
     );

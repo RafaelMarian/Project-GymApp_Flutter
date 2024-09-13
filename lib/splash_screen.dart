@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:gym_buddies/login_page.dart'; // Update with your actual path
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }

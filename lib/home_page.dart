@@ -12,14 +12,14 @@ import 'user_id_page.dart'; // Import the new User ID page
 class HomePage extends StatefulWidget {
   final UserProfile userProfile;
 
-  HomePage({required this.userProfile});
+  const HomePage({super.key, required this.userProfile});
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedWorkoutType = 0;
+  final int _selectedWorkoutType = 0;
   String _sleepDuration = 'Not available';
   double _sleepRating = 0.0;
 
@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _fetchSleepData() async {
     final now = DateTime.now();
-    final startDate = now.subtract(Duration(days: 7));
+    final startDate = now.subtract(const Duration(days: 7));
 
     try {
       final snapshot = await FirebaseFirestore.instance
@@ -263,11 +263,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildWorkoutProgressBox() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      child: Card(
+      child: const Card(
         color: Colors.yellow,
-        child: const Padding(
+        child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
             'Workout Progress',
@@ -367,9 +367,9 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildExercisesSection() {
     return Container(
-      child: Card(
+      child: const Card(
         color: Colors.yellow,
-        child: const Padding(
+        child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
             'Exercises',

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PlannedGymProgramsPage extends StatefulWidget {
+  const PlannedGymProgramsPage({super.key});
+
   @override
   _PlannedGymProgramsPageState createState() => _PlannedGymProgramsPageState();
 }
@@ -38,7 +40,7 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Planned Gym Programs'),
+        title: const Text('Planned Gym Programs'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
@@ -47,12 +49,12 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
           // Dropdown for difficulty
           DropdownButton<String>(
             value: selectedDifficulty,
-            hint: Text('Select Difficulty', style: TextStyle(color: Colors.white)),
+            hint: const Text('Select Difficulty', style: TextStyle(color: Colors.white)),
             dropdownColor: Colors.grey[800],
             items: <String>['Beginner', 'Intermediate', 'Advanced'].map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value, style: TextStyle(color: Colors.white)),
+                child: Text(value, style: const TextStyle(color: Colors.white)),
               );
             }).toList(),
             onChanged: (newValue) {
@@ -64,7 +66,7 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
           // Dropdown for workout type
           DropdownButton<String>(
             value: selectedWorkoutType,
-            hint: Text('Select Workout Type', style: TextStyle(color: Colors.white)),
+            hint: const Text('Select Workout Type', style: TextStyle(color: Colors.white)),
             dropdownColor: Colors.grey[800],
             items: <String>[
               'Full Body', 
@@ -75,7 +77,7 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
             ].map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value, style: TextStyle(color: Colors.white)),
+                child: Text(value, style: const TextStyle(color: Colors.white)),
               );
             }).toList(),
             onChanged: (newValue) {
@@ -87,12 +89,12 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
           // Dropdown for gender
           DropdownButton<String>(
             value: selectedGender,
-            hint: Text('Select Gender', style: TextStyle(color: Colors.white)),
+            hint: const Text('Select Gender', style: TextStyle(color: Colors.white)),
             dropdownColor: Colors.grey[800],
             items: <String>['Male', 'Female'].map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value, style: TextStyle(color: Colors.white)),
+                child: Text(value, style: const TextStyle(color: Colors.white)),
               );
             }).toList(),
             onChanged: (newValue) {
@@ -103,7 +105,7 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
           ),
           ElevatedButton(
             onPressed: _fetchWorkoutPlan,
-            child: Text('Fetch Workout Plan'),
+            child: const Text('Fetch Workout Plan'),
           ),
           Expanded(
             child: workoutRoutine != null
@@ -124,14 +126,14 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
                         child: ListTile(
                           title: Text(
                             '$dayName: ${day['muscle_groups'].join(', ')}',
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                           ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: exercises.map<Widget>((exercise) {
                               return Text(
                                 '${exercise['name']} - ${exercise['reps']} reps',
-                                style: TextStyle(color: Colors.grey),
+                                style: const TextStyle(color: Colors.grey),
                               );
                             }).toList(),
                           ),
@@ -139,7 +141,7 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
                       );
                     },
                   )
-                : Center(
+                : const Center(
                     child: Text(
                       'No workout plan selected.',
                       style: TextStyle(color: Colors.white),

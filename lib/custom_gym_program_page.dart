@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CustomGymProgramPage extends StatefulWidget {
+  const CustomGymProgramPage({super.key});
+
   @override
   _CustomGymProgramPageState createState() => _CustomGymProgramPageState();
 }
@@ -33,13 +35,13 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
 
       setState(() {
         defaultExercises = defaultExercisesSnapshot.docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>;
+          final data = doc.data();
           data['id'] = doc.id; // Add document ID to the data
           return data;
         }).toList();
 
         userExercises = userExercisesSnapshot.docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>;
+          final data = doc.data();
           data['id'] = doc.id; // Add document ID to the data
           return data;
         }).toList();
@@ -72,7 +74,7 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
 
     await batch.commit();
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Exercises updated successfully')),
+      const SnackBar(content: Text('Exercises updated successfully')),
     );
   }
 
@@ -80,7 +82,7 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
     try {
       await FirebaseFirestore.instance.collection('exercises').doc(exerciseId).delete();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Exercise deleted successfully')),
+        const SnackBar(content: Text('Exercise deleted successfully')),
       );
       _fetchExercisesForGroup(); // Refresh the list
     } catch (e) {
@@ -94,7 +96,7 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Custom Gym Program'),
+        title: const Text('Custom Gym Program'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
@@ -102,13 +104,13 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
         children: [
           DropdownButton<String>(
             value: selectedMuscleGroup,
-            hint: Text('Select Muscle Group', style: TextStyle(color: Colors.white)),
+            hint: const Text('Select Muscle Group', style: TextStyle(color: Colors.white)),
             dropdownColor: Colors.grey[800],
             items: <String>['Chest', 'Back', 'Biceps', 'Triceps', 'Legs', 'Abs', 'Shoulders']
                 .map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value, style: TextStyle(color: Colors.white)),
+                child: Text(value, style: const TextStyle(color: Colors.white)),
               );
             }).toList(),
             onChanged: (newValue) {
@@ -132,7 +134,7 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
                   child: ExpansionTile(
                     title: Text(
                       exerciseName,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                     children: [
                       Padding(
@@ -142,12 +144,12 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
                           children: [
                             Text(
                               exerciseDescription,
-                              style: TextStyle(color: Colors.grey),
+                              style: const TextStyle(color: Colors.grey),
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             // Reps input field
                             TextField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Enter Reps',
                                 labelStyle: TextStyle(color: Colors.black),
                                 border: OutlineInputBorder(),
@@ -163,10 +165,10 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
                                 });
                               },
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             // KG input field
                             TextField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Enter Weight (kg)',
                                 labelStyle: TextStyle(color: Colors.black),
                                 border: OutlineInputBorder(),
@@ -182,7 +184,7 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
                                 });
                               },
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             // Delete button for user-added exercises
                             if (!isDefault)
                               ElevatedButton(
@@ -190,7 +192,7 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.red,
                                 ),
-                                child: Text('Delete'),
+                                child: const Text('Delete'),
                               ),
                           ],
                         ),
@@ -205,7 +207,7 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _updateExercisesInFirestore,
-        child: Icon(Icons.check),
+        child: const Icon(Icons.check),
       ),
     );
   }

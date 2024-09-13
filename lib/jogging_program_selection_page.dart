@@ -4,6 +4,8 @@ import 'planned_jogging_programs_page.dart';
 import 'my_personal_trainer_plan_page.dart'; // Import the new "My Personal Trainer Plan" page
 
 class JoggingProgramSelectionPage extends StatefulWidget {
+  const JoggingProgramSelectionPage({super.key});
+
   @override
   _JoggingProgramSelectionPageState createState() =>
       _JoggingProgramSelectionPageState();
@@ -15,7 +17,7 @@ class _JoggingProgramSelectionPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Jogging Program Selection'),
+        title: const Text('Jogging Program Selection'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
@@ -34,11 +36,11 @@ class _JoggingProgramSelectionPageState
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50), // Set the same size for all buttons
+                minimumSize: const Size(200, 50), // Set the same size for all buttons
               ),
-              child: Text('Custom Program'),
+              child: const Text('Custom Program'),
             ),
-            SizedBox(height: 20), // Add spacing between buttons
+            const SizedBox(height: 20), // Add spacing between buttons
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -50,11 +52,11 @@ class _JoggingProgramSelectionPageState
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50),
+                minimumSize: const Size(200, 50),
               ),
-              child: Text('Planned Programs'),
+              child: const Text('Planned Programs'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -66,9 +68,9 @@ class _JoggingProgramSelectionPageState
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50),
+                minimumSize: const Size(200, 50),
               ),
-              child: Text('My Personal Trainer Plan'),
+              child: const Text('My Personal Trainer Plan'),
             ),
           ],
         ),

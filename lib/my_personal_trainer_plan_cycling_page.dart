@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MyPersonalTrainerPlanCyclingPage extends StatefulWidget {
+  const MyPersonalTrainerPlanCyclingPage({super.key});
+
   @override
   _MyPersonalTrainerPlanCyclingPageState createState() =>
       _MyPersonalTrainerPlanCyclingPageState();
@@ -12,7 +14,7 @@ class _MyPersonalTrainerPlanCyclingPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Personal Trainer Plan (Cycling)'),
+        title: const Text('My Personal Trainer Plan (Cycling)'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
@@ -21,16 +23,16 @@ class _MyPersonalTrainerPlanCyclingPageState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Personalized Cycling Plan',
               style: TextStyle(fontSize: 24, color: Colors.yellow),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Here is your personalized cycling plan tailored to improve your stamina and endurance.',
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Expanded(
               child: ListView(
                 children: [
@@ -53,11 +55,11 @@ class _MyPersonalTrainerPlanCyclingPageState
       child: ListTile(
         title: Text(
           workoutName,
-          style: TextStyle(color: Colors.yellow, fontSize: 18),
+          style: const TextStyle(color: Colors.yellow, fontSize: 18),
         ),
         subtitle: Text(
           details,
-          style: TextStyle(color: Colors.white70, fontSize: 16),
+          style: const TextStyle(color: Colors.white70, fontSize: 16),
         ),
       ),
     );

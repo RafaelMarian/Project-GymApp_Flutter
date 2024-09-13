@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart'; // Ensure this impo
 import 'dart:convert'; // Import this for JSON encoding/decoding
 
 class CreateTrainingPlanPageGym extends StatefulWidget {
+  const CreateTrainingPlanPageGym({super.key});
+
   @override
   _CreateTrainingPlanPageState createState() => _CreateTrainingPlanPageState();
 }
@@ -40,7 +42,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
   Future<void> _submitPlan() async {
     if (clientID == null || clientID!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Client ID is required')),
+        const SnackBar(content: Text('Client ID is required')),
       );
       return;
     }
@@ -59,11 +61,11 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
         'days': days,
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Plan submitted successfully')),
+        const SnackBar(content: Text('Plan submitted successfully')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error submitting plan')),
+        const SnackBar(content: Text('Error submitting plan')),
       );
     }
   }
@@ -98,33 +100,33 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Training Plan'),
+        title: const Text('Create Training Plan'),
         backgroundColor: Colors.grey[800],
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
               onChanged: (value) => clientID = value,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Client ID',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               onChanged: (value) => clientName = value, // Update clientName, not clientID
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Client Name',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             DropdownButton<String>(
               value: difficulty,
-              hint: Text('Select Difficulty'),
+              hint: const Text('Select Difficulty'),
               items: ['Beginner', 'Intermediate', 'Advanced']
                   .map((difficulty) => DropdownMenuItem<String>(
                         value: difficulty,
@@ -137,10 +139,10 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                 });
               },
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             DropdownButton<String>(
               value: workoutType,
-              hint: Text('Select Workout Type'),
+              hint: const Text('Select Workout Type'),
               items: [
                 'Full Body',
                 'One Muscle Group Per Day',
@@ -159,10 +161,10 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                 });
               },
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             DropdownButton<String>(
               value: gender,
-              hint: Text('Select Gender'),
+              hint: const Text('Select Gender'),
               items: ['Male', 'Female', 'Other']
                   .map((gender) => DropdownMenuItem<String>(
                         value: gender,
@@ -175,10 +177,10 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                 });
               },
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             DropdownButton<String>(
               value: selectedDay,
-              hint: Text('Select Day of the Week'),
+              hint: const Text('Select Day of the Week'),
               items: [
                 'Monday',
                 'Tuesday',
@@ -200,15 +202,15 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                 });
               },
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: _deleteAllExercises,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
               ),
-              child: Text('Delete All Exercises'),
+              child: const Text('Delete All Exercises'),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
                 itemCount: exercises.length,
@@ -219,7 +221,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                     subtitle: Text(
                         'Reps: ${exercise['reps']}, Weight: ${exercise['weight']}kg, Rest: ${exercise['restTime']}s'),
                     trailing: IconButton(
-                      icon: Icon(Icons.delete),
+                      icon: const Icon(Icons.delete),
                       onPressed: () => _deleteExercise(index),
                     ),
                   );
@@ -237,13 +239,13 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                     double weight = 0.0;
                     int restTime = 0;
                     return AlertDialog(
-                      title: Text('Add Exercise'),
+                      title: const Text('Add Exercise'),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextField(
                             onChanged: (value) => exerciseName = value,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'Exercise Name',
                               border: OutlineInputBorder(),
                             ),
@@ -251,15 +253,15 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                           TextField(
                             keyboardType: TextInputType.number,
                             onChanged: (value) => reps = int.tryParse(value) ?? 0,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'Reps',
                               border: OutlineInputBorder(),
                             ),
                           ),
                           TextField(
-                            keyboardType: TextInputType.numberWithOptions(decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             onChanged: (value) => weight = double.tryParse(value) ?? 0.0,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'Weight (kg)',
                               border: OutlineInputBorder(),
                             ),
@@ -267,7 +269,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                           TextField(
                             keyboardType: TextInputType.number,
                             onChanged: (value) => restTime = int.tryParse(value) ?? 0,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'Rest Time (s)',
                               border: OutlineInputBorder(),
                             ),
@@ -280,7 +282,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                             _addExercise(exerciseName, reps, weight, restTime);
                             Navigator.of(context).pop();
                           },
-                          child: Text('Add'),
+                          child: const Text('Add'),
                         ),
                       ],
                     );
@@ -290,15 +292,15 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
               ),
-              child: Text('Add Exercise'),
+              child: const Text('Add Exercise'),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: _submitPlan,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
               ),
-              child: Text('Submit Plan'),
+              child: const Text('Submit Plan'),
             ),
           ],
         ),

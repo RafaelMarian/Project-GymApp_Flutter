@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MyPersonalTrainerPlanYogaPage extends StatefulWidget {
+  const MyPersonalTrainerPlanYogaPage({super.key});
+
   @override
   _MyPersonalTrainerPlanYogaPageState createState() =>
       _MyPersonalTrainerPlanYogaPageState();
@@ -12,7 +14,7 @@ class _MyPersonalTrainerPlanYogaPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Personal Trainer Plan (Yoga)'),
+        title: const Text('My Personal Trainer Plan (Yoga)'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
@@ -21,16 +23,16 @@ class _MyPersonalTrainerPlanYogaPageState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Personalized Yoga Plan',
               style: TextStyle(fontSize: 24, color: Colors.yellow),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Here is your personalized yoga routine to help you with flexibility and mindfulness.',
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Expanded(
               child: ListView(
                 children: [
@@ -53,11 +55,11 @@ class _MyPersonalTrainerPlanYogaPageState
       child: ListTile(
         title: Text(
           workoutName,
-          style: TextStyle(color: Colors.yellow, fontSize: 18),
+          style: const TextStyle(color: Colors.yellow, fontSize: 18),
         ),
         subtitle: Text(
           details,
-          style: TextStyle(color: Colors.white70, fontSize: 16),
+          style: const TextStyle(color: Colors.white70, fontSize: 16),
         ),
       ),
     );

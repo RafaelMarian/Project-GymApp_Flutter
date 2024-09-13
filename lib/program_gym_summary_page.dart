@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ProgramGymSummaryPage extends StatefulWidget {
   final List<Map<String, dynamic>> exercises;
 
-  ProgramGymSummaryPage({required this.exercises});
+  const ProgramGymSummaryPage({super.key, required this.exercises});
 
   @override
   _ProgramGymSummaryPageState createState() => _ProgramGymSummaryPageState();
@@ -14,7 +14,7 @@ class _ProgramGymSummaryPageState extends State<ProgramGymSummaryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Program Summary'),
+        title: const Text('Program Summary'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
@@ -23,13 +23,13 @@ class _ProgramGymSummaryPageState extends State<ProgramGymSummaryPage> {
         itemBuilder: (context, index) {
           final exercise = widget.exercises[index];
           return ListTile(
-            title: Text(exercise['exercise'], style: TextStyle(color: Colors.yellow)),
+            title: Text(exercise['exercise'], style: const TextStyle(color: Colors.yellow)),
             subtitle: Row(
               children: [
                 Expanded(
                   child: TextField(
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(labelText: 'Reps'),
+                    decoration: const InputDecoration(labelText: 'Reps'),
                     onChanged: (value) {
                       setState(() {
                         exercise['reps'] = int.tryParse(value) ?? 0;
@@ -37,11 +37,11 @@ class _ProgramGymSummaryPageState extends State<ProgramGymSummaryPage> {
                     },
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: TextField(
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(labelText: 'Weight (kg)'),
+                    decoration: const InputDecoration(labelText: 'Weight (kg)'),
                     onChanged: (value) {
                       setState(() {
                         exercise['weight'] = int.tryParse(value) ?? 0;
@@ -52,7 +52,7 @@ class _ProgramGymSummaryPageState extends State<ProgramGymSummaryPage> {
               ],
             ),
             trailing: IconButton(
-              icon: Icon(Icons.delete, color: Colors.red),
+              icon: const Icon(Icons.delete, color: Colors.red),
               onPressed: () {
                 setState(() {
                   widget.exercises.removeAt(index);

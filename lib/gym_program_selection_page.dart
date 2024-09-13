@@ -6,6 +6,8 @@ import 'add_exercise_page_gym.dart'; // Import AddExercisePage
 import 'create_training_plan_gym.dart'; // Import CreateTrainingPlanGymPage
 
 class GymProgramSelectionPage extends StatefulWidget {
+  const GymProgramSelectionPage({super.key});
+
   @override
   _GymProgramSelectionPageState createState() =>
       _GymProgramSelectionPageState();
@@ -16,7 +18,7 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gym Program Selection'),
+        title: const Text('Gym Program Selection'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
@@ -35,11 +37,11 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50),
+                minimumSize: const Size(200, 50),
               ),
-              child: Text('Custom Program'),
+              child: const Text('Custom Program'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -51,11 +53,11 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50),
+                minimumSize: const Size(200, 50),
               ),
-              child: Text('Planned Programs'),
+              child: const Text('Planned Programs'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -67,11 +69,11 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50),
+                minimumSize: const Size(200, 50),
               ),
-              child: Text('My Personal Trainer Plan'),
+              child: const Text('My Personal Trainer Plan'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton( // Button for adding an exercise
               onPressed: () {
                 Navigator.push(
@@ -83,11 +85,11 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50),
+                minimumSize: const Size(200, 50),
               ),
-              child: Text('Add Exercise'),
+              child: const Text('Add Exercise'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton( // New button for Create Training Plan
               onPressed: () {
                 Navigator.push(
@@ -99,9 +101,9 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
-                minimumSize: Size(200, 50),
+                minimumSize: const Size(200, 50),
               ),
-              child: Text('Create Training Plan'),
+              child: const Text('Create Training Plan'),
             ),
           ],
         ),

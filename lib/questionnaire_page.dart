@@ -4,6 +4,8 @@ import 'home_page.dart'; // Import HomePage
 import 'user_profile_service.dart';
 
 class QuestionnairePage extends StatefulWidget {
+  const QuestionnairePage({super.key});
+
   @override
   _QuestionnairePageState createState() => _QuestionnairePageState();
 }
@@ -74,7 +76,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
 
     // Move to the next page
     _pageController.nextPage(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeIn,
     );
   }
@@ -82,24 +84,16 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
   void _onPreviousPage() {
     // Move to the previous page
     _pageController.previousPage(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeIn,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_userProfile == null) {
-      // Show a loading screen or handle uninitialized UserProfile
-      return Scaffold(
-        appBar: AppBar(title: Text('Loading...')),
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile Setup'),
+        title: const Text('Profile Setup'),
         backgroundColor: Colors.grey[800],
       ),
       backgroundColor: Colors.grey[800],
@@ -128,7 +122,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
     TextEditingController controller = TextEditingController();
 
     return Padding(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -138,28 +132,28 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
               children: [
                 Text(
                   question,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.yellow,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 TextField(
                   controller: controller,
                   decoration: InputDecoration(
                     hintText: hint,
-                    hintStyle: TextStyle(color: Colors.yellow),
-                    border: OutlineInputBorder(),
+                    hintStyle: const TextStyle(color: Colors.yellow),
+                    border: const OutlineInputBorder(),
                   ),
-                  style: TextStyle(color: Colors.yellow),
+                  style: const TextStyle(color: Colors.yellow),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 20.0),
-          Spacer(),
+          const SizedBox(height: 20.0),
+          const Spacer(),
           Align(
             alignment: Alignment.bottomCenter,
             child: Row(
@@ -171,9 +165,9 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.yellow,
                     ),
-                    child: Text('Previous'),
+                    child: const Text('Previous'),
                   ),
-                SizedBox(width: 20.0),
+                const SizedBox(width: 20.0),
                 ElevatedButton(
                   onPressed: () {
                     _onNextPage(controller.text.trim());
@@ -181,7 +175,7 @@ class _QuestionnairePageState extends State<QuestionnairePage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.yellow,
                   ),
-                  child: Text('Next'),
+                  child: const Text('Next'),
                 ),
               ],
             ),
