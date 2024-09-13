@@ -95,17 +95,17 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Confirm Deletion"),
-          content: Text("Are you sure you want to clear all data? This action cannot be undone."),
+          title: Text("Confirm Deletion", style: TextStyle(color: Color(0xFFEFE9E1))), // Text color
+          content: Text("Are you sure you want to clear all data? This action cannot be undone.", style: TextStyle(color: Color(0xFFEFE9E1))), // Text color
           actions: [
             TextButton(
-              child: Text("Cancel"),
+              child: Text("Cancel", style: TextStyle(color: Color(0xFFD1C7BD))), // Button text color
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
-              child: Text("Delete"),
+              child: Text("Delete", style: TextStyle(color: Color(0xFFD1C7BD))), // Button text color
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -122,85 +122,88 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> {
       appBar: AppBar(
         title: const Text(
           'Water Tracking',
-          style: TextStyle(color: Colors.white), // Set text color to white
+          style: TextStyle(color: Color(0xFFEFE9E1)), // Primary text color
         ),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: const Color(0xFF322D29), // Dark teal
         centerTitle: true, // Center the title
       ),
-      body: Container(
-        color: Colors.black, // Set background color to black
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CustomCircularProgress(
-                progress: _progress.clamp(0.0, 1.0),
-                size: 150, // Same size as steps counter
-                backgroundColor: Colors.grey[400]!,
-                progressColor: Colors.yellow,
-              ),
-              const SizedBox(height: 20),
-              Text(
-                '$_currentIntake ml',
-                style: const TextStyle(fontSize: 36, color: Colors.white), // Increased font size
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _waterController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter Water Intake (ml)',
+      backgroundColor: const Color(0xFFD1C7BD), // Lighter beige
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CustomCircularProgress(
+              progress: _progress.clamp(0.0, 1.0),
+              size: 150, // Same size as steps counter
+              backgroundColor: Color(0xFFD9D9D9), // Light grey
+              progressColor: Color(0xFFFFEB3B), // Yellow
+            ),
+            const SizedBox(height: 20),
+            Text(
+              '$_currentIntake ml',
+              style: const TextStyle(fontSize: 36, color: Color(0xFFEFE9E1)), // Primary text color
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: _waterController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFFD9D9D9)), // Light grey border
                 ),
+                filled: true,
+                fillColor: Color(0xFFEFE9E1), // Text field background
+                labelText: 'Enter Water Intake (ml)',
+                labelStyle: TextStyle(color: Color(0xFF322D29)), // Dark teal label text
               ),
-              const SizedBox(height: 20),
-              DropdownButton<int>(
-                value: _goal,
-                items: [1000, 2000, 3000, 4000, 5000].map((int value) {
-                  return DropdownMenuItem<int>(
-                    value: value,
-                    child: Text('$value ml'),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
-                  setState(() {
-                    _goal = newValue ?? _goal;
-                  });
-                },
-                hint: const Text('Select your goal'),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Goal Progress: ${(_progress * 100).toStringAsFixed(1)}%',
-                style: const TextStyle(fontSize: 18, color: Colors.white),
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _waterHistory.length,
-                  itemBuilder: (context, index) {
-                    final entry = _waterHistory[index];
-                    return Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      child: ListTile(
-                        title: Text(
-                          'Date: ${entry['date']}',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          'Intake: ${entry['intake']} ml',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        tileColor: Colors.grey[800],
-                        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            ),
+            const SizedBox(height: 20),
+            DropdownButton<int>(
+              value: _goal,
+              items: [1000, 2000, 3000, 4000, 5000].map((int value) {
+                return DropdownMenuItem<int>(
+                  value: value,
+                  child: Text('$value ml', style: TextStyle(color: Color(0xFF322D29))), // Dark teal text color
+                );
+              }).toList(),
+              onChanged: (newValue) {
+                setState(() {
+                  _goal = newValue ?? _goal;
+                });
+              },
+              hint: Text('Select your goal', style: TextStyle(color: Color(0xFF322D29))), // Dark teal hint text
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Goal Progress: ${(_progress * 100).toStringAsFixed(1)}%',
+              style: const TextStyle(fontSize: 18, color: Color(0xFFEFE9E1)), // Primary text color
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _waterHistory.length,
+                itemBuilder: (context, index) {
+                  final entry = _waterHistory[index];
+                  return Container(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    child: ListTile(
+                      title: Text(
+                        'Date: ${entry['date']}',
+                        style: const TextStyle(color: Color(0xFFEFE9E1)), // Primary text color
                       ),
-                    );
-                  },
-                ),
+                      subtitle: Text(
+                        'Intake: ${entry['intake']} ml',
+                        style: const TextStyle(color: Color(0xFFEFE9E1)), // Primary text color
+                      ),
+                      tileColor: Color(0xFF322D29), // Dark teal
+                      contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    ),
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: Column(
@@ -208,14 +211,14 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> {
         children: [
           FloatingActionButton(
             onPressed: _clearData,
-            child: const Icon(Icons.remove),
-            backgroundColor: Colors.red,
+            child: const Icon(Icons.remove, color: Color(0xFFEFE9E1)), // Primary text color
+            backgroundColor: const Color.fromARGB(255, 255, 0, 0), // Yellow
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
             onPressed: _updateWaterIntake,
-            child: const Icon(Icons.add),
-            backgroundColor: Colors.yellow,
+            child: const Icon(Icons.add, color: Color(0xFF322D29)), // Dark teal
+            backgroundColor: const Color(0xFFFFC400), // Lighter beige
           ),
         ],
       ),

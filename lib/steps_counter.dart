@@ -96,17 +96,17 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Confirm Deletion"),
-          content: Text("Are you sure you want to clear all data? This action cannot be undone."),
+          title: Text("Confirm Deletion", style: TextStyle(color: Color(0xFF322D29))),
+          content: Text("Are you sure you want to clear all data? This action cannot be undone.", style: TextStyle(color: Color(0xFF322D29))),
           actions: [
             TextButton(
-              child: Text("Cancel"),
+              child: Text("Cancel", style: TextStyle(color: Color(0xFF322D29))),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
-              child: Text("Delete"),
+              child: Text("Delete", style: TextStyle(color: Colors.red)),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -123,13 +123,13 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
       appBar: AppBar(
         title: const Text(
           'Steps Counter',
-          style: TextStyle(color: Colors.white), // Set text color to white
+          style: TextStyle(color: Color(0xFFEFE9E1)), // Very light cream
         ),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Color(0xFF322D29), // Dark teal
         centerTitle: true, // Center the title
       ),
       body: Container(
-        color: Colors.black, // Set background color to black
+        color: Color(0xFFD1C7BD), // Lighter beige
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -138,21 +138,22 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
               CustomCircularProgress(
                 progress: _progress.clamp(0.0, 1.0),
                 size: 150, // Smaller size
-                backgroundColor: Colors.grey[400]!,
-                progressColor: Colors.yellow,
+                backgroundColor: Color(0xFFD9D9D9), // Light grey
+                progressColor: Color(0xFFFFC400), // Yellow
               ),
               const SizedBox(height: 20),
               Text(
                 '$_stepsToday steps',
-                style: const TextStyle(fontSize: 36, color: Color.fromARGB(255, 255, 255, 255)), // Increased font size
+                style: TextStyle(fontSize: 36, color: Color(0xFF322D29)), // Dark teal
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _stepsController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Enter Steps Today',
+                  labelStyle: TextStyle(color: Color(0xFF322D29)), // Dark teal
                 ),
               ),
               const SizedBox(height: 20),
@@ -161,7 +162,7 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
                 items: [5000, 10000, 15000, 20000].map((int value) {
                   return DropdownMenuItem<int>(
                     value: value,
-                    child: Text('$value steps'),
+                    child: Text('$value steps', style: TextStyle(color: Color(0xFF322D29))), // Dark teal
                   );
                 }).toList(),
                 onChanged: (newValue) {
@@ -169,16 +170,16 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
                     _goal = newValue ?? _goal;
                   });
                 },
-                hint: const Text('Select your goal'),
+                hint: Text('Select your goal', style: TextStyle(color: Color(0xFF322D29))), // Dark teal
               ),
               const SizedBox(height: 20),
               Text(
                 'Goal Progress: ${(_progress * 100).toStringAsFixed(1)}%',
-                style: const TextStyle(fontSize: 18, color: Color.fromARGB(255, 255, 255, 255)),
+                style: TextStyle(fontSize: 18, color: Color(0xFF322D29)), // Dark teal
               ),
               Text(
                 'Calories Burned: ${_caloriesBurned.toStringAsFixed(1)} kcal',
-                style: const TextStyle(fontSize: 18, color: Color.fromARGB(255, 255, 255, 255)),
+                style: TextStyle(fontSize: 18, color: Color(0xFF322D29)), // Dark teal
               ),
               const SizedBox(height: 20),
               Expanded(
@@ -191,13 +192,13 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
                       child: ListTile(
                         title: Text(
                           'Date: ${entry['date']}',
-                          style: const TextStyle(color: Colors.white),
+                          style: TextStyle(color: Color(0xFFEFE9E1)), // Very light cream
                         ),
                         subtitle: Text(
                           'Steps: ${entry['steps']}',
-                          style: const TextStyle(color: Colors.white),
+                          style: TextStyle(color: Color(0xFFEFE9E1)), // Very light cream
                         ),
-                        tileColor: Colors.grey[800],
+                        tileColor: Color(0xFF322D29), // Dark teal
                         contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                       ),
                     );
@@ -220,7 +221,7 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
           FloatingActionButton(
             onPressed: _updateSteps,
             child: const Icon(Icons.add),
-            backgroundColor: const Color.fromARGB(255, 255, 196, 0),
+            backgroundColor: Color(0xFFFFC400), // Yellow
           ),
         ],
       ),

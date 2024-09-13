@@ -40,7 +40,6 @@ class _SleepInputPageState extends State<SleepInputPage> {
     if (sleepTime != null && wakeUpTime != null) {
       final sleepDuration = calculateSleepDuration(sleepTime!, wakeUpTime!);
 
-      // Save to Firebase
       try {
         await FirebaseFirestore.instance.collection('sleep_data').add({
           'sleep_time': sleepTime?.format(context),
@@ -51,7 +50,6 @@ class _SleepInputPageState extends State<SleepInputPage> {
 
         Navigator.pop(context, sleepDuration);
       } catch (e) {
-        // Handle any errors
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error saving sleep data: $e')),
         );
@@ -72,57 +70,62 @@ class _SleepInputPageState extends State<SleepInputPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Sleep Tracking',
-          style: TextStyle(color: Colors.white), // Text color to white
-        ),
-        backgroundColor: Colors.grey[800],
-        centerTitle: true, // Center the title
+        title: const Text('Sleep Tracking', style: TextStyle(color: Color(0xFFEFE9E1))), // Very light cream
+        backgroundColor: const Color(0xFF322D29), // Dark teal
       ),
-      backgroundColor: Colors.black, // Set the background color of the entire page to black
+      backgroundColor: const Color(0xFFD1C7BD), // Lighter beige
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () => _selectSleepTime(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow, // Button color
-                  minimumSize: const Size(200, 50), // Button size
-                ),
-                child: Text(
-                  sleepTime == null ? 'Set Sleep Time' : 'Sleep Time: ${sleepTime?.format(context)}',
-                  style: const TextStyle(color: Colors.black, fontSize: 16), // Text size
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElevatedButton(
+              onPressed: () => _selectSleepTime(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFAC9C8D), // Warm, earthy beige
+                minimumSize: const Size(200, 50),
+                foregroundColor: const Color(0xFF322D29), // Dark teal
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => _selectWakeUpTime(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow, // Button color
-                  minimumSize: const Size(200, 50), // Button size
-                ),
-                child: Text(
-                  wakeUpTime == null ? 'Set Wake Up Time' : 'Wake Up Time: ${wakeUpTime?.format(context)}',
-                  style: const TextStyle(color: Colors.black, fontSize: 16), // Text size
+              child: Text(
+                sleepTime == null ? 'Set Sleep Time' : 'Sleep Time: ${sleepTime?.format(context)}',
+                style: const TextStyle(color: Color(0xFFEFE9E1), fontSize: 16), // Very light cream
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => _selectWakeUpTime(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFAC9C8D), // Warm, earthy beige
+                minimumSize: const Size(200, 50),
+                foregroundColor: const Color(0xFF322D29), // Dark teal
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _saveSleepData,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow, // Button color
-                  minimumSize: const Size(200, 50), // Button size
-                ),
-                child: const Text(
-                  'Save Sleep Data',
-                  style: TextStyle(color: Colors.black, fontSize: 16), // Text size
+              child: Text(
+                wakeUpTime == null ? 'Set Wake Up Time' : 'Wake Up Time: ${wakeUpTime?.format(context)}',
+                style: const TextStyle(color: Color(0xFFEFE9E1), fontSize: 16), // Very light cream
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _saveSleepData,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFAC9C8D), // Warm, earthy beige
+                minimumSize: const Size(200, 50),
+                foregroundColor: const Color(0xFF322D29), // Dark teal
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-            ],
-          ),
+              child: const Text(
+                'Save Sleep Data',
+                style: TextStyle(color: Color(0xFFEFE9E1), fontSize: 16), // Very light cream
+              ),
+            ),
+          ],
         ),
       ),
     );
