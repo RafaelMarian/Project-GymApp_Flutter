@@ -30,7 +30,7 @@ class _JoggingProgramSelectionPageState
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CustomJoggingProgramPage(),
+                    builder: (context) => const CustomJoggingProgramPage(),
                   ),
                 );
               },
@@ -46,7 +46,7 @@ class _JoggingProgramSelectionPageState
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlannedJoggingProgramsPage(),
+                    builder: (context) => const PlannedJoggingProgramsPage(),
                   ),
                 );
               },
@@ -62,7 +62,7 @@ class _JoggingProgramSelectionPageState
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PersonalTrainerPlanPage(), // Navigate to "My Personal Trainer Plan" page
+                    builder: (context) => const PersonalTrainerPlanPage(), // Navigate to "My Personal Trainer Plan" page
                   ),
                 );
               },

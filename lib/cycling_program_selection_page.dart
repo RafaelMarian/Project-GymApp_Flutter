@@ -29,7 +29,7 @@ class _CyclingProgramSelectionPageState extends State<CyclingProgramSelectionPag
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CustomCyclingProgramPage(),
+                    builder: (context) => const CustomCyclingProgramPage(),
                   ),
                 );
               },
@@ -45,7 +45,7 @@ class _CyclingProgramSelectionPageState extends State<CyclingProgramSelectionPag
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlannedCyclingProgramsPage(),
+                    builder: (context) => const PlannedCyclingProgramsPage(),
                   ),
                 );
               },
@@ -61,7 +61,7 @@ class _CyclingProgramSelectionPageState extends State<CyclingProgramSelectionPag
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyPersonalTrainerPlanCyclingPage(), // Navigate to "My Personal Trainer Plan"
+                    builder: (context) => const MyPersonalTrainerPlanCyclingPage(), // Navigate to "My Personal Trainer Plan"
                   ),
                 );
               },

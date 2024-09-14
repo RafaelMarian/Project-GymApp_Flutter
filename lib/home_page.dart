@@ -20,7 +20,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final int _selectedWorkoutType = 0;
   String _sleepDuration = 'Not available';
   double _sleepRating = 0.0;
 
@@ -104,7 +103,7 @@ class _HomePageState extends State<HomePage> {
       onTap: () async {
         final sleepDuration = await Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SleepInputPage()),
+          MaterialPageRoute(builder: (context) => const SleepInputPage()),
         );
 
         if (sleepDuration != null) {
@@ -113,7 +112,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: Container(
         child: Card(
-          color: const Color(0xFF29282C), // Dark background for sleep tracking box
+          color: const Color.fromARGB(255, 10, 10, 10), // Dark background for sleep tracking box
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -189,7 +188,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => StepsCounterPage()), // Navigate to StepsTrackingPage
+                        MaterialPageRoute(builder: (context) =>const StepsCounterPage()), // Navigate to StepsTrackingPage
                       );
                     },
                     child: _buildBox('Steps Counted', 'Track your steps'),
@@ -213,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => WaterTrackingPage()), // Navigate to WaterTrackingPage
+                        MaterialPageRoute(builder: (context) =>const WaterTrackingPage()), // Navigate to WaterTrackingPage
                       );
                     },
                     child: _buildBox('Water Tracking', 'Set and track your goal'),
@@ -280,9 +279,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildWorkoutProgressBox() {
-    return SizedBox(
+    return const SizedBox(
       width: double.infinity,
-      child: const Card(
+      child: Card(
         color: Color(0xFFF7BB0E), // Yellow background for workout progress box
         child: Padding(
           padding: EdgeInsets.all(16.0),
@@ -328,7 +327,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => GymProgramSelectionPage()),
+                    MaterialPageRoute(builder: (context) => const GymProgramSelectionPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -343,7 +342,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => YogaProgramSelectionPage()),
+                    MaterialPageRoute(builder: (context) => const YogaProgramSelectionPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -362,7 +361,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CyclingProgramSelectionPage()),
+                    MaterialPageRoute(builder: (context) => const CyclingProgramSelectionPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -377,7 +376,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => JoggingProgramSelectionPage()),
+                    MaterialPageRoute(builder: (context) => const JoggingProgramSelectionPage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -393,22 +392,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildExercisesSection() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Exercises',
           style: TextStyle(fontSize: 18, color: Colors.white),
         ),
         // Placeholder for exercises
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         Card(
-          color: const Color(0xFF29282C), // Dark background for exercises section
+          color: Color(0xFF29282C), // Dark background for exercises section
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0),
             child: Text(
               'No exercises added yet.',
-              style: const TextStyle(fontSize: 16, color: Colors.white70),
+              style: TextStyle(fontSize: 16, color: Colors.white70),
             ),
           ),
         ),

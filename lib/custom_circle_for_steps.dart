@@ -6,7 +6,7 @@ class CustomCircularProgress extends StatelessWidget {
   final Color backgroundColor;
   final Color progressColor;
 
-  CustomCircularProgress({
+  const CustomCircularProgress({super.key, 
     required this.progress,
     required this.size,
     this.backgroundColor = Colors.grey,

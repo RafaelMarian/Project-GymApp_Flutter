@@ -29,7 +29,7 @@ class _YogaProgramSelectionPageState extends State<YogaProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CustomYogaProgramPage(),
+                    builder: (context) => const CustomYogaProgramPage(),
                   ),
                 );
               },
@@ -45,7 +45,7 @@ class _YogaProgramSelectionPageState extends State<YogaProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlannedYogaProgramsPage(),
+                    builder: (context) => const PlannedYogaProgramsPage(),
                   ),
                 );
               },
@@ -61,7 +61,7 @@ class _YogaProgramSelectionPageState extends State<YogaProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyPersonalTrainerPlanYogaPage(), // Navigate to "My Personal Trainer Plan"
+                    builder: (context) => const MyPersonalTrainerPlanYogaPage(), // Navigate to "My Personal Trainer Plan"
                   ),
                 );
               },

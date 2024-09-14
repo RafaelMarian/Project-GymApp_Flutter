@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
       // Successfully logged in, navigate to QuestionnairePage
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => QuestionnairePage()),
+        MaterialPageRoute(builder: (context) => const QuestionnairePage()),
       );
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -53,34 +53,34 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20.0),
             TextField(
               controller: _emailController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
-                labelStyle: const TextStyle(color: Color(0xFFFFFFFF)), // White text
-                enabledBorder: const OutlineInputBorder(
+                labelStyle: TextStyle(color: Color(0xFFFFFFFF)), // White text
+                enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFFFFFFFF)), // White border
                 ),
-                focusedBorder: const OutlineInputBorder(
+                focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFFFFFFFF)), // White border
                 ),
                 filled: true,
-                fillColor: const Color(0xFF29282C), // Dark grey background for text fields
+                fillColor: Color(0xFF29282C), // Dark grey background for text fields
               ),
             ),
             const SizedBox(height: 20.0),
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Password',
-                labelStyle: const TextStyle(color: Color(0xFFFFFFFF)), // White text
-                enabledBorder: const OutlineInputBorder(
+                labelStyle: TextStyle(color: Color(0xFFFFFFFF)), // White text
+                enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFFFFFFFF)), // White border
                 ),
-                focusedBorder: const OutlineInputBorder(
+                focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFFFFFFFF)), // White border
                 ),
                 filled: true,
-                fillColor: const Color(0xFF29282C),
+                fillColor: Color(0xFF29282C),
               ),
             ),
             const SizedBox(height: 20.0),

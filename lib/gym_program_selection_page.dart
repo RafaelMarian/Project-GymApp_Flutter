@@ -31,7 +31,7 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CustomGymProgramPage(),
+                    builder: (context) => const CustomGymProgramPage(),
                   ),
                 );
               },
@@ -47,7 +47,7 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlannedGymProgramsPage(),
+                    builder: (context) => const PlannedGymProgramsPage(),
                   ),
                 );
               },
@@ -63,7 +63,7 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyPersonalTrainerPlanPageGym(), // Navigate to "My Personal Trainer Plan"
+                    builder: (context) => const MyPersonalTrainerPlanPageGym(), // Navigate to "My Personal Trainer Plan"
                   ),
                 );
               },
@@ -79,7 +79,7 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddExerciseGymPage(), // Navigate to AddExercisePage
+                    builder: (context) => const AddExerciseGymPage(), // Navigate to AddExercisePage
                   ),
                 );
               },
@@ -95,7 +95,7 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CreateTrainingPlanPageGym(), // Navigate to CreateTrainingPlanGymPage
+                    builder: (context) => const CreateTrainingPlanPageGym(), // Navigate to CreateTrainingPlanGymPage
                   ),
                 );
               },

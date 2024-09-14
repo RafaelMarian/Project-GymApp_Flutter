@@ -157,7 +157,7 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
                             ),
-                            child: Text('Delete Plan'),
+                            child: const Text('Delete Plan'),
                           ),
                         ],
                       ),

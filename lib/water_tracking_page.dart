@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'custom_circle_for_steps.dart'; // Ensure this file is in your project and adjust the import if necessary
 
 class WaterTrackingPage extends StatefulWidget {
+  const WaterTrackingPage({super.key});
+
   @override
   _WaterTrackingPageState createState() => _WaterTrackingPageState();
 }
@@ -22,7 +24,7 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> {
 
   Future<void> _fetchData() async {
     final now = DateTime.now();
-    final startDate = now.subtract(Duration(days: 7));
+    final startDate = now.subtract(const Duration(days: 7));
 
     try {
       final snapshot = await FirebaseFirestore.instance
@@ -95,17 +97,17 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Confirm Deletion", style: TextStyle(color: Color(0xFFEFE9E1))), // Text color
-          content: Text("Are you sure you want to clear all data? This action cannot be undone.", style: TextStyle(color: Color(0xFFEFE9E1))), // Text color
+          title: const Text("Confirm Deletion", style: TextStyle(color: Color(0xFFEFE9E1))), // Text color
+          content: const Text("Are you sure you want to clear all data? This action cannot be undone.", style: TextStyle(color: Color(0xFFEFE9E1))), // Text color
           actions: [
             TextButton(
-              child: Text("Cancel", style: TextStyle(color: Color(0xFFD1C7BD))), // Button text color
+              child: const Text("Cancel", style: TextStyle(color: Color(0xFFD1C7BD))), // Button text color
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
-              child: Text("Delete", style: TextStyle(color: Color(0xFFD1C7BD))), // Button text color
+              child: const Text("Delete", style: TextStyle(color: Color(0xFFD1C7BD))), // Button text color
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -136,8 +138,8 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> {
             CustomCircularProgress(
               progress: _progress.clamp(0.0, 1.0),
               size: 150, // Same size as steps counter
-              backgroundColor: Color(0xFFD9D9D9), // Light grey
-              progressColor: Color(0xFFFFEB3B), // Yellow
+              backgroundColor: const Color(0xFFD9D9D9), // Light grey
+              progressColor: const Color(0xFFFFEB3B), // Yellow
             ),
             const SizedBox(height: 20),
             Text(
@@ -148,7 +150,7 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> {
             TextField(
               controller: _waterController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFFD9D9D9)), // Light grey border
                 ),
@@ -164,7 +166,7 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> {
               items: [1000, 2000, 3000, 4000, 5000].map((int value) {
                 return DropdownMenuItem<int>(
                   value: value,
-                  child: Text('$value ml', style: TextStyle(color: Color(0xFF322D29))), // Dark teal text color
+                  child: Text('$value ml', style: const TextStyle(color: Color(0xFF322D29))), // Dark teal text color
                 );
               }).toList(),
               onChanged: (newValue) {
@@ -172,7 +174,7 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> {
                   _goal = newValue ?? _goal;
                 });
               },
-              hint: Text('Select your goal', style: TextStyle(color: Color(0xFF322D29))), // Dark teal hint text
+              hint: const Text('Select your goal', style: TextStyle(color: Color(0xFF322D29))), // Dark teal hint text
             ),
             const SizedBox(height: 20),
             Text(
@@ -186,7 +188,7 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> {
                 itemBuilder: (context, index) {
                   final entry = _waterHistory[index];
                   return Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
+                    margin: const EdgeInsets.symmetric(vertical: 5),
                     child: ListTile(
                       title: Text(
                         'Date: ${entry['date']}',
@@ -196,8 +198,8 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> {
                         'Intake: ${entry['intake']} ml',
                         style: const TextStyle(color: Color(0xFFEFE9E1)), // Primary text color
                       ),
-                      tileColor: Color(0xFF322D29), // Dark teal
-                      contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                      tileColor: const Color(0xFF322D29), // Dark teal
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                     ),
                   );
                 },
@@ -210,15 +212,15 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: _clearData,
-            child: const Icon(Icons.remove, color: Color(0xFFEFE9E1)), // Primary text color
-            backgroundColor: const Color.fromARGB(255, 255, 0, 0), // Yellow
+            onPressed: _clearData, // Primary text color
+            backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+            child: const Icon(Icons.remove, color: Color(0xFFEFE9E1)), // Yellow
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
-            onPressed: _updateWaterIntake,
-            child: const Icon(Icons.add, color: Color(0xFF322D29)), // Dark teal
-            backgroundColor: const Color(0xFFFFC400), // Lighter beige
+            onPressed: _updateWaterIntake, // Dark teal
+            backgroundColor: const Color(0xFFFFC400),
+            child: const Icon(Icons.add, color: Color(0xFF322D29)), // Lighter beige
           ),
         ],
       ),
