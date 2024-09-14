@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF00000), // Red button
+                backgroundColor: const Color(0xFFF7BB0E), // yellow button
               ),
               onPressed: _login,
               child: const Text(
