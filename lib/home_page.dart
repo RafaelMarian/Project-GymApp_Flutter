@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: Container(
         child: Card(
-          color: Colors.yellow,
+          color: const Color(0xFF29282C), // Dark background for sleep tracking box
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 const Text(
                   'Sleep Tracking',
-                  style: TextStyle(fontSize: 18, color: Colors.black),
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 const SizedBox(height: 10),
                 LayoutBuilder(
@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 10),
                 Text(
                   'Sleep Rating: ${_sleepRating.toStringAsFixed(1)}%',
-                  style: const TextStyle(fontSize: 16, color: Colors.black),
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ],
             ),
@@ -172,9 +172,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.userProfile.name),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: const Color(0xFF29282C), // Dark background for app bar
       ),
-      backgroundColor: Colors.grey[800],
+      backgroundColor: const Color(0xFF29282C), // Dark background for the page
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -230,45 +230,45 @@ class _HomePageState extends State<HomePage> {
               child: ElevatedButton(
                 onPressed: _showUserId,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow,
+                  backgroundColor: const Color(0xFFF7BB0E), // Yellow color for Show User ID button
                 ),
-                child: const Text('Show User ID'),
+                child: const Text('Show User ID', style: TextStyle(color: Colors.black)),
               ),
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.grey[800],
+        color: const Color(0xFF29282C), // Dark background for bottom app bar
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
-              icon: const Icon(Icons.home, color: Colors.yellow),
+              icon: const Icon(Icons.home, color: Color(0xFFF7BB0E)),
               onPressed: () {
                 // Handle home button press
               },
             ),
             IconButton(
-              icon: const Icon(Icons.search, color: Colors.yellow),
+              icon: const Icon(Icons.search, color: Color(0xFFF7BB0E)),
               onPressed: () {
                 // Handle search button press
               },
             ),
             IconButton(
-              icon: const Icon(Icons.notifications, color: Colors.yellow),
+              icon: const Icon(Icons.notifications, color: Color(0xFFF7BB0E)),
               onPressed: () {
                 // Handle notifications button press
               },
             ),
             IconButton(
-              icon: const Icon(Icons.settings, color: Colors.yellow),
+              icon: const Icon(Icons.settings, color: Color(0xFFF7BB0E)),
               onPressed: () {
                 // Handle settings button press
               },
             ),
             IconButton(
-              icon: const Icon(Icons.person, color: Colors.yellow),
+              icon: const Icon(Icons.person, color: Color(0xFFF7BB0E)),
               onPressed: () {
                 // Handle profile button press
               },
@@ -283,7 +283,7 @@ class _HomePageState extends State<HomePage> {
     return SizedBox(
       width: double.infinity,
       child: const Card(
-        color: Colors.yellow,
+        color: Color(0xFFF7BB0E), // Yellow background for workout progress box
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
@@ -297,7 +297,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildBox(String title, String details) {
     return Card(
-      color: Colors.grey[700],
+      color: const Color(0xFF29282C), // Dark background for boxes
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -305,12 +305,12 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text(
               title,
-              style: const TextStyle(fontSize: 18, color: Colors.yellow),
+              style: const TextStyle(fontSize: 18, color: Colors.white),
             ),
             const SizedBox(height: 10),
             Text(
               details,
-              style: const TextStyle(fontSize: 16, color: Colors.yellow),
+              style: const TextStyle(fontSize: 14, color: Colors.white70),
             ),
           ],
         ),
@@ -319,58 +319,74 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildWorkoutTypeButtons() {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-                            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GymProgramSelectionPage()),
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
-            child: const Text('Gym'),
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GymProgramSelectionPage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF7BB0E), // Yellow color for buttons
+                ),
+                child: const Text('Gym Program', style: TextStyle(color: Colors.black)),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => YogaProgramSelectionPage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF7BB0E), // Yellow color for buttons
+                ),
+                child: const Text('Yoga Program', style: TextStyle(color: Colors.black)),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => YogaProgramSelectionPage()),
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
-            child: const Text('Yoga'),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CyclingProgramSelectionPage()),
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
-            child: const Text('Cycling'),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => JoggingProgramSelectionPage()),
-              );
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
-            child: const Text('Jogging'),
-          ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CyclingProgramSelectionPage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF7BB0E), // Yellow color for buttons
+                ),
+                child: const Text('Cycling Program', style: TextStyle(color: Colors.black)),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => JoggingProgramSelectionPage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF7BB0E), // Yellow color for buttons
+                ),
+                child: const Text('Jogging Program', style: TextStyle(color: Colors.black)),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -382,19 +398,17 @@ class _HomePageState extends State<HomePage> {
       children: [
         const Text(
           'Exercises',
-          style: TextStyle(fontSize: 18, color: Colors.yellow),
+          style: TextStyle(fontSize: 18, color: Colors.white),
         ),
+        // Placeholder for exercises
         const SizedBox(height: 10),
-        SizedBox(
-          height: 150,
-          child: Card(
-            color: Colors.grey[700],
-            child: const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'Your exercises will appear here',
-                style: TextStyle(fontSize: 16, color: Colors.yellow),
-              ),
+        Card(
+          color: const Color(0xFF29282C), // Dark background for exercises section
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'No exercises added yet.',
+              style: const TextStyle(fontSize: 16, color: Colors.white70),
             ),
           ),
         ),
@@ -402,4 +416,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

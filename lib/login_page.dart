@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[800], // Grey background color
+      backgroundColor: const Color(0xFF29282C), // Dark grey background
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -47,45 +47,52 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(
                 fontSize: 32.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.yellow, // Light yellow for title
+                color: Color(0xFFFFFFFF), // White text
               ),
             ),
             const SizedBox(height: 20.0),
             TextField(
               controller: _emailController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Email',
-                labelStyle: TextStyle(color: Colors.yellow),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.yellow),
+                labelStyle: const TextStyle(color: Color(0xFFFFFFFF)), // White text
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFFFFFFFF)), // White border
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.yellow),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFFFFFFFF)), // White border
                 ),
+                filled: true,
+                fillColor: const Color(0xFF29282C), // Dark grey background for text fields
               ),
             ),
             const SizedBox(height: 20.0),
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Password',
-                labelStyle: TextStyle(color: Colors.yellow),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.yellow),
+                labelStyle: const TextStyle(color: Color(0xFFFFFFFF)), // White text
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFFFFFFFF)), // White border
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.yellow),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFFFFFFFF)), // White border
                 ),
+                filled: true,
+                fillColor: const Color(0xFF29282C),
               ),
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow[600], // Light yellow button
+                backgroundColor: const Color(0xFFF00000), // Red button
               ),
               onPressed: _login,
-              child: const Text('Login'),
+              child: const Text(
+                'Login',
+                style: TextStyle(color: Color(0xFFFFFFFF)), // White text
+              ),
             ),
             if (errorMessage != null)
               Padding(
@@ -101,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: const Text(
                 'Forgot password?',
-                style: TextStyle(color: Colors.yellow),
+                style: TextStyle(color: Color(0xFFFFFFFF)), // White text
               ),
             ),
             TextButton(
@@ -110,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: const Text(
                 'Don’t have an account? Sign up',
-                style: TextStyle(color: Colors.yellow),
+                style: TextStyle(color: Color(0xFFFFFFFF)), // White text
               ),
             ),
           ],
