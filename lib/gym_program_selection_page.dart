@@ -18,10 +18,18 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gym Program Selection'),
-        backgroundColor: Colors.grey[800],
+       title: const Center(
+        child: Text(
+         'Gym Program Selection',
+         style: TextStyle(
+        color: Color(0xFFF7BB0E), // White text color
+        fontSize: 24, // Adjust font size if needed
       ),
-      backgroundColor: Colors.grey[800],
+    ),
+  ),
+  backgroundColor: const Color(0xFF29282C), // Custom background color
+),
+      backgroundColor: Color(0xFF29282C),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -31,15 +39,21 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CustomGymProgramPage(),
+                    builder: (context) => CustomGymProgramPage(),
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
+                backgroundColor: Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
-              child: const Text('Custom Program'),
+              child: const Text(
+                  'Custom Programs',
+                  style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0), // You can change this to any color you want
+                  fontSize: 14, // Adjust the font size as needed // Optional: Set font weight to bold
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -47,15 +61,21 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const PlannedGymProgramsPage(),
+                    builder: (context) => PlannedGymProgramsPage(),
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
+                backgroundColor: Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
-              child: const Text('Planned Programs'),
+              child: const Text(
+                 'Planned Programs',
+                  style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0), // You can change this to any color you want
+                  fontSize: 14, // Adjust the font size as needed // Optional: Set font weight to bold
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -63,15 +83,21 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MyPersonalTrainerPlanPageGym(), // Navigate to "My Personal Trainer Plan"
+                    builder: (context) => MyPersonalTrainerPlanPageGym(), // Navigate to "My Personal Trainer Plan"
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
+                backgroundColor: Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
-              child: const Text('My Personal Trainer Plan'),
+              child: const Text(
+                  'My Personal Trainer Plan',
+                  style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0), // You can change this to any color you want
+                  fontSize: 14, // Adjust the font size as needed // Optional: Set font weight to bold
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton( // Button for adding an exercise
@@ -79,15 +105,21 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const AddExerciseGymPage(), // Navigate to AddExercisePage
+                    builder: (context) => AddExerciseGymPage(), // Navigate to AddExercisePage
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
+                backgroundColor: Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
-              child: const Text('Add Exercise'),
+             child: const Text(
+                 'Add Exercise',
+                 style: TextStyle(
+                 color: Color.fromARGB(255, 0, 0, 0), // You can change this to any color you want
+                  fontSize: 14, // Adjust the font size as needed
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton( // New button for Create Training Plan
@@ -95,15 +127,21 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CreateTrainingPlanPageGym(), // Navigate to CreateTrainingPlanGymPage
+                    builder: (context) => CreateTrainingPlanPageGym(), // Navigate to CreateTrainingPlanGymPage
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
+                backgroundColor: Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
-              child: const Text('Create Training Plan'),
+              child: const Text(
+                'Create Training Plan',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0), // You can change this to any color you want
+                 fontSize: 14, // Adjust the font size as needed // Optional: Set font weight to bold
+                ),
+              ),
             ),
           ],
         ),

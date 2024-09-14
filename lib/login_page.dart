@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: _login,
               child: const Text(
                 'Login',
-                style: TextStyle(color: Color(0xFFFFFFFF)), // White text
+                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)), // White text
               ),
             ),
             if (errorMessage != null)
