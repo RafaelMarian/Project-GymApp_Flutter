@@ -188,7 +188,7 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
           content: Text("Are you sure you want to clear all data? This action cannot be undone.", style: TextStyle(color: Color.fromARGB(255, 0, 0, 0))), // Text color
           actions: [
             TextButton(
-              child: Text("Cancel", style: TextStyle(color: Color.fromARGB(255, 81, 255, 0))), // Button text color
+              child: Text("Cancel", style: TextStyle(color: Color.fromARGB(255, 41, 126, 2))), // Button text color
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
