@@ -184,17 +184,17 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Confirm Deletion", style: TextStyle(color: Color(0xFFEFE9E1))), // Text color
-          content: Text("Are you sure you want to clear all data? This action cannot be undone.", style: TextStyle(color: Color(0xFFEFE9E1))), // Text color
+          title: Text("Confirm Deletion", style: TextStyle(color: Color.fromARGB(255, 255, 0, 0))), // Text color
+          content: Text("Are you sure you want to clear all data? This action cannot be undone.", style: TextStyle(color: Color.fromARGB(255, 0, 0, 0))), // Text color
           actions: [
             TextButton(
-              child: Text("Cancel", style: TextStyle(color: Color(0xFFD1C7BD))), // Button text color
+              child: Text("Cancel", style: TextStyle(color: Color.fromARGB(255, 81, 255, 0))), // Button text color
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
-              child: Text("Delete", style: TextStyle(color: Color(0xFFD1C7BD))), // Button text color
+              child: Text("Delete", style: TextStyle(color: Color.fromARGB(255, 255, 0, 0))), // Button text color
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -221,12 +221,12 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
       appBar: AppBar(
         title: const Text(
           'Water Tracking',
-          style: TextStyle(color: Color(0xFFEFE9E1)), // Primary text color
+          style: TextStyle(color: Color(0xFFF7BB0E)), // Primary text color
         ),
-        backgroundColor: const Color(0xFF322D29), // Dark teal
+        backgroundColor: const Color(0xFF29282C), // Dark teal
         centerTitle: true, // Center the title
       ),
-      backgroundColor: const Color(0xFFD1C7BD), // Lighter beige
+      backgroundColor: const Color(0xFF29282C), // Lighter beige
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -242,20 +242,23 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
             const SizedBox(height: 20),
             Text(
               '$_currentIntake ml',
-              style: const TextStyle(fontSize: 36, color: Color(0xFFEFE9E1)), // Primary text color
+              style: const TextStyle(fontSize: 36, color: Color.fromARGB(255, 255, 255, 255)), // Primary text color
             ),
             const SizedBox(height: 20),
             TextField(
               controller: _waterController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFD9D9D9)), // Light grey border
+              decoration: const InputDecoration(
+                border:  OutlineInputBorder(
+                  borderSide: BorderSide(color: Color.fromARGB(255, 40, 39, 41)), // Light grey border
                 ),
                 filled: true,
-                fillColor: Color(0xFFEFE9E1), // Text field background
+                fillColor: Color.fromARGB(255, 23, 23, 24), // Text field background
                 labelText: 'Enter Water Intake (ml)',
-                labelStyle: TextStyle(color: Color(0xFF322D29)), // Dark teal label
+                labelStyle: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+               fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -278,28 +281,28 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
             ElevatedButton(
               onPressed: _updateWaterIntake,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF322D29), // Dark teal button
+                backgroundColor: const Color(0xFFF7BB0E), // Dark teal button
               ),
               child: const Text(
                 'Add Water',
-                style: TextStyle(color: Color(0xFFEFE9E1)), // Button text color
+                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)), // Button text color
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _clearData,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF322D29), // Dark teal button
+                backgroundColor: const Color(0xFFF7BB0E), // Dark teal button
               ),
               child: const Text(
                 'Clear Data',
-                style: TextStyle(color: Color(0xFFEFE9E1)), // Button text color
+                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)), // Button text color
               ),
             ),
             const SizedBox(height: 20),
             const Text(
               'Water Intake History',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF322D29)), // Dark teal text color
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 255, 255, 255)), // Dark teal text color
             ),
             const SizedBox(height: 10),
             Expanded(
@@ -310,7 +313,7 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
                   return ListTile(
                     title: Text(
                       '${entry['date']}: ${entry['intake']} ml',
-                      style: const TextStyle(color: Color(0xFF322D29)), // Dark teal text
+                      style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)), // Dark teal text
                     ),
                   );
                 },
