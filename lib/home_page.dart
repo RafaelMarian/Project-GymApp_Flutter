@@ -212,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) =>const WaterTrackingPage()), // Navigate to WaterTrackingPage
+                        MaterialPageRoute(builder: (context) => WaterTrackingPage()), // Navigate to WaterTrackingPage
                       );
                     },
                     child: _buildBox('Water Tracking', 'Set and track your goal'),
