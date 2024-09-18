@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: Container(
         child: Card(
-          color: const Color.fromARGB(255, 10, 10, 10), // Dark background for sleep tracking box
+          color: const Color(0xFFF7BB0E), // Dark background for sleep tracking box
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 const Text(
                   'Sleep Tracking',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)),
                 ),
                 const SizedBox(height: 10),
                 LayoutBuilder(
@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 10),
                 Text(
                   'Sleep Rating: ${_sleepRating.toStringAsFixed(1)}%',
-                  style: const TextStyle(fontSize: 16, color: Colors.white),
+                  style: const TextStyle(fontSize: 16, color: Color.fromARGB(255, 0, 0, 0)),
                 ),
               ],
             ),
@@ -191,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                         MaterialPageRoute(builder: (context) =>const StepsCounterPage()), // Navigate to StepsTrackingPage
                       );
                     },
-                    child: _buildBox('Steps Counted', 'Track your steps'),
+                    child: _buildBox('Steps Counted', 'Set and Track your steps'),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -204,7 +204,7 @@ class _HomePageState extends State<HomePage> {
             Row(
               children: [
                 Expanded(
-                  child: _buildBox('Calories Burned', 'Details here'),
+                  child: _buildBox('Calories Burned', 'Set and Track your steps'),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -296,7 +296,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildBox(String title, String details) {
     return Card(
-      color: const Color(0xFF29282C), // Dark background for boxes
+      color: const Color.fromARGB(255, 0, 0, 0), // Dark background for boxes
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
