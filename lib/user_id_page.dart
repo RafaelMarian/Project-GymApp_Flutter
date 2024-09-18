@@ -11,9 +11,9 @@ class UserIdPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your User ID'),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Color.fromARGB(255, 40, 39, 41),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -22,12 +22,12 @@ class UserIdPage extends StatelessWidget {
             children: [
               const Text(
                 'Your User ID:',
-                style: TextStyle(fontSize: 18, color: Colors.yellow),
+                style: TextStyle(fontSize: 18, color: Color(0xFFF7BB0E)),
               ),
               const SizedBox(height: 10),
               SelectableText(
                 userId,
-                style: const TextStyle(fontSize: 24, color: Colors.yellow),
+                style: const TextStyle(fontSize: 24, color: Color(0xFFF7BB0E)),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -38,7 +38,7 @@ class UserIdPage extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow,
+                  backgroundColor: Color(0xFFF7BB0E),
                 ),
                 child: const Text('Copy User ID'),
               ),

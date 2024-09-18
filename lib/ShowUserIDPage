@@ -30,9 +30,9 @@ class _ShowUserIdPageState extends State<ShowUserIdPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('User ID'),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Color.fromARGB(255, 40, 39, 41)],
       body: Center(
         child: userId != null
             ? Text(
