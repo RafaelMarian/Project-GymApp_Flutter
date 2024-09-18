@@ -17,9 +17,9 @@ class _YogaProgramSelectionPageState extends State<YogaProgramSelectionPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Yoga Program Selection'),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Color.fromARGB(255, 40, 39, 41),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -34,7 +34,7 @@ class _YogaProgramSelectionPageState extends State<YogaProgramSelectionPage> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
+                backgroundColor: Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
               child: const Text('Custom Program'),
@@ -50,7 +50,7 @@ class _YogaProgramSelectionPageState extends State<YogaProgramSelectionPage> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
+                backgroundColor: Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
               child: const Text('Planned Programs'),
@@ -66,7 +66,7 @@ class _YogaProgramSelectionPageState extends State<YogaProgramSelectionPage> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
+                backgroundColor: Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
               child: const Text('My Personal Trainer Plan'),

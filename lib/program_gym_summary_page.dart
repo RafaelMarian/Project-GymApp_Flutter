@@ -15,15 +15,15 @@ class _ProgramGymSummaryPageState extends State<ProgramGymSummaryPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Program Summary'),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Color.fromARGB(255, 40, 39, 41),
       body: ListView.builder(
         itemCount: widget.exercises.length,
         itemBuilder: (context, index) {
           final exercise = widget.exercises[index];
           return ListTile(
-            title: Text(exercise['exercise'], style: const TextStyle(color: Colors.yellow)),
+            title: Text(exercise['exercise'], style: const TextStyle(color: Color(0xFFF7BB0E))),
             subtitle: Row(
               children: [
                 Expanded(

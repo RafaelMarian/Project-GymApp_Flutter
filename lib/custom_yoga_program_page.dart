@@ -13,9 +13,9 @@ class _CustomYogaProgramPageState extends State<CustomYogaProgramPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Custom Yoga Program'),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Color.fromARGB(255, 40, 39, 41),
       body: const Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -23,12 +23,12 @@ class _CustomYogaProgramPageState extends State<CustomYogaProgramPage> {
           children: [
             Text(
               'Create Your Custom Yoga Program',
-              style: TextStyle(fontSize: 18, color: Colors.yellow),
+              style: TextStyle(fontSize: 18, color: Color(0xFFF7BB0E)),
             ),
             SizedBox(height: 20),
             Text(
               'Add yoga exercises and set the number of reps, duration, etc.',
-              style: TextStyle(fontSize: 16, color: Colors.yellow),
+              style: TextStyle(fontSize: 16, color: Color(0xFFF7BB0E)),
             ),
             // You can add form fields, dropdowns, etc. here for customization.
           ],

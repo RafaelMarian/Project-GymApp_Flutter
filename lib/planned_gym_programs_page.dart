@@ -41,16 +41,16 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Planned Gym Programs'),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Color.fromARGB(255, 40, 39, 41),
       body: Column(
         children: [
           // Dropdown for difficulty
           DropdownButton<String>(
             value: selectedDifficulty,
             hint: const Text('Select Difficulty', style: TextStyle(color: Colors.white)),
-            dropdownColor: Colors.grey[800],
+            dropdownColor: Color.fromARGB(255, 0, 0, 0),
             items: <String>['Beginner', 'Intermediate', 'Advanced'].map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -67,7 +67,7 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
           DropdownButton<String>(
             value: selectedWorkoutType,
             hint: const Text('Select Workout Type', style: TextStyle(color: Colors.white)),
-            dropdownColor: Colors.grey[800],
+            dropdownColor: Color.fromARGB(255, 0, 0, 0),
             items: <String>[
               'Full Body', 
               'One Muscle Group Per Day', 
@@ -90,7 +90,7 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
           DropdownButton<String>(
             value: selectedGender,
             hint: const Text('Select Gender', style: TextStyle(color: Colors.white)),
-            dropdownColor: Colors.grey[800],
+            dropdownColor: Color.fromARGB(255, 0, 0, 0),
             items: <String>['Male', 'Female'].map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -104,9 +104,13 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
             },
           ),
           ElevatedButton(
-            onPressed: _fetchWorkoutPlan,
-            child: const Text('Fetch Workout Plan'),
-          ),
+  onPressed: _fetchWorkoutPlan,
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Color(0xFFF7BB0E), // Background color
+    foregroundColor: const Color.fromARGB(255, 0, 0, 0), // Text color
+  ),
+  child: const Text('Fetch Workout Plan'),
+),
           Expanded(
             child: workoutRoutine != null
                 ? ListView.builder(
@@ -126,14 +130,14 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
                         child: ListTile(
                           title: Text(
                             '$dayName: ${day['muscle_groups'].join(', ')}',
-                            style: const TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Color(0xFFF7BB0E)),
                           ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: exercises.map<Widget>((exercise) {
                               return Text(
                                 '${exercise['name']} - ${exercise['reps']} reps',
-                                style: const TextStyle(color: Colors.grey),
+                                style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                               );
                             }).toList(),
                           ),

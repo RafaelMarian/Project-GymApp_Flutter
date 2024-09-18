@@ -97,15 +97,15 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Custom Gym Program'),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Color.fromARGB(255, 40, 39, 41),
       body: Column(
         children: [
           DropdownButton<String>(
             value: selectedMuscleGroup,
             hint: const Text('Select Muscle Group', style: TextStyle(color: Colors.white)),
-            dropdownColor: Colors.grey[800],
+            dropdownColor: Color.fromARGB(255, 0, 0, 0),
             items: <String>['Chest', 'Back', 'Biceps', 'Triceps', 'Legs', 'Abs', 'Shoulders']
                 .map((String value) {
               return DropdownMenuItem<String>(
@@ -130,7 +130,7 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
                 final userExercise = userInput[exerciseName] ?? {'kg': defaultKg.toString(), 'reps': defaultReps.toString()};
 
                 return Card(
-                  color: Colors.grey[850],
+                  color: Color.fromARGB(255, 0, 0, 0),
                   child: ExpansionTile(
                     title: Text(
                       exerciseName,
@@ -144,17 +144,17 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
                           children: [
                             Text(
                               exerciseDescription,
-                              style: const TextStyle(color: Colors.grey),
+                              style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                             ),
                             const SizedBox(height: 10),
                             // Reps input field
                             TextField(
                               decoration: const InputDecoration(
                                 labelText: 'Enter Reps',
-                                labelStyle: TextStyle(color: Colors.black),
+                                labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                                 border: OutlineInputBorder(),
                                 filled: true,
-                                fillColor: Colors.white,
+                                fillColor: Color.fromARGB(255, 0, 0, 0),
                               ),
                               keyboardType: TextInputType.number,
                               controller: TextEditingController(text: userExercise['reps']),
@@ -170,10 +170,10 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
                             TextField(
                               decoration: const InputDecoration(
                                 labelText: 'Enter Weight (kg)',
-                                labelStyle: TextStyle(color: Colors.black),
+                                labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                                 border: OutlineInputBorder(),
                                 filled: true,
-                                fillColor: Colors.white,
+                                fillColor: Color.fromARGB(255, 0, 0, 0),
                               ),
                               keyboardType: TextInputType.number,
                               controller: TextEditingController(text: userExercise['kg']),

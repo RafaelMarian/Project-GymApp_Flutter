@@ -22,14 +22,14 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
         child: Text(
          'Gym Program Selection',
          style: TextStyle(
-        color: Color(0xFFF7BB0E), // White text color
+        color: Color.fromARGB(255, 255, 255, 255), // White text color
         fontSize: 24, // Adjust font size if needed
       ),
     ),
   ),
-  backgroundColor: const Color(0xFF29282C), // Custom background color
+  backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Custom background color
 ),
-      backgroundColor: Color(0xFF29282C),
+      backgroundColor: Color.fromARGB(255, 40, 39, 41),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

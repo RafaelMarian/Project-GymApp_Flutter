@@ -14,9 +14,9 @@ class _PlannedYogaProgramsPageState extends State<PlannedYogaProgramsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Planned Yoga Programs'),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Color.fromARGB(255, 40, 39, 41),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
@@ -33,11 +33,11 @@ class _PlannedYogaProgramsPageState extends State<PlannedYogaProgramsPage> {
 
   Widget _buildProgramCard(String programName) {
     return Card(
-      color: Colors.grey[700],
+      color: Color.fromARGB(255, 40, 39, 41),
       child: ListTile(
         title: Text(
           programName,
-          style: const TextStyle(fontSize: 18, color: Colors.yellow),
+          style: const TextStyle(fontSize: 18, color: Color(0xFFF7BB0E)),
         ),
         onTap: () {
           // Handle program selection

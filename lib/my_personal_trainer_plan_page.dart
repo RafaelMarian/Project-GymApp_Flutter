@@ -8,13 +8,13 @@ class PersonalTrainerPlanPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Personal Trainer Plan'),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Color.fromARGB(255, 40, 39, 41),
       body: const Center(
         child: Text(
           'Personal Trainer Plan Page',
-          style: TextStyle(color: Colors.yellow, fontSize: 24),
+          style: TextStyle(color: Color(0xFFF7BB0E), fontSize: 24),
         ),
       ),
     );

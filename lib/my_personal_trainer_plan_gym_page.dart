@@ -26,8 +26,7 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
     });
 
     try {
-      final querySnapshot =
-          await FirebaseFirestore.instance.collection('training-plans').get();
+      final querySnapshot = await FirebaseFirestore.instance.collection('training-plans').get();
 
       if (querySnapshot.docs.isNotEmpty) {
         setState(() {
@@ -104,7 +103,9 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('All Training Plans'),
+        backgroundColor: Color.fromARGB(255, 40, 39, 41),
       ),
+      backgroundColor: Color.fromARGB(255, 40, 39, 41), // Set your background color here
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : plans.isNotEmpty

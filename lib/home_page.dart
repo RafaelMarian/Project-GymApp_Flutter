@@ -171,9 +171,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.userProfile.name),
-        backgroundColor: const Color(0xFF29282C), // Dark background for app bar
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark background for app bar
       ),
-      backgroundColor: const Color(0xFF29282C), // Dark background for the page
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark background for the page
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

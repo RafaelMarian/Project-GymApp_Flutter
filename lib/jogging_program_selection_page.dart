@@ -18,9 +18,9 @@ class _JoggingProgramSelectionPageState
     return Scaffold(
       appBar: AppBar(
         title: const Text('Jogging Program Selection'),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Color.fromARGB(255, 40, 39, 41),
       body: Center( // Center the content
         child: Column(
           mainAxisSize: MainAxisSize.min, // Align the column in the center vertically
@@ -35,7 +35,7 @@ class _JoggingProgramSelectionPageState
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
+                backgroundColor: Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50), // Set the same size for all buttons
               ),
               child: const Text('Custom Program'),
@@ -51,7 +51,7 @@ class _JoggingProgramSelectionPageState
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
+                backgroundColor: Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
               child: const Text('Planned Programs'),
@@ -67,7 +67,7 @@ class _JoggingProgramSelectionPageState
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
+                backgroundColor: Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
               child: const Text('My Personal Trainer Plan'),

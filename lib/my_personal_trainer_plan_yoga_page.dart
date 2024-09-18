@@ -15,9 +15,9 @@ class _MyPersonalTrainerPlanYogaPageState
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Personal Trainer Plan (Yoga)'),
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Color.fromARGB(255, 40, 39, 41),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -51,15 +51,15 @@ class _MyPersonalTrainerPlanYogaPageState
 
   Widget _buildWorkoutItem(String workoutName, String details) {
     return Card(
-      color: Colors.grey[700],
+      color: Color.fromARGB(255, 40, 39, 41),
       child: ListTile(
         title: Text(
           workoutName,
-          style: const TextStyle(color: Colors.yellow, fontSize: 18),
+          style: const TextStyle(color: Color(0xFFF7BB0E), fontSize: 18),
         ),
         subtitle: Text(
           details,
-          style: const TextStyle(color: Colors.white70, fontSize: 16),
+          style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 16),
         ),
       ),
     );
