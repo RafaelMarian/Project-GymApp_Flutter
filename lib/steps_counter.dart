@@ -98,11 +98,11 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Confirm Deletion", style: TextStyle(color: Color(0xFF322D29))),
+          title: const Text("Confirm Deletion", style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
           content: const Text("Are you sure you want to clear all data? This action cannot be undone.", style: TextStyle(color: Color(0xFF322D29))),
           actions: [
             TextButton(
-              child: const Text("Cancel", style: TextStyle(color: Color(0xFF322D29))),
+              child: const Text("Cancel", style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
@@ -175,7 +175,7 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
                 items: [5000, 10000, 15000, 20000].map((int value) {
                   return DropdownMenuItem<int>(
                     value: value,
-                    child: Text('$value steps', style: const TextStyle(color:Color(0xFFF7BB0E))), // Dark teal
+                    child: Text('$value steps', style: const TextStyle(color:Color.fromARGB(255, 255, 255, 255))), // Dark teal
                   );
                 }).toList(),
                 onChanged: (newValue) {

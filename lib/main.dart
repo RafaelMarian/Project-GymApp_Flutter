@@ -16,8 +16,39 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Gym Buddies',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+        // Remove the ColorScheme.fromSeed to prevent automatic color generation
+        colorScheme: const ColorScheme.dark(
+          primary: Colors.black, // Primary color for app
+          onPrimary: Colors.white, // Color for text/icons on primary background
+          surface: Colors.black, // Background color for surfaces like cards
+          onSurface: Colors.white, // Text color on surface backgrounds
+        ),
         useMaterial3: true,
+
+        // Input decoration for TextFields across the app
+        inputDecorationTheme: const InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.grey, // Background color of the TextField
+          labelStyle: TextStyle(color: Colors.white), // Label color
+          hintStyle: TextStyle(color: Colors.white), // Hint text color
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white), // Border when not focused
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white), // Border when focused
+          ),
+        ),
+
+        // Ensure all text input uses white text by default
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(color: Colors.white), // Default text style for input text
+        ),
+        
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Colors.white, // Cursor color
+          selectionColor: Colors.tealAccent, // Highlight color for selected text
+          selectionHandleColor: Colors.teal, // Handle color for text selection
+        ),
       ),
       home: const SplashScreen(), // Set SplashScreen as the initial screen
     );
@@ -36,7 +67,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // Navigate to LoginPage after 3 seconds
+    // Navigate to LoginPage after 2 seconds
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,

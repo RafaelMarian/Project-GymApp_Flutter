@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF29282C), // Dark grey background
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark grey background
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(
                 fontSize: 32.0,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFFFFFFFF), // White text
+                color: Color(0xFFF7BB0E), // White text
               ),
             ),
             const SizedBox(height: 20.0),
@@ -57,13 +57,13 @@ class _LoginPageState extends State<LoginPage> {
                 labelText: 'Email',
                 labelStyle: TextStyle(color: Color(0xFFFFFFFF)), // White text
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFFFFFFF)), // White border
+                  borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)), // White border
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFFFFFFF)), // White border
+                  borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)), // White border
                 ),
                 filled: true,
-                fillColor: Color(0xFF29282C), // Dark grey background for text fields
+                fillColor: Color.fromARGB(255, 0, 0, 0), // Dark grey background for text fields
               ),
             ),
             const SizedBox(height: 20.0),
@@ -74,13 +74,13 @@ class _LoginPageState extends State<LoginPage> {
                 labelText: 'Password',
                 labelStyle: TextStyle(color: Color(0xFFFFFFFF)), // White text
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFFFFFFF)), // White border
+                  borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)), // White border
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFFFFFFF)), // White border
+                  borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)), // White border
                 ),
                 filled: true,
-                fillColor: Color(0xFF29282C),
+                fillColor: Color.fromARGB(255, 0, 0, 0),
               ),
             ),
             const SizedBox(height: 20.0),
