@@ -125,7 +125,7 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
       appBar: AppBar(
         title: const Text(
           'Steps Counter',
-          style: TextStyle(color: Color(0xFFF7BB0E)), // Very light cream
+          style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)), // Very light cream
         ),
         backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark teal
         centerTitle: true, // Center the title

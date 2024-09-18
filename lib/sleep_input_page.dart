@@ -70,7 +70,7 @@ class _SleepInputPageState extends State<SleepInputPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sleep Tracking', style: TextStyle(color: Color(0xFFF7BB0E))), // Very light cream
+        title: const Text('Sleep Tracking', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))), // Very light cream
         backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark teal
       ),
       backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Lighter beige

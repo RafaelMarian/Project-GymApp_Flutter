@@ -188,7 +188,7 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
           content: Text("Are you sure you want to clear all data? This action cannot be undone.", style: TextStyle(color: Color.fromARGB(255, 0, 0, 0))), // Text color
           actions: [
             TextButton(
-              child: Text("Cancel", style: TextStyle(color: Color.fromARGB(255, 41, 126, 2))), // Button text color
+              child: Text("Cancel", style: TextStyle(color: Color(0xFFF7BB0E))), // Button text color
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
@@ -221,12 +221,12 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
       appBar: AppBar(
         title: const Text(
           'Water Tracking',
-          style: TextStyle(color: Color(0xFFF7BB0E)), // Primary text color
+          style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)), // Primary text color
         ),
-        backgroundColor: const Color(0xFF29282C), // Dark teal
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark teal
         centerTitle: true, // Center the title
       ),
-      backgroundColor: const Color(0xFF29282C), // Lighter beige
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Lighter beige
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
