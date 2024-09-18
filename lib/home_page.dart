@@ -9,6 +9,8 @@ import 'water_tracking_page.dart'; // Import WaterTrackingPage
 import 'steps_counter.dart'; // Import StepsTrackingPage
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'user_id_page.dart'; // Import the new User ID page
+import 'workout_progress_page.dart'; // Import the new WorkoutProgressPage
+
 
 class HomePage extends StatefulWidget {
   final UserProfile userProfile;
@@ -279,20 +281,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildWorkoutProgressBox() {
-    return const SizedBox(
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const WorkoutProgressPage()),
+      );
+    },
+    child: SizedBox(
       width: double.infinity,
       child: Card(
-        color: Color(0xFFF7BB0E), // Yellow background for workout progress box
+        color: const Color(0xFFF7BB0E), // Yellow background for workout progress box
         child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
+          padding: const EdgeInsets.all(16.0),
+          child: const Text(
             'Workout Progress',
             style: TextStyle(fontSize: 18, color: Colors.black),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildBox(String title, String details) {
     return Card(
