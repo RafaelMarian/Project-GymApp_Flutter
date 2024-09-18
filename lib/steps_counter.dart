@@ -125,13 +125,13 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
       appBar: AppBar(
         title: const Text(
           'Steps Counter',
-          style: TextStyle(color: Color(0xFFEFE9E1)), // Very light cream
+          style: TextStyle(color: Color(0xFFF7BB0E)), // Very light cream
         ),
-        backgroundColor: const Color(0xFF322D29), // Dark teal
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark teal
         centerTitle: true, // Center the title
       ),
       body: Container(
-        color: const Color(0xFFD1C7BD), // Lighter beige
+        color: const Color.fromARGB(255, 40, 39, 41), // Lighter beige
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -146,25 +146,36 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
               const SizedBox(height: 20),
               Text(
                 '$_stepsToday steps',
-                style: const TextStyle(fontSize: 36, color: Color(0xFF322D29)), // Dark teal
+                style: const TextStyle(fontSize: 36, color: Color.fromARGB(255, 255, 255, 255)), // Dark teal
               ),
               const SizedBox(height: 20),
-              TextField(
-                controller: _stepsController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter Steps Today',
-                  labelStyle: TextStyle(color: Color(0xFF322D29)), // Dark teal
-                ),
-              ),
+             Container(
+  decoration: BoxDecoration(
+    color: const Color.fromARGB(255, 0, 0, 0), // Change this to your desired background color
+    borderRadius: BorderRadius.circular(8.0), // Optional: rounded corners for the container
+  ),
+  child: TextField(
+    controller: _stepsController,
+    keyboardType: TextInputType.number,
+    decoration: const InputDecoration(
+      border: OutlineInputBorder(),
+      labelText: 'Enter Steps Today',
+      labelStyle: TextStyle(
+        color: Color.fromARGB(255, 255, 255, 255), // Label color
+      ),
+      filled: true,
+      fillColor: Colors.transparent, // No fill color inside the TextField to see the container background
+    ),
+  ),
+),
+
               const SizedBox(height: 20),
               DropdownButton<int>(
                 value: _goal,
                 items: [5000, 10000, 15000, 20000].map((int value) {
                   return DropdownMenuItem<int>(
                     value: value,
-                    child: Text('$value steps', style: const TextStyle(color: Color(0xFF322D29))), // Dark teal
+                    child: Text('$value steps', style: const TextStyle(color:Color(0xFFF7BB0E))), // Dark teal
                   );
                 }).toList(),
                 onChanged: (newValue) {
@@ -172,16 +183,16 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
                     _goal = newValue ?? _goal;
                   });
                 },
-                hint: const Text('Select your goal', style: TextStyle(color: Color(0xFF322D29))), // Dark teal
+                hint: const Text('Select your goal', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))), // Dark teal
               ),
               const SizedBox(height: 20),
               Text(
                 'Goal Progress: ${(_progress * 100).toStringAsFixed(1)}%',
-                style: const TextStyle(fontSize: 18, color: Color(0xFF322D29)), // Dark teal
+                style: const TextStyle(fontSize: 18, color: Color.fromARGB(255, 255, 255, 255)), // Dark teal
               ),
               Text(
                 'Calories Burned: ${_caloriesBurned.toStringAsFixed(1)} kcal',
-                style: const TextStyle(fontSize: 18, color: Color(0xFF322D29)), // Dark teal
+                style: const TextStyle(fontSize: 18, color: Color.fromARGB(255, 255, 255, 255)), // Dark teal
               ),
               const SizedBox(height: 20),
               Expanded(
@@ -194,11 +205,11 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
                       child: ListTile(
                         title: Text(
                           'Date: ${entry['date']}',
-                          style: const TextStyle(color: Color(0xFFEFE9E1)), // Very light cream
+                          style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)), // Very light cream
                         ),
                         subtitle: Text(
                           'Steps: ${entry['steps']}',
-                          style: const TextStyle(color: Color(0xFFEFE9E1)), // Very light cream
+                          style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)), // Very light cream
                         ),
                         tileColor: const Color(0xFF322D29), // Dark teal
                         contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),

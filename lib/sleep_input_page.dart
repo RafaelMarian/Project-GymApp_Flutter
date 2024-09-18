@@ -70,10 +70,10 @@ class _SleepInputPageState extends State<SleepInputPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sleep Tracking', style: TextStyle(color: Color(0xFFEFE9E1))), // Very light cream
-        backgroundColor: const Color(0xFF322D29), // Dark teal
+        title: const Text('Sleep Tracking', style: TextStyle(color: Color(0xFFF7BB0E))), // Very light cream
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark teal
       ),
-      backgroundColor: const Color(0xFFD1C7BD), // Lighter beige
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Lighter beige
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -81,48 +81,48 @@ class _SleepInputPageState extends State<SleepInputPage> {
             ElevatedButton(
               onPressed: () => _selectSleepTime(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFAC9C8D), // Warm, earthy beige
+                backgroundColor: const Color(0xFFF7BB0E), // Warm, earthy beige
                 minimumSize: const Size(200, 50),
-                foregroundColor: const Color(0xFF322D29), // Dark teal
+                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // Dark teal
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
               child: Text(
                 sleepTime == null ? 'Set Sleep Time' : 'Sleep Time: ${sleepTime?.format(context)}',
-                style: const TextStyle(color: Color(0xFFEFE9E1), fontSize: 16), // Very light cream
+                style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 16), // Very light cream
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _selectWakeUpTime(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFAC9C8D), // Warm, earthy beige
+                backgroundColor: const Color(0xFFF7BB0E), // Warm, earthy beige
                 minimumSize: const Size(200, 50),
-                foregroundColor: const Color(0xFF322D29), // Dark teal
+                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // Dark teal
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
               child: Text(
                 wakeUpTime == null ? 'Set Wake Up Time' : 'Wake Up Time: ${wakeUpTime?.format(context)}',
-                style: const TextStyle(color: Color(0xFFEFE9E1), fontSize: 16), // Very light cream
+                style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 16), // Very light cream
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _saveSleepData,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFAC9C8D), // Warm, earthy beige
+                backgroundColor: const Color(0xFFF7BB0E), // Warm, earthy beige
                 minimumSize: const Size(200, 50),
-                foregroundColor: const Color(0xFF322D29), // Dark teal
+                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // Dark teal
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
               child: const Text(
                 'Save Sleep Data',
-                style: TextStyle(color: Color(0xFFEFE9E1), fontSize: 16), // Very light cream
+                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 16), // Very light cream
               ),
             ),
           ],
