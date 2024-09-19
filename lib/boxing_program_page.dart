@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class NutritionPage extends StatelessWidget {
-  const NutritionPage({Key? key}) : super(key: key);
+class BoxingProgramPage extends StatelessWidget {
+  const BoxingProgramPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nutrition'),
+        title: const Text('Boxing Program'),
         backgroundColor: const Color(0xFF29282C), // Dark background
       ),
       body: const Center(
         child: Text(
-          'Welcome to Nutrition Page!',
+          'Welcome to the Boxing Program!',
           style: TextStyle(fontSize: 18, color: Colors.white),
         ),
       ),

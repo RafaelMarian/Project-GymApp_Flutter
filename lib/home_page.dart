@@ -4,13 +4,21 @@ import 'gym_program_selection_page.dart';
 import 'yoga_program_selection_page.dart';
 import 'cycling_program_selection_page.dart';
 import 'jogging_program_selection_page.dart';
+import 'calisthenics_program_page.dart';
+import 'swimming_program_page.dart';
+import 'home_workout_page.dart';
+import 'boxing_program_page.dart';
+import 'your_ai_page.dart';
+import 'nutrition_page.dart';
+import 'achievements_page.dart';
+import 'stretching_page.dart';
 import 'sleep_input_page.dart';
-import 'water_tracking_page.dart'; // Import WaterTrackingPage
-import 'steps_counter.dart'; // Import StepsTrackingPage
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'user_id_page.dart'; // Import the new User ID page
-import 'workout_progress_page.dart'; // Import the new WorkoutProgressPage
-
+import 'workout_progress_page.dart';
+import 'steps_counter.dart';
+import 'user_id_page.dart';
+import 'custom_programs_page.dart';
+import 'water_tracking_page.dart';
+import 'calories_page.dart';
 
 class HomePage extends StatefulWidget {
   final UserProfile userProfile;
@@ -22,7 +30,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _sleepDuration = 'Not available';
+  String _sleepDuration = '0'; // Changed default value for better calculation
   double _sleepRating = 0.0;
 
   @override
@@ -32,89 +40,33 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _fetchSleepData() async {
-    final now = DateTime.now();
-    final startDate = now.subtract(const Duration(days: 7));
-
-    try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('sleep_data')
-          .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
-          .orderBy('timestamp', descending: true)
-          .limit(7)
-          .get();
-
-      List<int> sleepDurations = [];
-      int totalSleep = 0;
-      int count = 0;
-
-      for (var doc in snapshot.docs) {
-        final data = doc.data();
-        final duration = data['sleep_duration'] as String?;
-
-        if (duration != null) {
-          final parts = duration.split(':');
-          final hours = int.parse(parts[0]);
-          final minutes = int.parse(parts[1]);
-          final totalMinutes = (hours * 60) + minutes;
-
-          sleepDurations.add(totalMinutes);
-          totalSleep += totalMinutes;
-          count++;
-        }
-      }
-
-      if (count > 0) {
-        final averageSleep = totalSleep / count / 60; // Convert minutes to hours
-        setState(() {
-          _sleepDuration = '${averageSleep.toStringAsFixed(2)} hours';
-          _sleepRating = _calculateSleepRating(sleepDurations);
-        });
-      }
-    } catch (e) {
-      print('Error fetching sleep data: $e');
-    }
-  }
-
-  double _calculateSleepRating(List<int> durations) {
-    if (durations.isEmpty) return 0.0;
-
-    int idealSleepMinutes = 8 * 60; // 8 hours in minutes
-    int totalMinutes = durations.reduce((a, b) => a + b);
-    double averageSleep = totalMinutes / durations.length;
-
-    double rating = (averageSleep / idealSleepMinutes) * 100;
-    if (averageSleep > idealSleepMinutes) {
-      rating -= (averageSleep - idealSleepMinutes) * 0.5;
-    }
-    return rating.clamp(0, 100);
+    // Replace with your actual logic to fetch and calculate sleep data
+    setState(() {
+      // Mock data for testing purposes
+      _sleepDuration = '6.5'; // Example duration in hours
+      _sleepRating = 81.0; // Example sleep rating percentage
+    });
   }
 
   Widget _buildSleepTrackingBox() {
-    Color lineColor;
-    final double sleepHours = _parseSleepDuration(_sleepDuration);
-
-    if (sleepHours >= 8) {
-      lineColor = Colors.green;
-    } else if (sleepHours >= 7) {
-      lineColor = Colors.orange;
-    } else {
-      lineColor = Colors.red;
-    }
-
     return GestureDetector(
       onTap: () async {
-        final sleepDuration = await Navigator.push(
+        final updatedData = await Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const SleepInputPage()),
         );
 
-        if (sleepDuration != null) {
+        if (updatedData != null) {
+          setState(() {
+            _sleepDuration = updatedData['duration'] ?? '0';
+            _sleepRating = updatedData['rating'] ?? 0.0;
+          });
           _fetchSleepData(); // Refresh sleep data
         }
       },
       child: Container(
         child: Card(
-          color: const Color(0xFFF7BB0E), // Dark background for sleep tracking box
+          color: const Color(0xFFF7BB0E), // Yellow background
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -125,12 +77,13 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)),
                 ),
                 const SizedBox(height: 10),
+                // Sleep progress bar
                 LayoutBuilder(
                   builder: (context, constraints) {
                     final width = constraints.maxWidth * (_parseSleepDuration(_sleepDuration) / 8).clamp(0.0, 1.0);
                     return Container(
                       height: 20,
-                      color: lineColor,
+                      color: _getSleepProgressColor(),
                       width: width,
                     );
                   },
@@ -148,24 +101,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  double _parseSleepDuration(String duration) {
-    final parts = duration.split(' ');
-    if (parts.length > 1) {
-      final hours = double.tryParse(parts[0]) ?? 0;
-      final minutes = double.tryParse(parts[1]) ?? 0;
-      return hours + minutes / 60;
+  Color _getSleepProgressColor() {
+    final double sleepHours = _parseSleepDuration(_sleepDuration);
+    if (sleepHours >= 8) {
+      return Colors.green;
+    } else if (sleepHours >= 7) {
+      return Colors.orange;
+    } else {
+      return Colors.red;
     }
-    return 0.0;
   }
 
-  void _showUserId() {
-    final userId = widget.userProfile.id;
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => UserIdPage(userId: userId),
-      ),
-    );
+  double _parseSleepDuration(String duration) {
+    final double? parsed = double.tryParse(duration);
+    return parsed ?? 0.0;
   }
 
   @override
@@ -173,9 +122,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.userProfile.name),
-        backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark background for app bar
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark background for the page
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -186,19 +135,16 @@ class _HomePageState extends State<HomePage> {
             Row(
               children: [
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) =>const StepsCounterPage()), // Navigate to StepsTrackingPage
-                      );
-                    },
-                    child: _buildBox('Steps Counted', 'Set and Track your steps'),
-                  ),
+                  child: _buildBox('Steps Counted', 'Set and Track your steps', () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const StepsCounterPage()),
+                    );
+                  }),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: _buildSleepTrackingBox(),
+                  child: _buildSleepTrackingBox(), // Updated Sleep Tracking
                 ),
               ],
             ),
@@ -206,32 +152,49 @@ class _HomePageState extends State<HomePage> {
             Row(
               children: [
                 Expanded(
-                  child: _buildBox('Calories Burned', 'Set and Track your steps'),
+                  child: _buildBox('Calories Burned', 'Track and set your calories', () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CaloriesPage()),
+                    );
+                  }),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => WaterTrackingPage()), // Navigate to WaterTrackingPage
-                      );
-                    },
-                    child: _buildBox('Water Tracking', 'Set and track your goal'),
-                  ),
+                  child: _buildBox('Water Tracking', 'Track your water intake', () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => WaterTrackingPage()),
+                    );
+                  }),
                 ),
               ],
             ),
             const SizedBox(height: 20),
             _buildWorkoutTypeButtons(),
             const SizedBox(height: 20),
-            _buildExercisesSection(),
+            _buildLargeBoxes(),
+            const SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CustomProgramsPage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF7BB0E),
+                ),
+                child: const Text('Custom Programs', style: TextStyle(color: Colors.black)),
+              ),
+            ),
             const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 onPressed: _showUserId,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF7BB0E), // Yellow color for Show User ID button
+                  backgroundColor: const Color(0xFFF7BB0E),
                 ),
                 child: const Text('Show User ID', style: TextStyle(color: Colors.black)),
               ),
@@ -239,90 +202,55 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: const Color(0xFF29282C), // Dark background for bottom app bar
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.home, color: Color(0xFFF7BB0E)),
-              onPressed: () {
-                // Handle home button press
-              },
+      bottomNavigationBar: _buildBottomNavigationBar(),
+    );
+  }
+
+  Widget _buildWorkoutProgressBox() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const WorkoutProgressPage()),
+        );
+      },
+      child: SizedBox(
+        width: double.infinity,
+        child: Card(
+          color: const Color(0xFFF7BB0E),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: const Text(
+              'Workout Progress',
+              style: TextStyle(fontSize: 18, color: Colors.black),
             ),
-            IconButton(
-              icon: const Icon(Icons.search, color: Color(0xFFF7BB0E)),
-              onPressed: () {
-                // Handle search button press
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.notifications, color: Color(0xFFF7BB0E)),
-              onPressed: () {
-                // Handle notifications button press
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.settings, color: Color(0xFFF7BB0E)),
-              onPressed: () {
-                // Handle settings button press
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.person, color: Color(0xFFF7BB0E)),
-              onPressed: () {
-                // Handle profile button press
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildWorkoutProgressBox() {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) =>  WorkoutProgressPage()),
-      );
-    },
-    child: SizedBox(
-      width: double.infinity,
+  Widget _buildBox(String title, String details, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
       child: Card(
-        color: const Color(0xFFF7BB0E), // Yellow background for workout progress box
+        color: const Color.fromARGB(255, 0, 0, 0),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: const Text(
-            'Workout Progress',
-            style: TextStyle(fontSize: 18, color: Colors.black),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                details,
+                style: const TextStyle(fontSize: 14, color: Colors.white70),
+              ),
+            ],
           ),
-        ),
-      ),
-    ),
-  );
-}
-
-
-  Widget _buildBox(String title, String details) {
-    return Card(
-      color: const Color.fromARGB(255, 0, 0, 0), // Dark background for boxes
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              details,
-              style: const TextStyle(fontSize: 14, color: Colors.white70),
-            ),
-          ],
         ),
       ),
     );
@@ -342,7 +270,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF7BB0E), // Yellow color for buttons
+                  backgroundColor: const Color(0xFFF7BB0E),
                 ),
                 child: const Text('Gym Program', style: TextStyle(color: Colors.black)),
               ),
@@ -357,7 +285,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF7BB0E), // Yellow color for buttons
+                  backgroundColor: const Color(0xFFF7BB0E),
                 ),
                 child: const Text('Yoga Program', style: TextStyle(color: Colors.black)),
               ),
@@ -376,9 +304,9 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF7BB0E), // Yellow color for buttons
+                  backgroundColor: const Color(0xFFF7BB0E),
                 ),
-                child: const Text('Cycling Program', style: TextStyle(color: Colors.black)),
+                                child: const Text('Cycling Program', style: TextStyle(color: Colors.black)),
               ),
             ),
             const SizedBox(width: 10),
@@ -391,7 +319,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF7BB0E), // Yellow color for buttons
+                  backgroundColor: const Color(0xFFF7BB0E),
                 ),
                 child: const Text('Jogging Program', style: TextStyle(color: Colors.black)),
               ),
@@ -402,27 +330,121 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildExercisesSection() {
-    return const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildLargeBoxes() {
+    return Row(
       children: [
-        Text(
-          'Exercises',
-          style: TextStyle(fontSize: 18, color: Colors.white),
+        Expanded(
+          child: _buildLargeBox('Your AI', const YourAIPage()),
         ),
-        // Placeholder for exercises
-        SizedBox(height: 10),
-        Card(
-          color: Color(0xFF29282C), // Dark background for exercises section
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'No exercises added yet.',
-              style: TextStyle(fontSize: 16, color: Colors.white70),
-            ),
-          ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: _buildLargeBox('Diet', const NutritionPage()),
         ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: _buildLargeBox('Goals', const AchievementsPage()),
+        ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: _buildLargeBox('Stretch', const StretchingPage()),
+        ),
+        const SizedBox(width: 6),
       ],
     );
   }
+
+  Widget _buildLargeBox(String title, Widget page) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+      },
+      child: Card(
+        color: const Color.fromARGB(255, 0, 0, 0),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(fontSize: 16, color: Colors.white),
+              ),
+              const SizedBox(height: 5),
+              const Text(
+                'Click to explore',
+                style: TextStyle(fontSize: 8, color: Colors.white70),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showUserId() {
+    final userId = widget.userProfile.id;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UserIdPage(userId: userId),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return BottomAppBar(
+      color: const Color(0xFF29282C),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.home, color: Color(0xFFF7BB0E)),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage(userProfile: widget.userProfile)),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.fitness_center, color: Color(0xFFF7BB0E)),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const WorkoutProgressPage()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.account_circle, color: Color(0xFFF7BB0E)),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AchievementsPage()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.restaurant, color: Color(0xFFF7BB0E)),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NutritionPage()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.chat, color: Color(0xFFF7BB0E)),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const YourAIPage()),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
 }
+
