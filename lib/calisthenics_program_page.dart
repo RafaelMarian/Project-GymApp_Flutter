@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CalisthenicsProgramPage extends StatelessWidget {
-  const CalisthenicsProgramPage({Key? key}) : super(key: key);
+  const CalisthenicsProgramPage({super.key});
 
   @override
   Widget build(BuildContext context) {

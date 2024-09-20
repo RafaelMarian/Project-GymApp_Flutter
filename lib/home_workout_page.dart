@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class HomeWorkoutPage extends StatelessWidget {
-  const HomeWorkoutPage({Key? key}) : super(key: key);
+  const HomeWorkoutPage({super.key});
 
   @override
   Widget build(BuildContext context) {

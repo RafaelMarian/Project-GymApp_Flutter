@@ -101,9 +101,9 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Training Plan'),
-        backgroundColor: Color.fromARGB(255, 40, 39, 41),
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Color.fromARGB(255, 40, 39, 41), // Background color for the whole app
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Background color for the whole app
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -111,7 +111,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
           children: [
             TextField(
               onChanged: (value) => clientID = value,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Client ID',
                 filled: true,
                 fillColor: Colors.black,
@@ -126,12 +126,12 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                 ),
               ),
               style: const TextStyle(color: Colors.white),
-              cursorColor: Color(0xFFF7BB0E),
+              cursorColor: const Color(0xFFF7BB0E),
             ),
             const SizedBox(height: 10),
             TextField(
               onChanged: (value) => clientName = value, // Update clientName, not clientID
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Client Name',
                 filled: true,
                 fillColor: Colors.black,
@@ -146,7 +146,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                 ),
               ),
               style: const TextStyle(color: Colors.white),
-              cursorColor: Color(0xFFF7BB0E),
+              cursorColor: const Color(0xFFF7BB0E),
             ),
             const SizedBox(height: 10),
             DropdownButton<String>(
@@ -156,7 +156,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
               items: ['Beginner', 'Intermediate', 'Advanced']
                   .map((difficulty) => DropdownMenuItem<String>(
                         value: difficulty,
-                        child: Text(difficulty, style: TextStyle(color: Colors.white)),
+                        child: Text(difficulty, style: const TextStyle(color: Colors.white)),
                       ))
                   .toList(),
               onChanged: (value) {
@@ -179,7 +179,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
               ]
                   .map((type) => DropdownMenuItem<String>(
                         value: type,
-                        child: Text(type, style: TextStyle(color: Colors.white)),
+                        child: Text(type, style: const TextStyle(color: Colors.white)),
                       ))
                   .toList(),
               onChanged: (value) {
@@ -196,7 +196,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
               items: ['Male', 'Female', 'Other']
                   .map((gender) => DropdownMenuItem<String>(
                         value: gender,
-                        child: Text(gender, style: TextStyle(color: Colors.white)),
+                        child: Text(gender, style: const TextStyle(color: Colors.white)),
                       ))
                   .toList(),
               onChanged: (value) {
@@ -221,7 +221,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
               ]
                   .map((day) => DropdownMenuItem<String>(
                         value: day,
-                        child: Text(day, style: TextStyle(color: Colors.white)),
+                        child: Text(day, style: const TextStyle(color: Colors.white)),
                       ))
                   .toList(),
               onChanged: (value) {
@@ -239,7 +239,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                 ElevatedButton(
                   onPressed: _deleteAllExercises,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 255, 0, 0),
+                    backgroundColor: const Color.fromARGB(255, 255, 0, 0),
                   ),
                   child: const Text('Delete All Exercises'),
                 ),
@@ -285,7 +285,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                             children: [
                               TextField(
                                 onChanged: (value) => exerciseName = value,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: 'Exercise Name',
                                   filled: true,
                                   fillColor: Colors.black,
@@ -304,7 +304,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                               const SizedBox(height: 10),
                               TextField(
                                 onChanged: (value) => reps = int.tryParse(value) ?? 0,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: 'Reps',
                                   filled: true,
                                   fillColor: Colors.black,
@@ -324,7 +324,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                               const SizedBox(height: 10),
                               TextField(
                                 onChanged: (value) => weight = double.tryParse(value) ?? 0.0,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: 'Weight (kg)',
                                   filled: true,
                                   fillColor: Colors.black,
@@ -344,7 +344,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                               const SizedBox(height: 10),
                               TextField(
                                 onChanged: (value) => restTime = int.tryParse(value) ?? 0,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: 'Rest Time (s)',
                                   filled: true,
                                   fillColor: Colors.black,
@@ -377,7 +377,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFF7BB0E),
+                    backgroundColor: const Color(0xFFF7BB0E),
                   ),
                   child: const Text('Add Exercise'),
                 ),
@@ -385,7 +385,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
                 ElevatedButton(
                   onPressed: _submitPlan,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFF7BB0E),
+                    backgroundColor: const Color(0xFFF7BB0E),
                   ),
                   child: const Text('Submit Plan'),
                 ),

@@ -38,9 +38,9 @@ class _CaloriesPageState extends State<CaloriesPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Total Calories Burned:',
-              style: const TextStyle(color: Colors.white, fontSize: 24),
+              style: TextStyle(color: Colors.white, fontSize: 24),
             ),
             const SizedBox(height: 10),
             Text(

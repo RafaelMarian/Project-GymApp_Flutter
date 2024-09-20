@@ -34,11 +34,11 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
           children: [
             Text(
               'Selected Month: ${DateFormat('MMMM yyyy').format(_selectedDate)}',
-              style: TextStyle(fontSize: 18, color: Colors.white),
+              style: const TextStyle(fontSize: 18, color: Colors.white),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFF7BB0E), // Custom color for "Select Month" button
+                backgroundColor: const Color(0xFFF7BB0E), // Custom color for "Select Month" button
               ),
               onPressed: () {
                 showDialog(
@@ -58,7 +58,7 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
                       actions: [
                         TextButton(
                           style: TextButton.styleFrom(
-                            backgroundColor: Color(0xFFF7BB0E), // Custom color for "Confirm" button
+                            backgroundColor: const Color(0xFFF7BB0E), // Custom color for "Confirm" button
                           ),
                           onPressed: () {
                             Navigator.pop(context); // Close the dialog

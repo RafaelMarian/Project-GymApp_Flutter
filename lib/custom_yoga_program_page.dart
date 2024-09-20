@@ -13,9 +13,9 @@ class _CustomYogaProgramPageState extends State<CustomYogaProgramPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Custom Yoga Program'),
-        backgroundColor: Color.fromARGB(255, 40, 39, 41),
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Color.fromARGB(255, 40, 39, 41),
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: const Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(

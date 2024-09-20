@@ -15,9 +15,9 @@ class _MyPersonalTrainerPlanCyclingPageState
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Personal Trainer Plan (Cycling)'),
-        backgroundColor: Color.fromARGB(255, 40, 39, 41),
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Color.fromARGB(255, 40, 39, 41),
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -51,7 +51,7 @@ class _MyPersonalTrainerPlanCyclingPageState
 
   Widget _buildWorkoutItem(String workoutName, String details) {
     return Card(
-      color: Color.fromARGB(255, 40, 39, 41),
+      color: const Color.fromARGB(255, 40, 39, 41),
       child: ListTile(
         title: Text(
           workoutName,

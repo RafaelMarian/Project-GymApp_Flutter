@@ -8,9 +8,9 @@ class PlannedCyclingProgramsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Planned Cycling Programs'),
-        backgroundColor: Color.fromARGB(255, 40, 39, 41),
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Color.fromARGB(255, 40, 39, 41),
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: const Center(
         child: Text(
           'Choose from various planned cycling programs!',

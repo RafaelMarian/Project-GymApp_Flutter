@@ -214,13 +214,13 @@ class _HomePageState extends State<HomePage> {
           MaterialPageRoute(builder: (context) => const WorkoutProgressPage()),
         );
       },
-      child: SizedBox(
+      child: const SizedBox(
         width: double.infinity,
         child: Card(
-          color: const Color(0xFFF7BB0E),
+          color: Color(0xFFF7BB0E),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: const Text(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
               'Workout Progress',
               style: TextStyle(fontSize: 18, color: Colors.black),
             ),

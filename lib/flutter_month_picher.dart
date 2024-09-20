@@ -6,10 +6,10 @@ class MonthPickerDialog extends StatefulWidget {
   final ValueChanged<DateTime> onChanged;
 
   const MonthPickerDialog({
-    Key? key,
+    super.key,
     required this.selectedDate,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   _MonthPickerDialogState createState() => _MonthPickerDialogState();

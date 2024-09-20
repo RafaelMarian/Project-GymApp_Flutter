@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SwimmingProgramPage extends StatelessWidget {
-  const SwimmingProgramPage({Key? key}) : super(key: key);
+  const SwimmingProgramPage({super.key});
 
   @override
   Widget build(BuildContext context) {

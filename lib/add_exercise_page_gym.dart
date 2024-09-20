@@ -62,16 +62,16 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Exercise'),
-        backgroundColor: Color.fromARGB(255, 40, 39, 41),
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Color.fromARGB(255, 40, 39, 41),
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Exercise Name',
                 filled: true,
                 fillColor: Colors.black,
@@ -86,12 +86,12 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
                 ),
               ),
               style: const TextStyle(color: Colors.white),
-              cursorColor: Color(0xFFF7BB0E),
+              cursorColor: const Color(0xFFF7BB0E),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _descriptionController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Description',
                 filled: true,
                 fillColor: Colors.black,
@@ -106,13 +106,13 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
                 ),
               ),
               style: const TextStyle(color: Colors.white),
-              cursorColor: Color(0xFFF7BB0E),
+              cursorColor: const Color(0xFFF7BB0E),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _repsController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Number of Reps',
                 filled: true,
                 fillColor: Colors.black,
@@ -127,13 +127,13 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
                 ),
               ),
               style: const TextStyle(color: Colors.white),
-              cursorColor: Color(0xFFF7BB0E),
+              cursorColor: const Color(0xFFF7BB0E),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _kgController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Weight (kg)',
                 filled: true,
                 fillColor: Colors.black,
@@ -148,7 +148,7 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
                 ),
               ),
               style: const TextStyle(color: Colors.white),
-              cursorColor: Color(0xFFF7BB0E),
+              cursorColor: const Color(0xFFF7BB0E),
             ),
             const SizedBox(height: 16),
             DropdownButton<String>(
@@ -172,7 +172,7 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
             ElevatedButton(
               onPressed: _addExercise,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFF7BB0E),
+                backgroundColor: const Color(0xFFF7BB0E),
               ),
               child: const Text('Add Exercise'),
             ),

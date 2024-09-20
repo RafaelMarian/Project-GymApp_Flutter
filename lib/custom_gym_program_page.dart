@@ -97,15 +97,15 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Custom Gym Program'),
-        backgroundColor: Color.fromARGB(255, 40, 39, 41),
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Color.fromARGB(255, 40, 39, 41),
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: Column(
         children: [
           DropdownButton<String>(
             value: selectedMuscleGroup,
             hint: const Text('Select Muscle Group', style: TextStyle(color: Colors.white)),
-            dropdownColor: Color.fromARGB(255, 0, 0, 0),
+            dropdownColor: const Color.fromARGB(255, 0, 0, 0),
             items: <String>['Chest', 'Back', 'Biceps', 'Triceps', 'Legs', 'Abs', 'Shoulders']
                 .map((String value) {
               return DropdownMenuItem<String>(
@@ -130,7 +130,7 @@ class _CustomGymProgramPageState extends State<CustomGymProgramPage> {
                 final userExercise = userInput[exerciseName] ?? {'kg': defaultKg.toString(), 'reps': defaultReps.toString()};
 
                 return Card(
-                  color: Color.fromARGB(255, 0, 0, 0),
+                  color: const Color.fromARGB(255, 0, 0, 0),
                   child: ExpansionTile(
                     title: Text(
                       exerciseName,

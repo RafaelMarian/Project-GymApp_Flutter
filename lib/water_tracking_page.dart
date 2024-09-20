@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
 class WaterTrackingPage extends StatefulWidget {
+  const WaterTrackingPage({super.key});
+
   @override
   _WaterTrackingPageState createState() => _WaterTrackingPageState();
 }
@@ -33,7 +35,7 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
 
     // Initialize water animation controllers
     firstController = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 1500));
+        vsync: this, duration: const Duration(milliseconds: 1500));
     firstAnimation = Tween<double>(begin: 1.9, end: 2.1).animate(
         CurvedAnimation(parent: firstController, curve: Curves.easeInOut))
       ..addListener(() {
@@ -48,7 +50,7 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
       });
 
     secondController = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 1500));
+        vsync: this, duration: const Duration(milliseconds: 1500));
     secondAnimation = Tween<double>(begin: 1.8, end: 2.4).animate(
         CurvedAnimation(parent: secondController, curve: Curves.easeInOut))
       ..addListener(() {
@@ -63,7 +65,7 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
       });
 
     thirdController = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 1500));
+        vsync: this, duration: const Duration(milliseconds: 1500));
     thirdAnimation = Tween<double>(begin: 1.8, end: 2.4).animate(
         CurvedAnimation(parent: thirdController, curve: Curves.easeInOut))
       ..addListener(() {
@@ -78,7 +80,7 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
       });
 
     fourthController = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 1500));
+        vsync: this, duration: const Duration(milliseconds: 1500));
     fourthAnimation = Tween<double>(begin: 1.9, end: 2.1).animate(
         CurvedAnimation(parent: fourthController, curve: Curves.easeInOut))
       ..addListener(() {
@@ -92,15 +94,15 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
         }
       });
 
-    Timer(Duration(seconds: 2), () {
+    Timer(const Duration(seconds: 2), () {
       firstController.forward();
     });
 
-    Timer(Duration(milliseconds: 1600), () {
+    Timer(const Duration(milliseconds: 1600), () {
       secondController.forward();
     });
 
-    Timer(Duration(milliseconds: 800), () {
+    Timer(const Duration(milliseconds: 800), () {
       thirdController.forward();
     });
 
@@ -184,17 +186,17 @@ class _WaterTrackingPageState extends State<WaterTrackingPage> with TickerProvid
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Confirm Deletion", style: TextStyle(color: Color.fromARGB(255, 255, 0, 0))), // Text color
-          content: Text("Are you sure you want to clear all data? This action cannot be undone.", style: TextStyle(color: Color.fromARGB(255, 0, 0, 0))), // Text color
+          title: const Text("Confirm Deletion", style: TextStyle(color: Color.fromARGB(255, 255, 0, 0))), // Text color
+          content: const Text("Are you sure you want to clear all data? This action cannot be undone.", style: TextStyle(color: Color.fromARGB(255, 0, 0, 0))), // Text color
           actions: [
             TextButton(
-              child: Text("Cancel", style: TextStyle(color: Color(0xFFF7BB0E))), // Button text color
+              child: const Text("Cancel", style: TextStyle(color: Color(0xFFF7BB0E))), // Button text color
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
-              child: Text("Delete", style: TextStyle(color: Color.fromARGB(255, 255, 0, 0))), // Button text color
+              child: const Text("Delete", style: TextStyle(color: Color.fromARGB(255, 255, 0, 0))), // Button text color
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -334,13 +336,13 @@ class WaterFillAnimation extends StatelessWidget {
   final Animation<double> fourthAnimation;
 
   const WaterFillAnimation({
-    Key? key,
+    super.key,
     required this.progress,
     required this.firstAnimation,
     required this.secondAnimation,
     required this.thirdAnimation,
     required this.fourthAnimation,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -350,7 +352,7 @@ class WaterFillAnimation extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(100.0),
-          child: Container(
+          child: SizedBox(
             height: size.width * 0.5,
             width: size.width * 0.5,
             child: Stack(

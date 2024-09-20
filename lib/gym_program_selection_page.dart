@@ -29,7 +29,7 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
   ),
   backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Custom background color
 ),
-      backgroundColor: Color.fromARGB(255, 40, 39, 41),
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -39,12 +39,12 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CustomGymProgramPage(),
+                    builder: (context) => const CustomGymProgramPage(),
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFF7BB0E),
+                backgroundColor: const Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
               child: const Text(
@@ -61,12 +61,12 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlannedGymProgramsPage(),
+                    builder: (context) => const PlannedGymProgramsPage(),
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFF7BB0E),
+                backgroundColor: const Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
               child: const Text(
@@ -83,12 +83,12 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyPersonalTrainerPlanPageGym(), // Navigate to "My Personal Trainer Plan"
+                    builder: (context) => const MyPersonalTrainerPlanPageGym(), // Navigate to "My Personal Trainer Plan"
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFF7BB0E),
+                backgroundColor: const Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
               child: const Text(
@@ -105,12 +105,12 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddExerciseGymPage(), // Navigate to AddExercisePage
+                    builder: (context) => const AddExerciseGymPage(), // Navigate to AddExercisePage
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFF7BB0E),
+                backgroundColor: const Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
              child: const Text(
@@ -127,12 +127,12 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CreateTrainingPlanPageGym(), // Navigate to CreateTrainingPlanGymPage
+                    builder: (context) => const CreateTrainingPlanPageGym(), // Navigate to CreateTrainingPlanGymPage
                   ),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFF7BB0E),
+                backgroundColor: const Color(0xFFF7BB0E),
                 minimumSize: const Size(200, 50),
               ),
               child: const Text(

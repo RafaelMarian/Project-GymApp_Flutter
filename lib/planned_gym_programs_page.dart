@@ -41,16 +41,16 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Planned Gym Programs'),
-        backgroundColor: Color.fromARGB(255, 40, 39, 41),
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Color.fromARGB(255, 40, 39, 41),
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: Column(
         children: [
           // Dropdown for difficulty
           DropdownButton<String>(
             value: selectedDifficulty,
             hint: const Text('Select Difficulty', style: TextStyle(color: Colors.white)),
-            dropdownColor: Color.fromARGB(255, 0, 0, 0),
+            dropdownColor: const Color.fromARGB(255, 0, 0, 0),
             items: <String>['Beginner', 'Intermediate', 'Advanced'].map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -67,7 +67,7 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
           DropdownButton<String>(
             value: selectedWorkoutType,
             hint: const Text('Select Workout Type', style: TextStyle(color: Colors.white)),
-            dropdownColor: Color.fromARGB(255, 0, 0, 0),
+            dropdownColor: const Color.fromARGB(255, 0, 0, 0),
             items: <String>[
               'Full Body', 
               'One Muscle Group Per Day', 
@@ -90,7 +90,7 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
           DropdownButton<String>(
             value: selectedGender,
             hint: const Text('Select Gender', style: TextStyle(color: Colors.white)),
-            dropdownColor: Color.fromARGB(255, 0, 0, 0),
+            dropdownColor: const Color.fromARGB(255, 0, 0, 0),
             items: <String>['Male', 'Female'].map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -106,7 +106,7 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
           ElevatedButton(
   onPressed: _fetchWorkoutPlan,
   style: ElevatedButton.styleFrom(
-    backgroundColor: Color(0xFFF7BB0E), // Background color
+    backgroundColor: const Color(0xFFF7BB0E), // Background color
     foregroundColor: const Color.fromARGB(255, 0, 0, 0), // Text color
   ),
   child: const Text('Fetch Workout Plan'),

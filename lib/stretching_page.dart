@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class StretchingPage extends StatelessWidget {
-  const StretchingPage({Key? key}) : super(key: key);
+  const StretchingPage({super.key});
 
   @override
   Widget build(BuildContext context) {

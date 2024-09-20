@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BoxingProgramPage extends StatelessWidget {
-  const BoxingProgramPage({Key? key}) : super(key: key);
+  const BoxingProgramPage({super.key});
 
   @override
   Widget build(BuildContext context) {

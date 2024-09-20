@@ -14,9 +14,9 @@ class _PlannedYogaProgramsPageState extends State<PlannedYogaProgramsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Planned Yoga Programs'),
-        backgroundColor: Color.fromARGB(255, 40, 39, 41),
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Color.fromARGB(255, 40, 39, 41),
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
@@ -33,7 +33,7 @@ class _PlannedYogaProgramsPageState extends State<PlannedYogaProgramsPage> {
 
   Widget _buildProgramCard(String programName) {
     return Card(
-      color: Color.fromARGB(255, 40, 39, 41),
+      color: const Color.fromARGB(255, 40, 39, 41),
       child: ListTile(
         title: Text(
           programName,

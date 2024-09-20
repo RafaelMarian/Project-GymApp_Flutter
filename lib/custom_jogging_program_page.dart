@@ -8,9 +8,9 @@ class CustomJoggingProgramPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Custom Jogging Program'),
-        backgroundColor: Color.fromARGB(255, 40, 39, 41),
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
-      backgroundColor: Color.fromARGB(255, 40, 39, 41),
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: const Center(
         child: Text(
           'Custom Jogging Program Page',
