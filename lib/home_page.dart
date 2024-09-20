@@ -19,6 +19,9 @@ import 'user_id_page.dart';
 import 'custom_programs_page.dart';
 import 'water_tracking_page.dart';
 import 'calories_page.dart';
+import 'cards_id.dart';
+import 'case_opening_animation.dart';
+import 'case_opening_logic.dart';
 
 class HomePage extends StatefulWidget {
   final UserProfile userProfile;
@@ -155,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                   child: _buildBox('Calories Burned', 'Track and set your calories', () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const CaloriesPage()),
+                      MaterialPageRoute(builder: (context) => InventoryPage()),
                     );
                   }),
                 ),
@@ -164,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                   child: _buildBox('Water Tracking', 'Track your water intake', () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => WaterTrackingPage()),
+                      MaterialPageRoute(builder: (context) => const WaterTrackingPage()),
                     );
                   }),
                 ),

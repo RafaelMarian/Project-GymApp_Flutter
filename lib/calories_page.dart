@@ -1,56 +1,108 @@
 import 'package:flutter/material.dart';
+import 'cards_id.dart';
+import 'case_opening_animation.dart';
 
-class CaloriesPage extends StatefulWidget {
-  const CaloriesPage({super.key});
-
+class InventoryPage extends StatefulWidget {
   @override
-  _CaloriesPageState createState() => _CaloriesPageState();
+  _InventoryPageState createState() => _InventoryPageState();
 }
 
-class _CaloriesPageState extends State<CaloriesPage> {
-  // Placeholder for calorie tracking data
-  int _caloriesBurned = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchCalorieData();
-  }
-
-  Future<void> _fetchCalorieData() async {
-    // Your logic for fetching and calculating calorie data goes here
-    // For demonstration, we're just setting a static value
-    setState(() {
-      _caloriesBurned = 2500; // Example static value
-    });
-  }
+class _InventoryPageState extends State<InventoryPage> {
+  List<Case> cases = [Case(id: '1', requiredPoints: 100, isOpened: false)];
+  List<CardItem> cards = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Calories Burned'),
-        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
+      appBar: AppBar(title: Text('Inventory')),
+      body: Column(
+        children: [
+          Text('Cases', style: Theme.of(context).textTheme.titleLarge),
+          SizedBox(height: 10),
+          _buildCasesSection(),
+          Divider(),
+          Text('Cards', style: Theme.of(context).textTheme.titleLarge),
+          SizedBox(height: 10),
+          _buildCardsSection(),
+        ],
       ),
-      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Total Calories Burned:',
-              style: TextStyle(color: Colors.white, fontSize: 24),
+    );
+  }
+
+  Widget _buildCasesSection() {
+    return Expanded(
+      child: cases.isEmpty
+          ? Center(child: Text('No cases available'))
+          : ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: cases.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    if (!cases[index].isOpened) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CaseOpeningAnimation(
+                            onCardRevealed: (CardItem revealedCard) {
+                              setState(() {
+                                cases[index] = Case(
+                                  id: cases[index].id,
+                                  requiredPoints: cases[index].requiredPoints,
+                                  isOpened: true,
+                                );
+                                cards.add(revealedCard);
+                              });
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  child: Card(
+                    color: cases[index].isOpened ? Colors.grey : Colors.amber,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Case #${cases[index].id}'),
+                          Text('Points: ${cases[index].requiredPoints}'),
+                          Text(cases[index].isOpened ? 'Opened' : 'Tap to open'),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
-            const SizedBox(height: 10),
-            Text(
-              '$_caloriesBurned kcal',
-              style: const TextStyle(color: Colors.white, fontSize: 48, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _buildCardsSection() {
+    return Expanded(
+      child: cards.isEmpty
+          ? Center(child: Text('No cards available'))
+          : GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemCount: cards.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  color: cards[index].rarity.color,
+                  child: Center(
+                    child: Text(
+                      cards[index].name,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              },
             ),
-            // Add more widgets or functionality for calorie tracking here
-          ],
-        ),
-      ),
     );
   }
 }
