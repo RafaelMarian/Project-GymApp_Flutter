@@ -3,6 +3,8 @@ import 'cards_id.dart';
 import 'case_opening_animation.dart';
 
 class InventoryPage extends StatefulWidget {
+  const InventoryPage({super.key});
+
   @override
   _InventoryPageState createState() => _InventoryPageState();
 }
@@ -14,15 +16,15 @@ class _InventoryPageState extends State<InventoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Inventory')),
+      appBar: AppBar(title: const Text('Inventory')),
       body: Column(
         children: [
           Text('Cases', style: Theme.of(context).textTheme.titleLarge),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           _buildCasesSection(),
-          Divider(),
+          const Divider(),
           Text('Cards', style: Theme.of(context).textTheme.titleLarge),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           _buildCardsSection(),
         ],
       ),
@@ -32,7 +34,7 @@ class _InventoryPageState extends State<InventoryPage> {
   Widget _buildCasesSection() {
     return Expanded(
       child: cases.isEmpty
-          ? Center(child: Text('No cases available'))
+          ? const Center(child: Text('No cases available'))
           : ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: cases.length,
@@ -82,9 +84,9 @@ class _InventoryPageState extends State<InventoryPage> {
   Widget _buildCardsSection() {
     return Expanded(
       child: cards.isEmpty
-          ? Center(child: Text('No cards available'))
+          ? const Center(child: Text('No cards available'))
           : GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
@@ -97,7 +99,7 @@ class _InventoryPageState extends State<InventoryPage> {
                     child: Text(
                       cards[index].name,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ),
                 );

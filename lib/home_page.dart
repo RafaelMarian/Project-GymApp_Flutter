@@ -4,10 +4,6 @@ import 'gym_program_selection_page.dart';
 import 'yoga_program_selection_page.dart';
 import 'cycling_program_selection_page.dart';
 import 'jogging_program_selection_page.dart';
-import 'calisthenics_program_page.dart';
-import 'swimming_program_page.dart';
-import 'home_workout_page.dart';
-import 'boxing_program_page.dart';
 import 'your_ai_page.dart';
 import 'nutrition_page.dart';
 import 'achievements_page.dart';
@@ -19,9 +15,6 @@ import 'user_id_page.dart';
 import 'custom_programs_page.dart';
 import 'water_tracking_page.dart';
 import 'calories_page.dart';
-import 'cards_id.dart';
-import 'case_opening_animation.dart';
-import 'case_opening_logic.dart';
 
 class HomePage extends StatefulWidget {
   final UserProfile userProfile;
