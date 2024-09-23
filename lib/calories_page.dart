@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'cards_id.dart';
 import 'case_opening_animation.dart';
 
@@ -20,22 +21,48 @@ class _InventoryPageState extends State<InventoryPage> {
     Case(id: '7', requiredPoints: 150, isOpened: false),
     Case(id: '8', requiredPoints: 150, isOpened: false),
     Case(id: '9', requiredPoints: 150, isOpened: false),
-
   ];
+
   List<CardItem> cards = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCardsFromFirestore(); // Fetch cards from Firestore when the page loads
+  }
+
+  Future<void> _loadCardsFromFirestore() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    try {
+      QuerySnapshot querySnapshot = await firestore.collection('inventory').get();
+      List<CardItem> loadedCards = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return CardItem(
+          name: data['name'],
+          rarity: Rarity.values.firstWhere((e) => e.toString() == data['rarity']),
+        );
+      }).toList();
+
+      setState(() {
+        cards = loadedCards; // Update the inventory with the loaded cards
+      });
+    } catch (e) {
+      print("Error loading cards from Firestore: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Inventory')),
       body: Container(
-        color: const Color.fromARGB(255, 40, 39, 41), // Background color change
+        color: const Color.fromARGB(255, 40, 39, 41),
         child: Column(
           children: [
-            const SizedBox(height: 20), // Padding from the top
-            _buildCardsSection(), // Cards displayed first (above)
-            const Divider(color: Color(0xFFF7BB0E)), // Divider between sections
-            _buildCasesSection(), // Cases displayed below
+            const SizedBox(height: 20),
+            _buildCardsSection(),
+            const Divider(color: Color(0xFFF7BB0E)),
+            _buildCasesSection(),
           ],
         ),
       ),
@@ -44,7 +71,7 @@ class _InventoryPageState extends State<InventoryPage> {
 
   Widget _buildCardsSection() {
     return Expanded(
-      flex: 2, // Takes up more space for cards
+      flex: 2,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: cards.isEmpty
@@ -56,10 +83,10 @@ class _InventoryPageState extends State<InventoryPage> {
               )
             : GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4, // Smaller cards with 4 in a row
+                  crossAxisCount: 4,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
-                  childAspectRatio: 2 / 3, // Make the cards taller than wide
+                  childAspectRatio: 2 / 3,
                 ),
                 itemCount: cards.length,
                 itemBuilder: (context, index) {
@@ -80,106 +107,100 @@ class _InventoryPageState extends State<InventoryPage> {
   }
 
   Widget _buildCasesSection() {
-  return Expanded(
-    flex: 1, // Takes up less space for cases
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: cases.isEmpty
-          ? const Center(
-              child: Text(
-                'No cases available',
-                style: TextStyle(color: Colors.white),
-              ),
-            )
-          : SizedBox( // Explicitly set the height for the ListView
-              height: 80, // Set the height for the entire section
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: cases.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () => _showOpenCaseDialog(index), // Show dialog on tap
-                    child: Card(
-                      color: cases[index].isOpened ? Colors.grey : const Color(0xFFF7BB0E),
-                      child: Container(
-                        width: 60, // Smaller square size
-                        height: 40, // Set the same height to maintain the square shape
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Case #${cases[index].id}',
-                              style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.black,
+    return Expanded(
+      flex: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: cases.isEmpty
+            ? const Center(
+                child: Text(
+                  'No cases available',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+            : SizedBox(
+                height: 80,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: cases.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () => _showOpenCaseDialog(index),
+                      child: Card(
+                        color: cases[index].isOpened ? Colors.grey : const Color(0xFFF7BB0E),
+                        child: Container(
+                          width: 60,
+                          height: 40,
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Case #${cases[index].id}',
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'Points: ${cases[index].requiredPoints}',
-                              style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.black,
+                              Text(
+                                'Points: ${cases[index].requiredPoints}',
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                            Text(
-                              cases[index].isOpened ? 'Opened' : 'Tap to open',
-                              style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.black,
+                              Text(
+                                cases[index].isOpened ? 'Opened' : 'Tap to open',
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-    ),
-  );
-}
+      ),
+    );
+  }
 
-
-  /// Show a confirmation dialog before opening the case
   void _showOpenCaseDialog(int index) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('Open Case'),
-        content: const Text('Do you want to open this case?'),
-        actions: [
-          // Cancel Button - Red Color
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close dialog
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.red, // Set text color to red
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Open Case'),
+          content: const Text('Do you want to open this case?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              child: const Text('Cancel'),
             ),
-            child: const Text('Cancel'),
-          ),
-          // Open Button - Green Color
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close dialog
-              _openCase(index); // Open case if confirmed
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.green, // Set text color to green
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _openCase(index);
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.green,
+              ),
+              child: const Text('Open'),
             ),
-            child: const Text('Open'),
-          ),
-        ],
-      );
-    },
-  );
-}
+          ],
+        );
+      },
+    );
+  }
 
-
-  /// Navigate to CaseOpeningAnimation page when case is opened
   void _openCase(int index) {
     if (!cases[index].isOpened) {
       Navigator.push(
@@ -195,10 +216,25 @@ class _InventoryPageState extends State<InventoryPage> {
                 );
                 cards.add(revealedCard);
               });
+
+              // Save the card to Firestore
+              _saveCardToFirestore(revealedCard);
             },
           ),
         ),
       );
+    }
+  }
+
+  void _saveCardToFirestore(CardItem card) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    try {
+      await firestore.collection('inventory').add({
+        'name': card.name,
+        'rarity': card.rarity.toString(),
+      });
+    } catch (e) {
+      print("Error saving card to Firestore: $e");
     }
   }
 }

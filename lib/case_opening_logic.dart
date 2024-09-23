@@ -8,7 +8,6 @@ class CaseOpeningLogic {
     CardItem(name: 'Epic Card 1', rarity: Rarity.epic),
     CardItem(name: 'Legendary Card 1', rarity: Rarity.legendary),
     CardItem(name: 'Mythical Card 1', rarity: Rarity.mythical),
-    // Add more cards as needed
   ];
 
   static CardItem openCase() {
