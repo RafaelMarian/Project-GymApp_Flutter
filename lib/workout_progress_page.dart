@@ -13,11 +13,14 @@ class WorkoutProgressPage extends StatefulWidget {
 class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
   List<bool> _checkedDays = List.generate(31, (index) => false); // Assume 31 days
   DateTime _selectedDate = DateTime.now(); // Default to current date
+  int points = 0; // Track user points
+  int cases = 0; // Track number of cases
 
   @override
   void initState() {
     super.initState();
     _fetchDataForMonth(_selectedDate); // Fetch data for the default month
+    _fetchPointsAndCases(); // Fetch points and cases from Firestore
   }
 
   @override
@@ -26,6 +29,19 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
       appBar: AppBar(
         title: const Text('Workout Progress'),
         backgroundColor: const Color.fromARGB(255, 40, 39, 41),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Text(
+                  'Points: $points | Cases: $cases',
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: Padding(
@@ -97,18 +113,20 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
                 ),
                 itemCount: _checkedDays.length,
                 itemBuilder: (context, index) {
+                  bool isCurrentDay = _selectedDate.month == DateTime.now().month &&
+                      index + 1 == DateTime.now().day;
+
                   return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _checkedDays[index] = !_checkedDays[index];
-                        _saveCheckedDays(); // Save state to Firebase
-                      });
-                    },
+                    onTap: isCurrentDay && !_checkedDays[index]
+                        ? () => _confirmCheckBox(index)
+                        : null,
                     child: Container(
                       decoration: BoxDecoration(
                         color: _checkedDays[index]
                             ? Colors.green
-                            : Colors.grey[800],
+                            : isCurrentDay
+                                ? Colors.grey[600]
+                                : Colors.grey[800],
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Center(
@@ -153,6 +171,66 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
       });
     } catch (e) {
       print('Error fetching workout data: $e');
+    }
+  }
+
+  Future<void> _fetchPointsAndCases() async {
+    try {
+      final doc = await FirebaseFirestore.instance.collection('users').doc('user_id').get();
+      if (doc.exists) {
+        final data = doc.data()!;
+        setState(() {
+          points = data['points'] ?? 0;
+          cases = data['cases'] ?? 0;
+        });
+      }
+    } catch (e) {
+      print('Error fetching points and cases: $e');
+    }
+  }
+
+  Future<void> _savePointsAndCases() async {
+    try {
+      await FirebaseFirestore.instance.collection('users').doc('user_id').set({
+        'points': points,
+        'cases': cases,
+      }, SetOptions(merge: true));
+    } catch (e) {
+      print('Error saving points and cases: $e');
+    }
+  }
+
+  Future<void> _confirmCheckBox(int index) async {
+    bool confirm = await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirm Check'),
+          content: const Text('Do you want to check this box?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm) {
+      setState(() {
+        _checkedDays[index] = true;
+        points++;
+        if (points % 30 == 0) {
+          cases++;
+        }
+        _saveCheckedDays();
+        _savePointsAndCases();
+      });
     }
   }
 
