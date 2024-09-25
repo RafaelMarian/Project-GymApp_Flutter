@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class SleepInputPage extends StatefulWidget {
   const SleepInputPage({super.key});
@@ -11,8 +12,34 @@ class SleepInputPage extends StatefulWidget {
 class _SleepInputPageState extends State<SleepInputPage> {
   TimeOfDay? sleepTime;
   TimeOfDay? wakeUpTime;
+  DateTime? lastInputTime;
+  bool canInput = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLastInputTime();
+  }
+
+  Future<void> _checkLastInputTime() async {
+    // Fetch the last sleep entry time from Firestore or locally
+    final snapshot = await FirebaseFirestore.instance
+        .collection('sleep_data')
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final lastTime = snapshot.docs.first['timestamp'].toDate();
+      setState(() {
+        lastInputTime = lastTime;
+        canInput = DateTime.now().difference(lastTime).inHours >= 16;
+      });
+    }
+  }
 
   Future<void> _selectSleepTime(BuildContext context) async {
+    if (!canInput) return;
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: sleepTime ?? TimeOfDay.now(),
@@ -25,6 +52,7 @@ class _SleepInputPageState extends State<SleepInputPage> {
   }
 
   Future<void> _selectWakeUpTime(BuildContext context) async {
+    if (!canInput) return;
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: wakeUpTime ?? TimeOfDay.now(),
@@ -39,22 +67,53 @@ class _SleepInputPageState extends State<SleepInputPage> {
   Future<void> _saveSleepData() async {
     if (sleepTime != null && wakeUpTime != null) {
       final sleepDuration = calculateSleepDuration(sleepTime!, wakeUpTime!);
+      // Confirm dialog before saving
+      bool confirmed = await _confirmSaveDialog(sleepDuration);
 
-      try {
-        await FirebaseFirestore.instance.collection('sleep_data').add({
-          'sleep_time': sleepTime?.format(context),
-          'wake_up_time': wakeUpTime?.format(context),
-          'sleep_duration': sleepDuration,
-          'timestamp': Timestamp.now(),
-        });
+      if (confirmed) {
+        try {
+          await FirebaseFirestore.instance.collection('sleep_data').add({
+            'sleep_time': sleepTime?.format(context),
+            'wake_up_time': wakeUpTime?.format(context),
+            'sleep_duration': sleepDuration,
+            'timestamp': Timestamp.now(),
+          });
 
-        Navigator.pop(context, sleepDuration);
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error saving sleep data: $e')),
-        );
+          setState(() {
+            lastInputTime = DateTime.now();
+            canInput = false; // Disable input for 16 hours
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Sleep data saved successfully')),
+          );
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error saving sleep data: $e')),
+          );
+        }
       }
     }
+  }
+
+  Future<bool> _confirmSaveDialog(String duration) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Sleep Data'),
+        content: Text('You slept for $duration. Is this correct?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Confirm'),
+          ),
+        ],
+      ),
+    ) ?? false;
   }
 
   String calculateSleepDuration(TimeOfDay sleep, TimeOfDay wakeUp) {
@@ -70,63 +129,51 @@ class _SleepInputPageState extends State<SleepInputPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sleep Tracking', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))), // Very light cream
-        backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark teal
+        title: const Text('Sleep Tracking', style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF29282C),
       ),
-      backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Lighter beige
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ElevatedButton(
-              onPressed: () => _selectSleepTime(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF7BB0E), // Warm, earthy beige
-                minimumSize: const Size(200, 50),
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // Dark teal
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text(
-                sleepTime == null ? 'Set Sleep Time' : 'Sleep Time: ${sleepTime?.format(context)}',
-                style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 16), // Very light cream
-              ),
+      backgroundColor: const Color(0xFF29282C),
+      body: canInput ? _buildInputForm(context) : _buildCooldownMessage(),
+    );
+  }
+
+  Widget _buildInputForm(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ElevatedButton(
+            onPressed: () => _selectSleepTime(context),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF7BB0E)),
+            child: Text(
+              sleepTime == null ? 'Set Sleep Time' : 'Sleep Time: ${sleepTime?.format(context)}',
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _selectWakeUpTime(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF7BB0E), // Warm, earthy beige
-                minimumSize: const Size(200, 50),
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // Dark teal
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text(
-                wakeUpTime == null ? 'Set Wake Up Time' : 'Wake Up Time: ${wakeUpTime?.format(context)}',
-                style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 16), // Very light cream
-              ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => _selectWakeUpTime(context),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF7BB0E)),
+            child: Text(
+              wakeUpTime == null ? 'Set Wake Up Time' : 'Wake Up Time: ${wakeUpTime?.format(context)}',
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _saveSleepData,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF7BB0E), // Warm, earthy beige
-                minimumSize: const Size(200, 50),
-                foregroundColor: const Color.fromARGB(255, 0, 0, 0), // Dark teal
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                'Save Sleep Data',
-                style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 16), // Very light cream
-              ),
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _saveSleepData,
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF7BB0E)),
+            child: const Text('Save Sleep Data'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCooldownMessage() {
+    final DateTime? nextInputTime = lastInputTime?.add(const Duration(hours: 16));
+    return Center(
+      child: Text(
+        'You can input sleep data again at ${DateFormat('hh:mm a').format(nextInputTime!)}',
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
