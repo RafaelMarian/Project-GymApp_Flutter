@@ -151,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                   child: _buildBox('Calories Burned', 'Track and set your calories', () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => InventoryPage()),
+                      MaterialPageRoute(builder: (context) => const InventoryPage()),
                     );
                   }),
                 ),
