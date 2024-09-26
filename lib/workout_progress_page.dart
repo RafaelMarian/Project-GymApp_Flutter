@@ -13,6 +13,8 @@ class WorkoutProgressPage extends StatefulWidget {
 class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
   List<bool> _checkedDays = List.generate(31, (index) => false); // Assume 31 days
   DateTime _selectedDate = DateTime.now(); // Default to current date
+  int _points = 0; // Points for checked days
+  int _cases = 0; // 1 case for every 30 points
 
   @override
   void initState() {
@@ -26,6 +28,30 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
       appBar: AppBar(
         title: const Text('Workout Progress'),
         backgroundColor: const Color.fromARGB(255, 40, 39, 41),
+        actions: [
+          // Display points and cases in the app bar
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Points: $_points',
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                    Text(
+                      'Cases: $_cases',
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: Padding(
@@ -73,6 +99,7 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
                     onTap: () {
                       setState(() {
                         _checkedDays[index] = !_checkedDays[index];
+                        _calculatePointsAndCases(); // Recalculate points and cases
                         _saveCheckedDays(); // Save state to Firebase
                       });
                     },
@@ -98,6 +125,15 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
     );
   }
 
+  void _calculatePointsAndCases() {
+    // Count how many boxes are checked
+    int checkedCount = _checkedDays.where((day) => day == true).length;
+    _points = checkedCount;
+    _cases = (_points / 30).floor(); // 1 case for every 30 points
+
+    setState(() {}); // Update the UI
+  }
+
   Future<void> _fetchDataForMonth(DateTime date) async {
     final startDate = DateTime(date.year, date.month, 1);
     final endDate = DateTime(date.year, date.month + 1, 0);
@@ -120,6 +156,7 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
 
       setState(() {
         _checkedDays = checkedDays;
+        _calculatePointsAndCases(); // Recalculate points and cases after fetching data
       });
     } catch (e) {
       print('Error fetching workout data: $e');
