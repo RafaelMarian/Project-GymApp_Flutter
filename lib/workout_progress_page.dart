@@ -15,6 +15,7 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
   DateTime _selectedDate = DateTime.now(); // Default to current date
   int _points = 0; // Points for checked days
   int _cases = 0; // 1 case for every 30 points
+  int _checkedCount = 0; // Count of checked boxes
 
   @override
   void initState() {
@@ -28,30 +29,6 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
       appBar: AppBar(
         title: const Text('Workout Progress'),
         backgroundColor: const Color.fromARGB(255, 40, 39, 41),
-        actions: [
-          // Display points and cases in the app bar
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Points: $_points',
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                    Text(
-                      'Cases: $_cases',
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
       backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: Padding(
@@ -62,6 +39,72 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
               'Selected Month: ${DateFormat('MMMM yyyy').format(_selectedDate)}',
               style: const TextStyle(fontSize: 18, color: Colors.white),
             ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 7,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                ),
+                itemCount: _checkedDays.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _checkedDays[index] = !_checkedDays[index]; // Toggle checked state
+                        _calculatePointsAndCases(); // Recalculate points and cases
+                        _saveCheckedDays(); // Save state to Firebase
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: _checkedDays[index] ? Colors.green : Colors.grey[800],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${index + 1}',
+                          style: const TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+            // Move the points, cases, and checked count below the grid
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      'Points: $_points',
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      'Cases: $_cases',
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      'Checked: $_checkedCount',
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFF7BB0E),
@@ -85,40 +128,6 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
               },
               child: const Text('Select Month'),
             ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7,
-                  crossAxisSpacing: 8.0,
-                  mainAxisSpacing: 8.0,
-                ),
-                itemCount: _checkedDays.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _checkedDays[index] = !_checkedDays[index];
-                        _calculatePointsAndCases(); // Recalculate points and cases
-                        _saveCheckedDays(); // Save state to Firebase
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: _checkedDays[index] ? Colors.green : Colors.grey[800],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${index + 1}',
-                          style: const TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
           ],
         ),
       ),
@@ -127,66 +136,49 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
 
   void _calculatePointsAndCases() {
     // Count how many boxes are checked
-    int checkedCount = _checkedDays.where((day) => day == true).length;
-    _points = checkedCount;
+    _checkedCount = _checkedDays.where((day) => day == true).length;
+    _points = _checkedCount;
     _cases = (_points / 30).floor(); // 1 case for every 30 points
 
     setState(() {}); // Update the UI
   }
 
   Future<void> _fetchDataForMonth(DateTime date) async {
-    final startDate = DateTime(date.year, date.month, 1);
-    final endDate = DateTime(date.year, date.month + 1, 0);
+    final docId = '${date.year}_${date.month}'; // Document ID based on year and month
+    final workoutDoc = FirebaseFirestore.instance.collection('workout_data').doc(docId);
 
     try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('workout_data')
-          .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
-          .where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
-          .get();
+      final snapshot = await workoutDoc.get();
+      if (snapshot.exists) {
+        final data = snapshot.data()!;
+        List<bool> checkedDays = List<bool>.from(data['checkedDays']);
+        int points = data['points'];
+        int cases = data['cases'];
+        int checkedCount = data['checkedCount'];
 
-      List<bool> checkedDays = List.generate(31, (index) => false);
-
-      for (var doc in snapshot.docs) {
-        final data = doc.data();
-        final timestamp = (data['timestamp'] as Timestamp).toDate();
-        final day = timestamp.day;
-        checkedDays[day - 1] = true; // Mark the day as checked
+        setState(() {
+          _checkedDays = checkedDays;
+          _points = points;
+          _cases = cases;
+          _checkedCount = checkedCount;
+        });
       }
-
-      setState(() {
-        _checkedDays = checkedDays;
-        _calculatePointsAndCases(); // Recalculate points and cases after fetching data
-      });
     } catch (e) {
       print('Error fetching workout data: $e');
     }
   }
 
   Future<void> _saveCheckedDays() async {
-    final startDate = DateTime(_selectedDate.year, _selectedDate.month, 1);
-    final endDate = DateTime(_selectedDate.year, _selectedDate.month + 1, 0);
+    final docId = '${_selectedDate.year}_${_selectedDate.month}';
+    final workoutDoc = FirebaseFirestore.instance.collection('workout_data').doc(docId);
 
     try {
-      await FirebaseFirestore.instance
-          .collection('workout_data')
-          .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
-          .where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
-          .get()
-          .then((snapshot) {
-        for (DocumentSnapshot ds in snapshot.docs) {
-          ds.reference.delete();
-        }
+      await workoutDoc.set({
+        'checkedDays': _checkedDays,
+        'points': _points,
+        'cases': _cases,
+        'checkedCount': _checkedCount,
       });
-
-      for (int i = 0; i < _checkedDays.length; i++) {
-        if (_checkedDays[i]) {
-          await FirebaseFirestore.instance.collection('workout_data').add({
-            'timestamp': Timestamp.fromDate(DateTime(_selectedDate.year, _selectedDate.month, i + 1)),
-            'checked': true,
-          });
-        }
-      }
     } catch (e) {
       print('Error saving workout data: $e');
     }
