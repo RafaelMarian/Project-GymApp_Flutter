@@ -18,15 +18,18 @@ class _CaseOpeningAnimationState extends State<CaseOpeningAnimation>
   List<CardItem> _scrollingCards = [];
   bool _animationCompleted = false;
   CardItem? _revealedCard;
+  int? _revealedCardIndex;
 
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 6),
     );
-    _pageController = PageController();
+
+    _pageController = PageController(initialPage: 50, viewportFraction: 0.3);
 
     _scrollingCards = List.generate(100, (_) => CaseOpeningLogic.openCase());
 
@@ -38,10 +41,11 @@ class _CaseOpeningAnimationState extends State<CaseOpeningAnimation>
   void _startCaseOpening() {
     _controller.forward().then((_) {
       if (_scrollingCards.isNotEmpty) {
-        int currentPageIndex = _pageController.page?.round() ?? 0;
+        int currentPageIndex = _pageController.page?.round() ?? 50;
         currentPageIndex = currentPageIndex.clamp(0, _scrollingCards.length - 1);
 
         _revealedCard = _scrollingCards[currentPageIndex];
+        _revealedCardIndex = currentPageIndex; // Store the index of the revealed card
 
         setState(() {
           _animationCompleted = true;
@@ -58,7 +62,12 @@ class _CaseOpeningAnimationState extends State<CaseOpeningAnimation>
 
         int pageIndex = (slowDownFactor * (_scrollingCards.length - 1)).toInt();
         pageIndex = pageIndex.clamp(0, _scrollingCards.length - 1);
-        _pageController.jumpToPage(pageIndex);
+
+        _pageController.animateToPage(
+          pageIndex,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
       }
     });
   }
@@ -92,15 +101,26 @@ class _CaseOpeningAnimationState extends State<CaseOpeningAnimation>
                 if (_scrollingCards.isEmpty) {
                   return const Center(child: Text("No cards available"));
                 }
+
+                // Highlight only the revealed card based on the index
+                double scale = (_animationCompleted && _revealedCardIndex == index) ? 1.2 : 1.0;
+
                 return Center(
-                  child: Container(
-                    width: 100,
-                    height: 150,
-                    color: _scrollingCards[index].rarity.color,
-                    child: Center(
-                      child: Text(
-                        _scrollingCards[index].name,
-                        style: const TextStyle(color: Colors.white),
+                  child: Transform.scale(
+                    scale: scale,
+                    child: Container(
+                      width: 150,
+                      height: 200,
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      color: _scrollingCards[index].rarity.color,
+                      child: Center(
+                        child: Text(
+                          _scrollingCards[index].name,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -131,6 +151,7 @@ class _CaseOpeningAnimationState extends State<CaseOpeningAnimation>
   @override
   void dispose() {
     _controller.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 }
