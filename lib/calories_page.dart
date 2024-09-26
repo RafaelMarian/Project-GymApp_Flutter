@@ -12,15 +12,15 @@ class InventoryPage extends StatefulWidget {
 
 class _InventoryPageState extends State<InventoryPage> {
   List<Case> cases = [
-    Case(id: '1', requiredPoints: 100, isOpened: false),
-    Case(id: '2', requiredPoints: 150, isOpened: false),
-    Case(id: '3', requiredPoints: 150, isOpened: false),
-    Case(id: '4', requiredPoints: 150, isOpened: false),
-    Case(id: '5', requiredPoints: 150, isOpened: false),
-    Case(id: '6', requiredPoints: 150, isOpened: false),
-    Case(id: '7', requiredPoints: 150, isOpened: false),
-    Case(id: '8', requiredPoints: 150, isOpened: false),
-    Case(id: '9', requiredPoints: 150, isOpened: false),
+    Case(id: '1', requiredPoints: 5, isOpened: false),
+    Case(id: '2', requiredPoints: 5, isOpened: false),
+    Case(id: '3', requiredPoints: 5, isOpened: false),
+    Case(id: '4', requiredPoints: 5, isOpened: false),
+    Case(id: '5', requiredPoints: 5, isOpened: false),
+    Case(id: '6', requiredPoints: 5, isOpened: false),
+    Case(id: '7', requiredPoints: 5, isOpened: false),
+    Case(id: '8', requiredPoints: 5, isOpened: false),
+    Case(id: '9', requiredPoints: 5, isOpened: false),
   ];
 
   List<CardItem> cards = [];
@@ -66,6 +66,115 @@ class _InventoryPageState extends State<InventoryPage> {
       }
     } catch (e) {
       print('Error fetching total points: $e');
+    }
+  }
+
+  void _showOpenCaseDialog(int index) {
+    // Check if the user has enough points to open a case
+    if (_totalPoints < cases[index].requiredPoints) {
+      // Show a dialog indicating insufficient points
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Insufficient Points'),
+            content: const Text('You do not have enough points to open this case.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return; // Exit the method if not enough points
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Open Case'),
+          content: const Text('Do you want to open this case?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _openCase(index);
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.green,
+              ),
+              child: const Text('Open'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _openCase(int index) {
+    if (!cases[index].isOpened) {
+      setState(() {
+        // Decrease total points by required points for this case
+        _totalPoints -= cases[index].requiredPoints;
+      });
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CaseOpeningAnimation(
+            onCardRevealed: (CardItem revealedCard) {
+              setState(() {
+                cases[index] = Case(
+                  id: cases[index].id,
+                  requiredPoints: cases[index].requiredPoints,
+                  isOpened: true,
+                );
+                cards.add(revealedCard);
+              });
+
+              // Save the card to Firestore
+              _saveCardToFirestore(revealedCard);
+              _updateTotalPointsInFirestore(); // Update total points in Firestore
+            },
+          ),
+        ),
+      );
+    }
+  }
+
+  void _saveCardToFirestore(CardItem card) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    try {
+      await firestore.collection('inventory').add({
+        'name': card.name,
+        'rarity': card.rarity.toString(),
+      });
+    } catch (e) {
+      print("Error saving card to Firestore: $e");
+    }
+  }
+
+  void _updateTotalPointsInFirestore() async {
+    final totalDoc = FirebaseFirestore.instance.collection('workout_data').doc('total_data');
+
+    try {
+      await totalDoc.update({'totalPoints': _totalPoints});
+    } catch (e) {
+      print('Error updating total points: $e');
     }
   }
 
@@ -193,75 +302,5 @@ class _InventoryPageState extends State<InventoryPage> {
               ),
       ),
     );
-  }
-
-  void _showOpenCaseDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Open Case'),
-          content: const Text('Do you want to open this case?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.red,
-              ),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _openCase(index);
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.green,
-              ),
-              child: const Text('Open'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _openCase(int index) {
-    if (!cases[index].isOpened) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CaseOpeningAnimation(
-            onCardRevealed: (CardItem revealedCard) {
-              setState(() {
-                cases[index] = Case(
-                  id: cases[index].id,
-                  requiredPoints: cases[index].requiredPoints,
-                  isOpened: true,
-                );
-                cards.add(revealedCard);
-              });
-
-              // Save the card to Firestore
-              _saveCardToFirestore(revealedCard);
-            },
-          ),
-        ),
-      );
-    }
-  }
-
-  void _saveCardToFirestore(CardItem card) async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    try {
-      await firestore.collection('inventory').add({
-        'name': card.name,
-        'rarity': card.rarity.toString(),
-      });
-    } catch (e) {
-      print("Error saving card to Firestore: $e");
-    }
   }
 }
