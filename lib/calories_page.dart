@@ -24,11 +24,13 @@ class _InventoryPageState extends State<InventoryPage> {
   ];
 
   List<CardItem> cards = [];
+  int _totalPoints = 0; // Variable to hold total points
 
   @override
   void initState() {
     super.initState();
     _loadCardsFromFirestore(); // Fetch cards from Firestore when the page loads
+    _fetchTotalPoints(); // Fetch total points from Firestore
   }
 
   Future<void> _loadCardsFromFirestore() async {
@@ -51,6 +53,22 @@ class _InventoryPageState extends State<InventoryPage> {
     }
   }
 
+  Future<void> _fetchTotalPoints() async {
+    final totalDoc = FirebaseFirestore.instance.collection('workout_data').doc('total_data');
+
+    try {
+      final snapshot = await totalDoc.get();
+      if (snapshot.exists) {
+        final data = snapshot.data()!;
+        setState(() {
+          _totalPoints = data['totalPoints'] ?? 0; // Load total points from Firebase
+        });
+      }
+    } catch (e) {
+      print('Error fetching total points: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +77,15 @@ class _InventoryPageState extends State<InventoryPage> {
         color: const Color.fromARGB(255, 40, 39, 41),
         child: Column(
           children: [
+            const SizedBox(height: 20),
+            // Display Total Points
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                'Total Points: $_totalPoints',
+                style: const TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
             const SizedBox(height: 20),
             _buildCardsSection(),
             const Divider(color: Color(0xFFF7BB0E)),
