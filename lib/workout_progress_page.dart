@@ -13,14 +13,15 @@ class WorkoutProgressPage extends StatefulWidget {
 class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
   List<bool> _checkedDays = List.generate(31, (index) => false); // Assume 31 days
   DateTime _selectedDate = DateTime.now(); // Default to current date
-  int _points = 0; // Points for checked days
-  int _cases = 0; // 1 case for every 30 points
-  int _checkedCount = 0; // Count of checked boxes
+  int _points = 0; // Points for checked days in the current month
+  int _cases = 0; // Cases for the current month
+  int _totalPoints = 0; // Total points across all months
 
   @override
   void initState() {
     super.initState();
     _fetchDataForMonth(_selectedDate); // Fetch data for the default month
+    _fetchTotalPoints(); // Fetch total points when the page loads
   }
 
   @override
@@ -35,6 +36,11 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            Text(
+              'Total Points: $_totalPoints', // Display the total points at the top
+              style: const TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            const SizedBox(height: 10),
             Text(
               'Selected Month: ${DateFormat('MMMM yyyy').format(_selectedDate)}',
               style: const TextStyle(fontSize: 18, color: Colors.white),
@@ -74,7 +80,6 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
               ),
             ),
             const SizedBox(height: 10),
-            // Move the points, cases, and checked count below the grid
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -97,7 +102,7 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
                 Column(
                   children: [
                     Text(
-                      'Checked: $_checkedCount',
+                      'Checked: ${_checkedDays.where((day) => day).length}', // Show checked count for the current month
                       style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ],
@@ -135,10 +140,12 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
   }
 
   void _calculatePointsAndCases() {
-    // Count how many boxes are checked
-    _checkedCount = _checkedDays.where((day) => day == true).length;
-    _points = _checkedCount;
-    _cases = (_points / 30).floor(); // 1 case for every 30 points
+    // Count how many boxes are checked in the current month
+    int checkedCount = _checkedDays.where((day) => day).length;
+
+    // Update current month points and cases
+    _points = checkedCount;
+    _cases = (_points / 30).floor(); // Cases for the current month
 
     setState(() {}); // Update the UI
   }
@@ -152,19 +159,39 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
       if (snapshot.exists) {
         final data = snapshot.data()!;
         List<bool> checkedDays = List<bool>.from(data['checkedDays']);
-        int points = data['points'];
-        int cases = data['cases'];
-        int checkedCount = data['checkedCount'];
 
+        // Set checked days for the month
         setState(() {
-          _checkedDays = checkedDays;
-          _points = points;
-          _cases = cases;
-          _checkedCount = checkedCount;
+          _checkedDays = checkedDays; 
+          _points = data['points']; // Load points for the month
+          _cases = data['cases']; // Load cases for the month
+        });
+      } else {
+        // Reset for the new month if no document exists
+        setState(() {
+          _checkedDays = List.generate(31, (index) => false);
+          _points = 0; // Reset points for the new month
+          _cases = 0; // Reset cases for the new month
         });
       }
     } catch (e) {
       print('Error fetching workout data: $e');
+    }
+  }
+
+  Future<void> _fetchTotalPoints() async {
+    final totalDoc = FirebaseFirestore.instance.collection('workout_data').doc('total_data');
+
+    try {
+      final snapshot = await totalDoc.get();
+      if (snapshot.exists) {
+        final data = snapshot.data()!;
+        setState(() {
+          _totalPoints = data['totalPoints'] ?? 0; // Load total points from Firebase
+        });
+      }
+    } catch (e) {
+      print('Error fetching total points: $e');
     }
   }
 
@@ -173,12 +200,49 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
     final workoutDoc = FirebaseFirestore.instance.collection('workout_data').doc(docId);
 
     try {
+      // Get the current month's document
+      final snapshot = await workoutDoc.get();
+      int previousPoints = 0;
+
+      if (snapshot.exists) {
+        final data = snapshot.data()!;
+        previousPoints = data['points'] ?? 0; // Get previous points for this month
+      }
+
+      // Save the new points and checked days for the month
       await workoutDoc.set({
         'checkedDays': _checkedDays,
-        'points': _points,
-        'cases': _cases,
-        'checkedCount': _checkedCount,
+        'points': _points, // Save the new points
+        'cases': _cases,   // Save cases for the month
       });
+
+      // Calculate the difference in points
+      int pointsDifference = _points - previousPoints;
+
+      // Update total_data with the points difference
+      final totalDoc = FirebaseFirestore.instance.collection('workout_data').doc('total_data');
+      final totalSnapshot = await totalDoc.get();
+
+      int currentTotalPoints = 0;
+
+      if (totalSnapshot.exists) {
+        final data = totalSnapshot.data()!;
+        currentTotalPoints = data['totalPoints'] ?? 0; // Get current total points
+      }
+
+      // Add the points difference to the total points
+      int newTotalPoints = currentTotalPoints + pointsDifference;
+
+      // Save the updated total points
+      await totalDoc.set({
+        'totalPoints': newTotalPoints,
+      });
+
+      // Update the total points in the UI
+      setState(() {
+        _totalPoints = newTotalPoints;
+      });
+
     } catch (e) {
       print('Error saving workout data: $e');
     }
