@@ -26,21 +26,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _sleepDuration = '0'; // Changed default value for better calculation
+  String _sleepDuration = '0';
   double _sleepRating = 0.0;
+  final PageController _pageController = PageController(viewportFraction: 0.8);
+  int _currentPage = 0;
 
   @override
   void initState() {
     super.initState();
     _fetchSleepData();
+
+    _pageController.addListener(() {
+      setState(() {
+        _currentPage = _pageController.page!.round();
+      });
+    });
   }
 
   Future<void> _fetchSleepData() async {
-    // Replace with your actual logic to fetch and calculate sleep data
     setState(() {
-      // Mock data for testing purposes
-      _sleepDuration = '6.5'; // Example duration in hours
-      _sleepRating = 81.0; // Example sleep rating percentage
+      _sleepDuration = '6.5';
+      _sleepRating = 81.0;
     });
   }
 
@@ -57,12 +63,12 @@ class _HomePageState extends State<HomePage> {
             _sleepDuration = updatedData['duration'] ?? '0';
             _sleepRating = updatedData['rating'] ?? 0.0;
           });
-          _fetchSleepData(); // Refresh sleep data
+          _fetchSleepData();
         }
       },
       child: Container(
         child: Card(
-          color: const Color(0xFFF7BB0E), // Yellow background
+          color: const Color(0xFFF7BB0E),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -73,7 +79,6 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)),
                 ),
                 const SizedBox(height: 10),
-                // Sleep progress bar
                 LayoutBuilder(
                   builder: (context, constraints) {
                     final width = constraints.maxWidth * (_parseSleepDuration(_sleepDuration) / 8).clamp(0.0, 1.0);
@@ -126,7 +131,18 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildWorkoutProgressBox(),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildWorkoutProgressBox(),
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 60, // Set a fixed width for the ID box (or your desired width)
+                  child: _buildShowUserIdBox(), // ID button moved next to Workout Progress
+                ),
+              ],
+            ),
             const SizedBox(height: 10),
             Row(
               children: [
@@ -140,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: _buildSleepTrackingBox(), // Updated Sleep Tracking
+                  child: _buildSleepTrackingBox(),
                 ),
               ],
             ),
@@ -167,34 +183,9 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             const SizedBox(height: 20),
-            _buildWorkoutTypeButtons(),
+            _buildWorkoutTypeSlideshow(),
             const SizedBox(height: 20),
             _buildLargeBoxes(),
-            const SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const CustomProgramsPage()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF7BB0E),
-                ),
-                child: const Text('Custom Programs', style: TextStyle(color: Colors.black)),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: _showUserId,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF7BB0E),
-                ),
-                child: const Text('Show User ID', style: TextStyle(color: Colors.black)),
-              ),
-            ),
           ],
         ),
       ),
@@ -226,6 +217,29 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+// New "ID" box next to "Workout Progress" with reduced width (left to right)
+Widget _buildShowUserIdBox() {
+  return GestureDetector(
+    onTap: _showUserId,
+    child: Container(
+      width: 60, // Set a fixed width for the ID box
+      child: Card(
+        color: const Color(0xFFF7BB0E),
+        child: const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Center(
+            child: Text(
+              'ID',
+              style: TextStyle(fontSize: 18, color: Colors.black),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+
   Widget _buildBox(String title, String details, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
@@ -252,77 +266,52 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildWorkoutTypeButtons() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const GymProgramSelectionPage()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF7BB0E),
-                ),
-                child: const Text('Gym Program', style: TextStyle(color: Colors.black)),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const YogaProgramSelectionPage()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF7BB0E),
-                ),
-                child: const Text('Yoga Program', style: TextStyle(color: Colors.black)),
-              ),
-            ),
-          ],
+  Widget _buildWorkoutTypeSlideshow() {
+    return SizedBox(
+      height: 150,
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: 5, // Gym, Yoga, Cycling, Jogging, and Custom Programs
+        itemBuilder: (context, index) {
+          return _buildWorkoutSlide(index == _currentPage, index);
+        },
+      ),
+    );
+  }
+
+  Widget _buildWorkoutSlide(bool active, int index) {
+    final workouts = ['Gym Program', 'Yoga Program', 'Cycling Program', 'Jogging Program', 'Custom Programs'];
+    final pages = [
+      const GymProgramSelectionPage(),
+      const YogaProgramSelectionPage(),
+      const CyclingProgramSelectionPage(),
+      const JoggingProgramSelectionPage(),
+      const CustomProgramsPage(),
+    ];
+
+    final double blur = active ? 20 : 0;
+    final double scale = active ? 1.0 : 0.9;
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => pages[index]));
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 500),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        transform: Matrix4.identity()..scale(scale),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF7BB0E),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [BoxShadow(color: Colors.black87, blurRadius: blur)],
         ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const CyclingProgramSelectionPage()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF7BB0E),
-                ),
-                                child: const Text('Cycling Program', style: TextStyle(color: Colors.black)),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const JoggingProgramSelectionPage()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF7BB0E),
-                ),
-                child: const Text('Jogging Program', style: TextStyle(color: Colors.black)),
-              ),
-            ),
-          ],
+        child: Center(
+          child: Text(
+            workouts[index],
+            style: const TextStyle(fontSize: 18, color: Colors.black),
+          ),
         ),
-      ],
+      ),
     );
   }
 
@@ -443,4 +432,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
