@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.userProfile.name),
+        
         backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
       backgroundColor: const Color.fromARGB(255, 40, 39, 41),
@@ -268,7 +268,7 @@ Widget _buildShowUserIdBox() {
 
   Widget _buildWorkoutTypeSlideshow() {
     return SizedBox(
-      height: 150,
+      height: 230,
       child: PageView.builder(
         controller: _pageController,
         itemCount: 5, // Gym, Yoga, Cycling, Jogging, and Custom Programs
@@ -279,41 +279,60 @@ Widget _buildShowUserIdBox() {
     );
   }
 
-  Widget _buildWorkoutSlide(bool active, int index) {
-    final workouts = ['Gym Program', 'Yoga Program', 'Cycling Program', 'Jogging Program', 'Custom Programs'];
-    final pages = [
-      const GymProgramSelectionPage(),
-      const YogaProgramSelectionPage(),
-      const CyclingProgramSelectionPage(),
-      const JoggingProgramSelectionPage(),
-      const CustomProgramsPage(),
-    ];
+Widget _buildWorkoutSlide(bool active, int index) {
+  final workouts = [
+    'Gym Program',
+    'Yoga Program',
+    'Cycling Program',
+    'Jogging Program',
+    'Custom Programs'
+  ];
+  
+  final pages = [
+    const GymProgramSelectionPage(),
+    const YogaProgramSelectionPage(),
+    const CyclingProgramSelectionPage(),
+    const JoggingProgramSelectionPage(),
+    const CustomProgramsPage(),
+  ];
 
-    final double blur = active ? 20 : 0;
-    final double scale = active ? 1.0 : 0.9;
+  final double blur = active ? 20 : 0;
+  final double scale = active ? 1.0 : 0.9;
 
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => pages[index]));
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        transform: Matrix4.identity()..scale(scale),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF7BB0E),
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [BoxShadow(color: Colors.black87, blurRadius: blur)],
-        ),
-        child: Center(
-          child: Text(
-            workouts[index],
-            style: const TextStyle(fontSize: 18, color: Colors.black),
-          ),
+  // List of image paths corresponding to each workout type
+  final List<String> workoutImages = [
+    'assets/gym.png',
+    'assets/yoga.png',
+    'assets/cycling.png',
+    'assets/jogging.png',
+    'assets/custom_programs.png',
+  ];
+
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => pages[index]));
+    },
+    child: AnimatedContainer(
+      duration: const Duration(milliseconds: 500),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      transform: Matrix4.identity()..scale(scale),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [BoxShadow(color: Colors.black87, blurRadius: blur)],
+        image: DecorationImage(
+          image: AssetImage(workoutImages[index]), // Use the image for background
+          fit: BoxFit.cover, // Cover the entire box
         ),
       ),
-    );
-  }
+      child: Center(
+        child: Text(
+          workouts[index],
+          style: const TextStyle(fontSize: 18, color: Colors.white,), // Changed to white for better visibility
+        ),
+      ),
+    ),
+  );
+}
 
   Widget _buildLargeBoxes() {
     return Row(
