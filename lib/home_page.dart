@@ -43,80 +43,65 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<void> _fetchSleepData() async {
-    setState(() {
-      _sleepDuration = '6.5';
-      _sleepRating = 81.0;
-    });
-  }
+ Future<void> _fetchSleepData() async {
+  setState(() {
+    _sleepDuration = '6.5'; // You may keep this for fetching purposes
+    _sleepRating = 81.0; // This can be removed if not needed
+  });
+}
 
-  Widget _buildSleepTrackingBox() {
-    return GestureDetector(
-      onTap: () async {
-        final updatedData = await Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const SleepInputPage()),
-        );
+Widget _buildInventoryBox() {
+  return GestureDetector(
+    onTap: () async {
+      final updatedData = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const InventoryPage()),
+      );
 
-        if (updatedData != null) {
-          setState(() {
-            _sleepDuration = updatedData['duration'] ?? '0';
-            _sleepRating = updatedData['rating'] ?? 0.0;
-          });
-          _fetchSleepData();
-        }
-      },
-      child: Container(
+      if (updatedData != null) {
+        setState(() {
+          _sleepDuration = updatedData['duration'] ?? '0';
+          _sleepRating = updatedData['rating'] ?? 0.0; // This can be removed if not needed
+        });
+        _fetchSleepData();
+      }
+    },
+    child: Container(
+      width: 300, // Set the desired width
+      height: 140, // Set the desired height
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/Inventory.png'), // Update the path to your background image
+          fit: BoxFit.cover, // Adjusts the image to cover the container
+        ),
+        borderRadius: BorderRadius.circular(16.0), // Set rounded corners
+      ),
+      child: ClipRRect( // Use ClipRRect to apply borderRadius to the card as well
+        borderRadius: BorderRadius.circular(16.0),
         child: Card(
-          color: const Color(0xFFF7BB0E),
+          color: Colors.transparent, // Make the card background transparent
+          elevation: 4, // Add some elevation if desired
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Sleep Tracking',
-                  style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)),
+                  'Inventory',
+                  style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 255, 255, 255)),
                 ),
                 const SizedBox(height: 10),
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final width = constraints.maxWidth * (_parseSleepDuration(_sleepDuration) / 8).clamp(0.0, 1.0);
-                    return Container(
-                      height: 20,
-                      color: _getSleepProgressColor(),
-                      width: width,
-                    );
-                  },
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Sleep Rating: ${_sleepRating.toStringAsFixed(1)}%',
-                  style: const TextStyle(fontSize: 16, color: Color.fromARGB(255, 0, 0, 0)),
-                ),
+                // Add any additional content here
               ],
             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Color _getSleepProgressColor() {
-    final double sleepHours = _parseSleepDuration(_sleepDuration);
-    if (sleepHours >= 8) {
-      return Colors.green;
-    } else if (sleepHours >= 7) {
-      return Colors.orange;
-    } else {
-      return Colors.red;
-    }
-  }
 
-  double _parseSleepDuration(String duration) {
-    final double? parsed = double.tryParse(duration);
-    return parsed ?? 0.0;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: _buildSleepTrackingBox(),
+                  child: _buildInventoryBox(),
                 ),
               ],
             ),
@@ -167,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                   child: _buildBox('Calories Burned', 'Track and set your calories', () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const InventoryPage()),
+                      MaterialPageRoute(builder: (context) => const SleepInputPage()),
                     );
                   }),
                 ),
