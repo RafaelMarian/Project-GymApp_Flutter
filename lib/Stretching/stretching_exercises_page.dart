@@ -29,7 +29,7 @@ class _StretchingExercisesPageState extends State<StretchingExercisesPage> {
 
       setState(() {
         exercises = querySnapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>) // Get exercise data directly
+            .map((doc) => doc.data()) // Get exercise data directly
             .toList();
         isLoading = false; // Set loading to false after fetching
       });

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'user_profile.dart';
-import 'gym_program_selection_page.dart';
-import 'yoga_program_selection_page.dart';
-import 'cycling_program_selection_page.dart';
-import 'jogging_program_selection_page.dart';
-import 'your_ai_page.dart';
-import 'nutrition_page.dart';
-import 'achievements_page.dart';
-import 'stretching_page.dart';
-import 'sleep_input_page.dart';
-import 'workout_progress_page.dart';
-import 'steps_counter.dart';
-import 'user_id_page.dart';
-import 'custom_programs_page.dart';
-import 'water_tracking_page.dart';
-import 'calories_page.dart';
+import '../User/user_profile.dart';
+import '../Gym/gym_program_selection_page.dart';
+import '../Yoga/yoga_program_selection_page.dart';
+import '../Cycling/cycling_program_selection_page.dart';
+import '../Jogging/jogging_program_selection_page.dart';
+import '../AI/your_ai_page.dart';
+import '../Nutrition/nutrition_page.dart';
+import '../achievements_page.dart';
+import '../Stretching/stretching_page.dart';
+import '../Sleep/sleep_input_page.dart';
+import '../WorkoutProgress/workout_progress_page.dart';
+import '../Steps/steps_counter.dart';
+import '../User/user_id_page.dart';
+import '../custom_programs_page.dart';
+import '../Wather/water_tracking_page.dart';
+import '../Inventory/calories_page.dart';
 
 class HomePage extends StatefulWidget {
   final UserProfile userProfile;
@@ -70,7 +70,7 @@ Widget _buildInventoryBox() {
       width: 300, // Set the desired width
       height: 140, // Set the desired height
       decoration: BoxDecoration(
-        image: DecorationImage(
+        image: const DecorationImage(
           image: AssetImage('assets/Inventory.png'), // Update the path to your background image
           fit: BoxFit.cover, // Adjusts the image to cover the container
         ),
@@ -78,19 +78,19 @@ Widget _buildInventoryBox() {
       ),
       child: ClipRRect( // Use ClipRRect to apply borderRadius to the card as well
         borderRadius: BorderRadius.circular(16.0),
-        child: Card(
+        child: const Card(
           color: Colors.transparent, // Make the card background transparent
           elevation: 4, // Add some elevation if desired
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Inventory',
                   style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 255, 255, 255)),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 // Add any additional content here
               ],
             ),
@@ -206,11 +206,11 @@ Widget _buildInventoryBox() {
 Widget _buildShowUserIdBox() {
   return GestureDetector(
     onTap: _showUserId,
-    child: Container(
+    child: SizedBox(
       width: 60, // Set a fixed width for the ID box
-      child: Card(
-        color: const Color(0xFFF7BB0E),
-        child: const Padding(
+      child: const Card(
+        color: Color(0xFFF7BB0E),
+        child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Center(
             child: Text(

@@ -67,6 +67,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+  #Home Page Images -----------------------------------------------------------------------------
     - assets/logo.png
     - assets/yoga_logo.png
     - assets/cycling_logo.png
@@ -76,6 +77,16 @@ flutter:
     - assets/jogging.png
     - assets/custom_programs.png
     - assets/Inventory.png
+    #For costum Gym Program Page ----------------------------------------------------------------
+    - assets/abs-workout-gym.png
+    - assets/biceps-workout-gym.png
+    - assets/back-workout-gym.png
+    - assets/chest-workout-gym.png
+    - assets/legs-workout-gym.png
+    - assets/shoulders-workout-gym.png
+    - assets/triceps-workout-gym.png
+    #---------------------------------------------------------------------------------------------
+
 
   #   - images/a_dot_ham.jpeg
 

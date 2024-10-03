@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'user_profile.dart'; // Import UserProfile from the correct file
-import 'home_page.dart'; // Import HomePage
-import 'user_profile_service.dart';
+import 'User/user_profile.dart'; // Import UserProfile from the correct file
+import 'HomePage/home_page.dart'; // Import HomePage
+import 'User/user_profile_service.dart';
 
 class QuestionnairePage extends StatefulWidget {
   const QuestionnairePage({super.key});

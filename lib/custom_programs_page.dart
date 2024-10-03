@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'gym_program_selection_page.dart';
-import 'yoga_program_selection_page.dart';
-import 'cycling_program_selection_page.dart';
-import 'jogging_program_selection_page.dart';
-import 'calisthenics_program_page.dart';
-import 'swimming_program_page.dart';
-import 'home_workout_page.dart';
-import 'boxing_program_page.dart';
+import 'Gym/gym_program_selection_page.dart';
+import 'Yoga/yoga_program_selection_page.dart';
+import 'Cycling/cycling_program_selection_page.dart';
+import 'Jogging/jogging_program_selection_page.dart';
+import 'Caliesthenics/calisthenics_program_page.dart';
+import 'Swimming/swimming_program_page.dart';
+import 'Home-Workout/home_workout_page.dart';
+import 'Boxing/boxing_program_page.dart';
 
 class CustomProgramsPage extends StatelessWidget {
   const CustomProgramsPage({super.key});

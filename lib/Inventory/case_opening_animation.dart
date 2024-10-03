@@ -90,7 +90,7 @@ class _CaseOpeningAnimationState extends State<CaseOpeningAnimation>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 40, 39, 41), // Change background color here
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Change background color here
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
