@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'custom_gym_program_page.dart';
+import 'Custom_Program_Gym/custom_gym_program_page.dart';
 import 'planned_gym_programs_page.dart';
 import 'my_personal_trainer_plan_gym_page.dart'; // Import Personal Trainer Plan page
 import 'add_exercise_page_gym.dart'; // Import AddExercisePage
