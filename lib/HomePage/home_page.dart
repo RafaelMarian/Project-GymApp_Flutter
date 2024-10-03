@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gym_buddies/Create_Yout_Workout_Day.dart';
 import '../User/user_profile.dart';
 import '../Gym/gym_program_selection_page.dart';
 import '../Yoga/yoga_program_selection_page.dart';
@@ -400,7 +401,7 @@ Widget _buildWorkoutSlide(bool active, int index) {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const WorkoutProgressPage()),
+                MaterialPageRoute(builder: (context) =>  CreateYourWorkoutDay()),
               );
             },
           ),
