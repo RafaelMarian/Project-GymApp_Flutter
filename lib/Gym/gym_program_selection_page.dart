@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'Custom_Program_Gym/custom_gym_program_page.dart';
 import 'planned_gym_programs_page.dart';
-import 'my_personal_trainer_plan_gym_page.dart'; // Import Personal Trainer Plan page
-import 'add_exercise_page_gym.dart'; // Import AddExercisePage
-import 'create_training_plan_gym.dart'; // Import CreateTrainingPlanGymPage
+import 'my_personal_trainer_plan_gym_page.dart'; 
+import 'add_exercise_page_gym.dart'; 
+import 'create_training_plan_gym.dart'; 
 
 class GymProgramSelectionPage extends StatefulWidget {
   const GymProgramSelectionPage({super.key});
@@ -18,132 +18,104 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-       title: const Center(
-        child: Text(
-         'Gym Program Selection',
-         style: TextStyle(
-        color: Color.fromARGB(255, 255, 255, 255), // White text color
-        fontSize: 24, // Adjust font size if needed
+        title: const Text(
+          'Gym Program Selection',
+          style: TextStyle(
+            color: Colors.white, // White text color
+            fontSize: 24, // Font size
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark background color
       ),
-    ),
-  ),
-  backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Custom background color
-),
       backgroundColor: const Color.fromARGB(255, 40, 39, 41),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF2C5364), Color(0xFF0F2027)], // Subtle gradient
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildProgramButton(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const CustomGymProgramPage(),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF7BB0E),
-                minimumSize: const Size(200, 50),
-              ),
-              child: const Text(
                   'Custom Programs',
-                  style: TextStyle(
-                  color: Color.fromARGB(255, 0, 0, 0), // You can change this to any color you want
-                  fontSize: 14, // Adjust the font size as needed // Optional: Set font weight to bold
+                  Icons.fitness_center,
+                  const CustomGymProgramPage(),
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
+                _buildProgramButton(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const PlannedGymProgramsPage(),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF7BB0E),
-                minimumSize: const Size(200, 50),
-              ),
-              child: const Text(
-                 'Planned Programs',
-                  style: TextStyle(
-                  color: Color.fromARGB(255, 0, 0, 0), // You can change this to any color you want
-                  fontSize: 14, // Adjust the font size as needed // Optional: Set font weight to bold
+                  'Planned Programs',
+                  Icons.calendar_today,
+                  const PlannedGymProgramsPage(),
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
+                _buildProgramButton(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const MyPersonalTrainerPlanPageGym(), // Navigate to "My Personal Trainer Plan"
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF7BB0E),
-                minimumSize: const Size(200, 50),
-              ),
-              child: const Text(
                   'My Personal Trainer Plan',
-                  style: TextStyle(
-                  color: Color.fromARGB(255, 0, 0, 0), // You can change this to any color you want
-                  fontSize: 14, // Adjust the font size as needed // Optional: Set font weight to bold
+                  Icons.person,
+                  const MyPersonalTrainerPlanPageGym(),
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton( // Button for adding an exercise
-              onPressed: () {
-                Navigator.push(
+                _buildProgramButton(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const AddExerciseGymPage(), // Navigate to AddExercisePage
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF7BB0E),
-                minimumSize: const Size(200, 50),
-              ),
-             child: const Text(
-                 'Add Exercise',
-                 style: TextStyle(
-                 color: Color.fromARGB(255, 0, 0, 0), // You can change this to any color you want
-                  fontSize: 14, // Adjust the font size as needed
+                  'Add Exercise',
+                  Icons.add,
+                  const AddExerciseGymPage(),
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton( // New button for Create Training Plan
-              onPressed: () {
-                Navigator.push(
+                _buildProgramButton(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const CreateTrainingPlanPageGym(), // Navigate to CreateTrainingPlanGymPage
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF7BB0E),
-                minimumSize: const Size(200, 50),
-              ),
-              child: const Text(
-                'Create Training Plan',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 0, 0, 0), // You can change this to any color you want
-                 fontSize: 14, // Adjust the font size as needed // Optional: Set font weight to bold
+                  'Create Training Plan',
+                  Icons.create,
+                  const CreateTrainingPlanPageGym(),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Reusable button builder function
+  Widget _buildProgramButton(BuildContext context, String title, IconData icon, Widget page) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0), // Spacing between buttons
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => page),
+          );
+        },
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12), // Rounded corners for card
+          ),
+          color: const Color(0xFFF7BB0E), // Custom button color
+          elevation: 5, // Elevation for depth effect
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: Colors.black, size: 24), // Icon on button
+                const SizedBox(width: 10), // Spacing between icon and text
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.black, // Black text color
+                    fontSize: 16, // Adjusted font size
+                    fontWeight: FontWeight.bold, // Bold font weight
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
