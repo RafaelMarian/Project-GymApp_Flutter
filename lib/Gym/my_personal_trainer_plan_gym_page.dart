@@ -115,8 +115,6 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
                     final plan = plans[index];
                     final planID = plan.id;
                     final clientName = plan['clientName'] ?? 'Unknown Client';
-                    final trainerName = plan['trainerName'] ?? 'Unknown Trainer';
-                    final muscleGroup = plan['muscleGroup'] ?? 'Unknown Muscle Group';
                     final difficulty = plan['difficulty'] ?? 'No Difficulty';
                     final workoutType = plan['workoutType'] ?? 'No Workout Type';
                     final days = plan['days'] as Map<String, dynamic>? ?? {};
@@ -125,7 +123,7 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
                       margin: const EdgeInsets.all(8.0),
                       child: ExpansionTile(
                         title: Text(
-                          '$muscleGroup by $trainerName for $clientName',
+                          ' $clientName',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text('Workout Type: $workoutType, Difficulty: $difficulty'),

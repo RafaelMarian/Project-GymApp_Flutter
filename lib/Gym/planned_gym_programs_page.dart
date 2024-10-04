@@ -16,7 +16,9 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
 
   // Fetch workout plan based on selected criteria
   Future<void> _fetchWorkoutPlan() async {
-    if (selectedDifficulty != null && selectedWorkoutType != null && selectedGender != null) {
+    if (selectedDifficulty != null &&
+        selectedWorkoutType != null &&
+        selectedGender != null) {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('planned_gym_programs')
           .where('difficulty', isEqualTo: selectedDifficulty)
@@ -44,115 +46,147 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
         backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
       backgroundColor: const Color.fromARGB(255, 40, 39, 41),
-      body: Column(
-        children: [
-          // Dropdown for difficulty
-          DropdownButton<String>(
-            value: selectedDifficulty,
-            hint: const Text('Select Difficulty', style: TextStyle(color: Colors.white)),
-            dropdownColor: const Color.fromARGB(255, 0, 0, 0),
-            items: <String>['Beginner', 'Intermediate', 'Advanced'].map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value, style: const TextStyle(color: Colors.white)),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                selectedDifficulty = newValue;
-              });
-            },
-          ),
-          // Dropdown for workout type
-          DropdownButton<String>(
-            value: selectedWorkoutType,
-            hint: const Text('Select Workout Type', style: TextStyle(color: Colors.white)),
-            dropdownColor: const Color.fromARGB(255, 0, 0, 0),
-            items: <String>[
-              'Full Body', 
-              'One Muscle Group Per Day', 
-              'Two Muscle Groups Per Day', 
-              'Push Pull Legs', 
-              'Upper Lower'
-            ].map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value, style: const TextStyle(color: Colors.white)),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                selectedWorkoutType = newValue;
-              });
-            },
-          ),
-          // Dropdown for gender
-          DropdownButton<String>(
-            value: selectedGender,
-            hint: const Text('Select Gender', style: TextStyle(color: Colors.white)),
-            dropdownColor: const Color.fromARGB(255, 0, 0, 0),
-            items: <String>['Male', 'Female'].map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value, style: const TextStyle(color: Colors.white)),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                selectedGender = newValue;
-              });
-            },
-          ),
-          ElevatedButton(
-  onPressed: _fetchWorkoutPlan,
-  style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFFF7BB0E), // Background color
-    foregroundColor: const Color.fromARGB(255, 0, 0, 0), // Text color
-  ),
-  child: const Text('Fetch Workout Plan'),
-),
-          Expanded(
-            child: workoutRoutine != null
-                ? ListView.builder(
-                    itemCount: workoutRoutine!['days'].length, // Loop over the days
-                    itemBuilder: (context, index) {
-                      // Get the day name (like 'Monday', 'Tuesday', etc.)
-                      String dayName = workoutRoutine!['days'].keys.elementAt(index);
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // Dropdown for difficulty
+            _buildDropdown(
+              'Select Difficulty',
+              selectedDifficulty,
+              ['Beginner', 'Intermediate', 'Advanced'],
+              (newValue) {
+                setState(() {
+                  selectedDifficulty = newValue;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            // Dropdown for workout type
+            _buildDropdown(
+              'Select Workout Type',
+              selectedWorkoutType,
+              ['Full Body', 'One Muscle Group Per Day', 'Two Muscle Groups Per Day', 'Push Pull Legs', 'Upper Lower'],
+              (newValue) {
+                setState(() {
+                  selectedWorkoutType = newValue;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            // Dropdown for gender
+            _buildDropdown(
+              'Select Gender',
+              selectedGender,
+              ['Male', 'Female'],
+              (newValue) {
+                setState(() {
+                  selectedGender = newValue;
+                });
+              },
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: _fetchWorkoutPlan,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFF7BB0E),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12), // Rounded corners
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+              ),
+              child: const Text(
+                'Fetch Workout Plan',
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Expanded(
+              child: workoutRoutine != null
+                  ? ListView.builder(
+                      itemCount: workoutRoutine!['days'].length,
+                      itemBuilder: (context, index) {
+                        // Get the day name and its details
+                        String dayName = workoutRoutine!['days'].keys.elementAt(index);
+                        final day = workoutRoutine!['days'][dayName];
+                        final List exercises = day['exercises'] as List;
 
-                      // Get the day's details (muscle groups and exercises)
-                      final day = workoutRoutine!['days'][dayName];
-
-                      // Access the exercises as a List
-                      final List exercises = day['exercises'] as List;
-
-                      return Card(
-                        color: Colors.grey[850],
-                        child: ListTile(
-                          title: Text(
-                            '$dayName: ${day['muscle_groups'].join(', ')}',
-                            style: const TextStyle(color: Color(0xFFF7BB0E)),
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          color: Colors.grey[850],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: exercises.map<Widget>((exercise) {
-                              return Text(
-                                '${exercise['name']} - ${exercise['reps']} reps',
-                                style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                              );
-                            }).toList(),
+                          elevation: 3,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '$dayName: ${day['muscle_groups'].join(', ')}',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    color: Color(0xFFF7BB0E),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                ...exercises.map<Widget>((exercise) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 4.0),
+                                    child: Text(
+                                      '${exercise['name']} - ${exercise['reps']} reps',
+                                      style: const TextStyle(color: Colors.white),
+                                    ),
+                                  );
+                                }).toList(),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  )
-                : const Center(
-                    child: Text(
-                      'No workout plan selected.',
-                      style: TextStyle(color: Colors.white),
+                        );
+                      },
+                    )
+                  : const Center(
+                      child: Text(
+                        'No workout plan selected.',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
                     ),
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Reusable Dropdown Builder
+  Widget _buildDropdown(
+    String hint,
+    String? selectedValue,
+    List<String> items,
+    ValueChanged<String?> onChanged,
+  ) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.grey[800],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: DropdownButton<String>(
+        value: selectedValue,
+        isExpanded: true,
+        dropdownColor: Colors.grey[900],
+        hint: Text(hint, style: const TextStyle(color: Colors.white)),
+        items: items.map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value, style: const TextStyle(color: Colors.white)),
+          );
+        }).toList(),
+        onChanged: onChanged,
+        underline: const SizedBox(), // Removes the default underline
+        icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
       ),
     );
   }

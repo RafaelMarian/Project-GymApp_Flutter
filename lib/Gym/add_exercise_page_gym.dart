@@ -22,18 +22,23 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
     final kgString = _kgController.text;
     final muscleGroup = _selectedMuscleGroup;
 
-    if (name.isNotEmpty && description.isNotEmpty && repsString.isNotEmpty && kgString.isNotEmpty && muscleGroup != null) {
+    if (name.isNotEmpty &&
+        description.isNotEmpty &&
+        repsString.isNotEmpty &&
+        kgString.isNotEmpty &&
+        muscleGroup != null) {
       // Convert reps and kg to integers
       final reps = int.tryParse(repsString);
       final kg = int.tryParse(kgString);
 
       if (reps != null && kg != null) {
-        await FirebaseFirestore.instance.collection('exercises').add({
+        await FirebaseFirestore.instance.collection('default-gym-exercises').add({
           'name': name,
           'description': description,
-          'reps': reps,  // Store as integer
-          'kg': kg,      // Store as integer
+          'reps': reps,
+          'kg': kg,
           'muscle_group': muscleGroup,
+          'completed': false, // Default value for 'completed'
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Exercise added successfully')),
@@ -63,103 +68,150 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
       appBar: AppBar(
         title: const Text('Add Exercise'),
         backgroundColor: const Color.fromARGB(255, 40, 39, 41),
+        elevation: 0,
       ),
-      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      backgroundColor: const Color(0xFF121212),
+      body: Container(
+        
+        padding: const EdgeInsets.all(20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(
                 labelText: 'Exercise Name',
+                labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                 filled: true,
-                fillColor: Colors.black,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
+                fillColor: Color(0xFF2A2A2A),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
+                  borderSide: BorderSide.none, // No outline when enabled
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
+                  borderSide: BorderSide.none, // No outline when focused
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  borderSide: BorderSide.none,
                 ),
               ),
               style: const TextStyle(color: Colors.white),
               cursorColor: const Color(0xFFF7BB0E),
             ),
+
             const SizedBox(height: 16),
             TextField(
               controller: _descriptionController,
               decoration: const InputDecoration(
                 labelText: 'Description',
+                labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                 filled: true,
-                fillColor: Colors.black,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
+                fillColor: Color(0xFF2A2A2A),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
+                  borderSide: BorderSide.none, // No outline when enabled
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
+                  borderSide: BorderSide.none, // No outline when focused
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  borderSide: BorderSide.none,
                 ),
               ),
               style: const TextStyle(color: Colors.white),
               cursorColor: const Color(0xFFF7BB0E),
             ),
+
             const SizedBox(height: 16),
-            TextField(
-              controller: _repsController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Number of Reps',
-                filled: true,
-                fillColor: Colors.black,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _repsController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Reps',
+                      labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                      filled: true,
+                      fillColor: Color(0xFF2A2A2A),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
+                        borderSide: BorderSide.none, // No outline when enabled
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
+                        borderSide: BorderSide.none, // No outline when focused
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                    cursorColor: const Color(0xFFF7BB0E),
+                  ),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: TextField(
+                    controller: _kgController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Weight (kg)',
+                      labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                      filled: true,
+                      fillColor: Color(0xFF2A2A2A),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
+                        borderSide: BorderSide.none, // No outline when enabled
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
+                        borderSide: BorderSide.none, // No outline when focused
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                    cursorColor: const Color(0xFFF7BB0E),
+                  ),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-              ),
-              style: const TextStyle(color: Colors.white),
-              cursorColor: const Color(0xFFF7BB0E),
+              ],
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: _kgController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Weight (kg)',
-                filled: true,
-                fillColor: Colors.black,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-              ),
-              style: const TextStyle(color: Colors.white),
-              cursorColor: const Color(0xFFF7BB0E),
-            ),
-            const SizedBox(height: 16),
-            DropdownButton<String>(
+            DropdownButtonFormField<String>(
               value: _selectedMuscleGroup,
-              hint: const Text('Select Muscle Group', style: TextStyle(color: Colors.white)),
-              dropdownColor: Colors.black,
-              items: <String>['Chest', 'Back', 'Biceps', 'Triceps', 'Legs', 'Abs', 'Shoulders']
+              dropdownColor: const Color(0xFF2A2A2A),
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color(0xFF2A2A2A),
+                labelText: 'Select Muscle Group',
+                labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
+                  borderSide: BorderSide.none, // No outline when enabled
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
+                  borderSide: BorderSide.none, // No outline when focused
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              items: ['Chest', 'Back', 'Biceps', 'Triceps', 'Legs', 'Abs', 'Shoulders']
                   .map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value, style: const TextStyle(color: Colors.white)),
+                  child: Text(value, style: const TextStyle(color: Colors.white)), // Ensure text color is white
                 );
               }).toList(),
               onChanged: (newValue) {
@@ -168,13 +220,21 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
                 });
               },
             ),
-            const SizedBox(height: 20),
+
+            const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _addExercise,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFF7BB0E),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              child: const Text('Add Exercise'),
+              child: const Text(
+                'Add Exercise',
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
             ),
           ],
         ),

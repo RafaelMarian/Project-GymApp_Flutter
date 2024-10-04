@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Ensure this import is present
-import 'dart:convert'; // Import this for JSON encoding/decoding
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class CreateTrainingPlanPageGym extends StatefulWidget {
   const CreateTrainingPlanPageGym({super.key});
@@ -12,13 +12,13 @@ class CreateTrainingPlanPageGym extends StatefulWidget {
 
 class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
   String? clientID;
-  String? clientName; // Separate variable for client name
+  String? clientName;
   String? difficulty;
   String? workoutType;
   String? gender;
-  Map<String, dynamic> days = {}; // Use this to build the daily plan
-  String selectedDay = 'Monday'; // Default selected day
-  List<Map<String, dynamic>> exercises = []; // Exercises for the selected day
+  Map<String, dynamic> days = {};
+  String selectedDay = 'Monday';
+  List<Map<String, dynamic>> exercises = [];
 
   @override
   void initState() {
@@ -28,15 +28,20 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
 
   Future<void> _loadExercises() async {
     final prefs = await SharedPreferences.getInstance();
-    final savedExercises = prefs.getString('exercises_$selectedDay') ?? '[]';
+    for (String day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']) {
+      final savedExercises = prefs.getString('exercises_$day') ?? '[]';
+      days[day] = List<Map<String, dynamic>>.from(jsonDecode(savedExercises));
+    }
     setState(() {
-      exercises = List<Map<String, dynamic>>.from(jsonDecode(savedExercises));
+      exercises = days[selectedDay] ?? [];
     });
   }
 
   Future<void> _saveExercises() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('exercises_$selectedDay', jsonEncode(exercises));
+    for (String day in days.keys) {
+      prefs.setString('exercises_$day', jsonEncode(days[day]));
+    }
   }
 
   Future<void> _submitPlan() async {
@@ -47,14 +52,13 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
       return;
     }
 
-    // Populate the days map with exercises for each day
     days[selectedDay] = exercises;
 
     try {
       await FirebaseFirestore.instance.collection('training-plans').add({
-        'trainerID': 'current_trainer_id', // Replace with actual trainer ID
-        'clientID': clientID, // Use clientID not clientName
-        'clientName': clientName, // Store clientName separately
+        'trainerID': 'current_trainer_id',
+        'clientID': clientID,
+        'clientName': clientName,
         'difficulty': difficulty,
         'workoutType': workoutType,
         'gender': gender,
@@ -78,6 +82,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
         'weight': weight,
         'restTime': restTime,
       });
+      days[selectedDay] = exercises;
       _saveExercises();
     });
   }
@@ -85,6 +90,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
   void _deleteExercise(int index) {
     setState(() {
       exercises.removeAt(index);
+      days[selectedDay] = exercises;
       _saveExercises();
     });
   }
@@ -92,6 +98,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
   void _deleteAllExercises() {
     setState(() {
       exercises.clear();
+      days[selectedDay] = exercises;
       _saveExercises();
     });
   }
@@ -100,300 +107,288 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Training Plan'),
-        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
+        title: const Text('Create Training Plan', style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF222222),
+        elevation: 0,
       ),
-      backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Background color for the whole app
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              onChanged: (value) => clientID = value,
-              decoration: const InputDecoration(
-                labelText: 'Client ID',
-                filled: true,
-                fillColor: Colors.black,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-              ),
-              style: const TextStyle(color: Colors.white),
-              cursorColor: const Color(0xFFF7BB0E),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              onChanged: (value) => clientName = value, // Update clientName, not clientID
-              decoration: const InputDecoration(
-                labelText: 'Client Name',
-                filled: true,
-                fillColor: Colors.black,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-              ),
-              style: const TextStyle(color: Colors.white),
-              cursorColor: const Color(0xFFF7BB0E),
-            ),
-            const SizedBox(height: 10),
-            DropdownButton<String>(
-              value: difficulty,
-              hint: const Text('Select Difficulty', style: TextStyle(color: Colors.white)),
-              dropdownColor: Colors.black,
-              items: ['Beginner', 'Intermediate', 'Advanced']
-                  .map((difficulty) => DropdownMenuItem<String>(
-                        value: difficulty,
-                        child: Text(difficulty, style: const TextStyle(color: Colors.white)),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  difficulty = value;
-                });
-              },
-            ),
-            const SizedBox(height: 10),
-            DropdownButton<String>(
-              value: workoutType,
-              hint: const Text('Select Workout Type', style: TextStyle(color: Colors.white)),
-              dropdownColor: Colors.black,
-              items: [
-                'Full Body',
-                'One Muscle Group Per Day',
-                'Two Muscle Groups Per Day',
-                'Push Pull Legs',
-                'Upper Lower'
-              ]
-                  .map((type) => DropdownMenuItem<String>(
-                        value: type,
-                        child: Text(type, style: const TextStyle(color: Colors.white)),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  workoutType = value;
-                });
-              },
-            ),
-            const SizedBox(height: 10),
-            DropdownButton<String>(
-              value: gender,
-              hint: const Text('Select Gender', style: TextStyle(color: Colors.white)),
-              dropdownColor: Colors.black,
-              items: ['Male', 'Female', 'Other']
-                  .map((gender) => DropdownMenuItem<String>(
-                        value: gender,
-                        child: Text(gender, style: const TextStyle(color: Colors.white)),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  gender = value;
-                });
-              },
-            ),
-            const SizedBox(height: 10),
-            DropdownButton<String>(
-              value: selectedDay,
-              hint: const Text('Select Day of the Week', style: TextStyle(color: Colors.white)),
-              dropdownColor: Colors.black,
-              items: [
-                'Monday',
-                'Tuesday',
-                'Wednesday',
-                'Thursday',
-                'Friday',
-                'Saturday',
-                'Sunday'
-              ]
-                  .map((day) => DropdownMenuItem<String>(
-                        value: day,
-                        child: Text(day, style: const TextStyle(color: Colors.white)),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedDay = value!;
-                  _loadExercises();
-                });
-              },
-            ),
-            const SizedBox(height: 10),
-            // Align the buttons to the right using a Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color.fromARGB(255, 40, 39, 41), Color.fromARGB(255, 0, 0, 0)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                ElevatedButton(
-                  onPressed: _deleteAllExercises,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 255, 0, 0),
-                  ),
-                  child: const Text('Delete All Exercises'),
+                _buildTextField('Client ID', onChanged: (value) => clientID = value),
+                const SizedBox(height: 16),
+                _buildTextField('Client Name', onChanged: (value) => clientName = value),
+                const SizedBox(height: 16),
+                _buildDropdown(
+                  'Select Difficulty',
+                  ['Beginner', 'Intermediate', 'Advanced'],
+                  value: difficulty,
+                  onChanged: (value) => setState(() => difficulty = value),
                 ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: ListView.builder(
-                itemCount: exercises.length,
-                itemBuilder: (context, index) {
-                  final exercise = exercises[index];
-                  return ListTile(
-                    title: Text(exercise['name']),
-                    subtitle: Text(
-                        'Reps: ${exercise['reps']}, Weight: ${exercise['weight']}kg, Rest: ${exercise['restTime']}s'),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => _deleteExercise(index),
+                const SizedBox(height: 16),
+                _buildDropdown(
+                  'Select Workout Type',
+                  ['Full Body', 'One Muscle Group Per Day', 'Two Muscle Groups Per Day', 'Push Pull Legs', 'Upper Lower'],
+                  value: workoutType,
+                  onChanged: (value) => setState(() => workoutType = value),
+                ),
+                const SizedBox(height: 16),
+                _buildDropdown(
+                  'Select Gender',
+                  ['Male', 'Female',],
+                  value: gender,
+                  onChanged: (value) => setState(() => gender = value),
+                ),
+                const SizedBox(height: 16),
+                _buildDropdown(
+                  'Select Day of the Week',
+                  ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                  value: selectedDay,
+                  onChanged: (value) => setState(() {
+                    selectedDay = value!;
+                    exercises = List<Map<String, dynamic>>.from(days[selectedDay] ?? []);
+                  }),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _deleteAllExercises,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text('Delete All Exercises', style: TextStyle(color: Colors.white)),
                     ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Align the buttons to the right using a Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Add a new exercise dialog
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        String exerciseName = '';
-                        int reps = 0;
-                        double weight = 0.0;
-                        int restTime = 0;
-                        return AlertDialog(
-                          title: const Text('Add Exercise'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextField(
-                                onChanged: (value) => exerciseName = value,
-                                decoration: const InputDecoration(
-                                  labelText: 'Exercise Name',
-                                  filled: true,
-                                  fillColor: Colors.black,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                ),
-                                style: const TextStyle(color: Colors.black),
-                              ),
-                              const SizedBox(height: 10),
-                              TextField(
-                                onChanged: (value) => reps = int.tryParse(value) ?? 0,
-                                decoration: const InputDecoration(
-                                  labelText: 'Reps',
-                                  filled: true,
-                                  fillColor: Colors.black,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                ),
-                                style: const TextStyle(color: Colors.black),
-                                keyboardType: TextInputType.number,
-                              ),
-                              const SizedBox(height: 10),
-                              TextField(
-                                onChanged: (value) => weight = double.tryParse(value) ?? 0.0,
-                                decoration: const InputDecoration(
-                                  labelText: 'Weight (kg)',
-                                  filled: true,
-                                  fillColor: Colors.black,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                ),
-                                style: const TextStyle(color: Colors.black),
-                                keyboardType: TextInputType.number,
-                              ),
-                              const SizedBox(height: 10),
-                              TextField(
-                                onChanged: (value) => restTime = int.tryParse(value) ?? 0,
-                                decoration: const InputDecoration(
-                                  labelText: 'Rest Time (s)',
-                                  filled: true,
-                                  fillColor: Colors.black,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                ),
-                                style: const TextStyle(color: Colors.black),
-                                keyboardType: TextInputType.number,
-                              ),
-                            ],
-                          ),
-                          actions: [
-                            ElevatedButton(
-                              onPressed: () {
-                                _addExercise(exerciseName, reps, weight, restTime);
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Add'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF7BB0E),
-                  ),
-                  child: const Text('Add Exercise'),
+                    ElevatedButton(
+                      onPressed: () => _showAddExerciseDialog(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFF7BB0E),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text('Add Exercise', style: TextStyle(color: Colors.black)),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: _submitPlan,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF7BB0E),
+                const SizedBox(height: 24),
+                _buildExerciseCards(), // Updated to use exercise cards
+                const SizedBox(height: 24),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: _submitPlan,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFF7BB0E),
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Submit Plan',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                    ),
                   ),
-                  child: const Text('Submit Plan'),
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
+
+Widget _buildTextField(String label, {required ValueChanged<String> onChanged}) {
+  return TextField(
+    onChanged: onChanged,
+    decoration: InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(color: Colors.white),
+      filled: true,
+      fillColor: const Color(0xFF2A2A2A),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12), // Keep the corners rounded
+        borderSide: BorderSide.none, // No outline when enabled
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12), // Keep the corners rounded
+        borderSide: BorderSide.none, // No outline when focused
+      ),
+    ),
+    style: const TextStyle(color: Colors.white),
+    cursorColor: const Color(0xFFF7BB0E),
+  );
 }
+
+Widget _buildDropdown(
+    String hint,
+    List<String> items, {
+    String? value,
+    required ValueChanged<String?> onChanged,
+}) {
+  return DropdownButtonFormField<String>(
+    value: value,
+    decoration: InputDecoration(
+      filled: true,
+      fillColor: const Color.fromARGB(255, 40, 39, 41),
+      labelText: hint,
+      labelStyle: const TextStyle(color: Colors.white),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12), // Keep the corners rounded
+        borderSide: BorderSide.none, // No outline
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12), // Keep the corners rounded
+        borderSide: BorderSide.none, // No outline when enabled
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12), // Keep the corners rounded
+        borderSide: BorderSide.none, // No outline when focused
+      ),
+    ),
+    dropdownColor: const Color.fromARGB(255, 40, 39, 41),
+    style: const TextStyle(color: Colors.white),
+    items: items.map((item) {
+      return DropdownMenuItem<String>(
+        value: item,
+        child: Text(item, style: const TextStyle(color: Colors.white)),
+      );
+    }).toList(),
+    onChanged: onChanged,
+  );
+}
+   // Function to create the exercise cards
+  Widget _buildExerciseCards() {
+    if (exercises.isEmpty) {
+      return const Center(
+        child: Text(
+          'No exercises added for this day.',
+          style: TextStyle(color: Colors.white, fontSize: 16),
+        ),
+      );
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(), // Disable scrolling for the list
+      itemCount: exercises.length,
+      itemBuilder: (context, index) {
+        final exercise = exercises[index];
+        return Card(
+          color: const Color.fromARGB(255, 40, 39, 41),
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  exercise['name'],
+                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Reps: ${exercise['reps']}',
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                Text(
+                  'Weight: ${exercise['weight']} kg',
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                Text(
+                  'Rest Time: ${exercise['restTime']} sec',
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () => _deleteExercise(index),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Function to show dialog for adding a new exercise
+  void _showAddExerciseDialog(BuildContext context) {
+    String exerciseName = '';
+    int reps = 0;
+    double weight = 0.0;
+    int restTime = 0;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Add Exercise'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildTextField('Exercise Name', onChanged: (value) => exerciseName = value),
+              const SizedBox(height: 16),
+              _buildTextField('Reps', onChanged: (value) => reps = int.tryParse(value) ?? 0),
+              const SizedBox(height: 16),
+              _buildTextField('Weight (kg)', onChanged: (value) => weight = double.tryParse(value) ?? 0.0),
+              const SizedBox(height: 16),
+              _buildTextField('Rest Time (sec)', onChanged: (value) => restTime = int.tryParse(value) ?? 0),
+            ],
+          ),
+          actions: [
+            TextButton(
+  onPressed: () {
+    Navigator.of(context).pop();
+  },
+  style: TextButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 0, 0, 0), // Set the text color
+  ),
+  child: const Text('Cancel'),
+),
+
+            ElevatedButton(
+  onPressed: () {
+    _addExercise(exerciseName, reps, weight, restTime);
+    Navigator.of(context).pop();
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Color(0xFFF7BB0E), // Set the background color
+    foregroundColor: const Color.fromARGB(255, 0, 0, 0), // Set the text color
+  ),
+  child: const Text('Add'),
+),
+
+          ],
+        );
+      },
+    );
+  }
+}
+
