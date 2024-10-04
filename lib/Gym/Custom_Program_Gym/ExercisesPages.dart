@@ -4,7 +4,7 @@ import 'package:gym_buddies/Create_Yout_Workout_Day.dart'; // Import the Workout
 
 class ExercisesPage extends StatefulWidget {
   final String muscleGroup;
-  const ExercisesPage({required this.muscleGroup});
+  const ExercisesPage({super.key, required this.muscleGroup});
 
   @override
   _ExercisesPageState createState() => _ExercisesPageState();
@@ -120,11 +120,11 @@ class _ExercisesPageState extends State<ExercisesPage> {
                     const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: () => _addToWorkout(exercise),
-                      child: const Text('➕ Add to Workout'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFF7BB0E),
                         foregroundColor: Colors.black,
                       ),
+                      child: const Text('➕ Add to Workout'),
                     ),
                   ],
                 ),

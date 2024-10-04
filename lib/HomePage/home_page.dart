@@ -207,9 +207,9 @@ Widget _buildInventoryBox() {
 Widget _buildShowUserIdBox() {
   return GestureDetector(
     onTap: _showUserId,
-    child: SizedBox(
+    child: const SizedBox(
       width: 60, // Set a fixed width for the ID box
-      child: const Card(
+      child: Card(
         color: Color(0xFFF7BB0E),
         child: Padding(
           padding: EdgeInsets.all(16.0),

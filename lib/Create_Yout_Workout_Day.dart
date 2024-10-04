@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateYourWorkoutDay extends StatefulWidget {
+  const CreateYourWorkoutDay({super.key});
+
   @override
   _CreateYourWorkoutDayState createState() => _CreateYourWorkoutDayState();
 }
@@ -121,20 +123,20 @@ class _CreateYourWorkoutDayState extends State<CreateYourWorkoutDay> {
                                       children: [
                                         ElevatedButton(
                                           onPressed: () => _deleteExercise(docId),
-                                          child: const Text('Delete'),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.red,
                                             foregroundColor: Colors.white,
                                           ),
+                                          child: const Text('Delete'),
                                         ),
                                         // Green box to mark as complete
                                         ElevatedButton(
                                           onPressed: () => _markAsComplete(docId, isCompleted),
-                                          child: Text(isCompleted ? 'Completed' : 'Mark as Done'),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: isCompleted ? Colors.grey : Colors.green,
                                             foregroundColor: Colors.white,
                                           ),
+                                          child: Text(isCompleted ? 'Completed' : 'Mark as Done'),
                                         ),
                                       ],
                                     ),

@@ -86,7 +86,16 @@ flutter:
     - assets/shoulders-workout-gym.png
     - assets/triceps-workout-gym.png
     - assets/bench_press.png
-    #---------------------------------------------------------------------------------------------
+    #CustomP Programs Page---------------------------------------------------------------------------------------------
+    - assets/custom-page/gym-program.png
+    - assets/custom-page/yoga-program.png
+    - assets/custom-page/cycling-program.png
+    - assets/custom-page/jogging-program.png
+    - assets/custom-page/caliesthenics-program.png
+    - assets/custom-page/swimming-program.png
+    - assets/custom-page/home-workout-program.png
+    - assets/custom-page/boxing-program.png
+
 
 
   #   - images/a_dot_ham.jpeg
