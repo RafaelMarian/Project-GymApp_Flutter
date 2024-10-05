@@ -114,7 +114,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color.fromARGB(255, 40, 39, 41), Color.fromARGB(255, 0, 0, 0)],
+            colors: [Color.fromARGB(255, 40, 39, 41), Color.fromARGB(255, 40, 39, 41)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -221,7 +221,7 @@ Widget _buildTextField(String label, {required ValueChanged<String> onChanged}) 
       labelText: label,
       labelStyle: const TextStyle(color: Colors.white),
       filled: true,
-      fillColor: const Color(0xFF2A2A2A),
+      fillColor: const Color.fromARGB(255, 66, 66, 66),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
@@ -250,7 +250,7 @@ Widget _buildDropdown(
     value: value,
     decoration: InputDecoration(
       filled: true,
-      fillColor: const Color.fromARGB(255, 40, 39, 41),
+      fillColor: const Color.fromARGB(255, 66, 66, 66),
       labelText: hint,
       labelStyle: const TextStyle(color: Colors.white),
       border: OutlineInputBorder(
@@ -266,7 +266,7 @@ Widget _buildDropdown(
         borderSide: BorderSide.none, // No outline when focused
       ),
     ),
-    dropdownColor: const Color.fromARGB(255, 40, 39, 41),
+    dropdownColor: const Color.fromARGB(255, 66, 66, 66),
     style: const TextStyle(color: Colors.white),
     items: items.map((item) {
       return DropdownMenuItem<String>(
@@ -290,12 +290,12 @@ Widget _buildDropdown(
 
     return ListView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(), // Disable scrolling for the list
+      physics: const NeverScrollableScrollPhysics(), // Disable scrolling for the list
       itemCount: exercises.length,
       itemBuilder: (context, index) {
         final exercise = exercises[index];
         return Card(
-          color: const Color.fromARGB(255, 40, 39, 41),
+          color: const Color.fromARGB(255, 66, 66, 66),
           margin: const EdgeInsets.symmetric(vertical: 8),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -379,7 +379,7 @@ Widget _buildDropdown(
     Navigator.of(context).pop();
   },
   style: ElevatedButton.styleFrom(
-    backgroundColor: Color(0xFFF7BB0E), // Set the background color
+    backgroundColor: const Color(0xFFF7BB0E), // Set the background color
     foregroundColor: const Color.fromARGB(255, 0, 0, 0), // Set the text color
   ),
   child: const Text('Add'),

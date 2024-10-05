@@ -140,7 +140,7 @@ class _PlannedGymProgramsPageState extends State<PlannedGymProgramsPage> {
                                       style: const TextStyle(color: Colors.white),
                                     ),
                                   );
-                                }).toList(),
+                                }),
                               ],
                             ),
                           ),

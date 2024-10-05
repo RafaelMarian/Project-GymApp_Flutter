@@ -70,7 +70,7 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
         backgroundColor: const Color.fromARGB(255, 40, 39, 41),
         elevation: 0,
       ),
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       body: Container(
         
         padding: const EdgeInsets.all(20.0),
@@ -83,7 +83,7 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
                 labelText: 'Exercise Name',
                 labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                 filled: true,
-                fillColor: Color(0xFF2A2A2A),
+                fillColor: Color.fromARGB(255, 66, 66, 66),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
                   borderSide: BorderSide.none, // No outline when enabled
@@ -108,7 +108,7 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
                 labelText: 'Description',
                 labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                 filled: true,
-                fillColor: Color(0xFF2A2A2A),
+                fillColor: Color.fromARGB(255, 66, 66, 66),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
                   borderSide: BorderSide.none, // No outline when enabled
@@ -137,7 +137,7 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
                       labelText: 'Reps',
                       labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                       filled: true,
-                      fillColor: Color(0xFF2A2A2A),
+                      fillColor: Color.fromARGB(255, 66, 66, 66),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
                         borderSide: BorderSide.none, // No outline when enabled
@@ -164,7 +164,7 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
                       labelText: 'Weight (kg)',
                       labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                       filled: true,
-                      fillColor: Color(0xFF2A2A2A),
+                      fillColor: Color.fromARGB(255, 66, 66, 66),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12)), // Rounded corners
                         borderSide: BorderSide.none, // No outline when enabled
@@ -187,11 +187,11 @@ class _AddExerciseGymPageState extends State<AddExerciseGymPage> {
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               value: _selectedMuscleGroup,
-              dropdownColor: const Color(0xFF2A2A2A),
+              dropdownColor: const Color.fromARGB(255, 66, 66, 66),
               style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(
                 filled: true,
-                fillColor: Color(0xFF2A2A2A),
+                fillColor: Color.fromARGB(255, 66, 66, 66),
                 labelText: 'Select Muscle Group',
                 labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                 enabledBorder: OutlineInputBorder(

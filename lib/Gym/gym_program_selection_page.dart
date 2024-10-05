@@ -32,7 +32,7 @@ class _GymProgramSelectionPageState extends State<GymProgramSelectionPage> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF2C5364), Color(0xFF0F2027)], // Subtle gradient
+            colors: [Color.fromARGB(255, 40, 39, 41), Color.fromARGB(255, 0, 0, 0)], // Subtle gradient
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),

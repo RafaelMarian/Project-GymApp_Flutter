@@ -401,7 +401,7 @@ Widget _buildWorkoutSlide(bool active, int index) {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  CreateYourWorkoutDay()),
+                MaterialPageRoute(builder: (context) =>  const CreateYourWorkoutDay()),
               );
             },
           ),
