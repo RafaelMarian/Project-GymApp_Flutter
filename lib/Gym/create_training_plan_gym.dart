@@ -108,281 +108,322 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Training Plan', style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF222222),
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
         elevation: 0,
       ),
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41),  // Ensure the whole page has the desired background
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color.fromARGB(255, 40, 39, 41), Color.fromARGB(255, 40, 39, 41)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildTextField('Client ID', onChanged: (value) => clientID = value),
-                const SizedBox(height: 16),
-                _buildTextField('Client Name', onChanged: (value) => clientName = value),
-                const SizedBox(height: 16),
-                _buildDropdown(
-                  'Select Difficulty',
-                  ['Beginner', 'Intermediate', 'Advanced'],
-                  value: difficulty,
-                  onChanged: (value) => setState(() => difficulty = value),
-                ),
-                const SizedBox(height: 16),
-                _buildDropdown(
-                  'Select Workout Type',
-                  ['Full Body', 'One Muscle Group Per Day', 'Two Muscle Groups Per Day', 'Push Pull Legs', 'Upper Lower'],
-                  value: workoutType,
-                  onChanged: (value) => setState(() => workoutType = value),
-                ),
-                const SizedBox(height: 16),
-                _buildDropdown(
-                  'Select Gender',
-                  ['Male', 'Female',],
-                  value: gender,
-                  onChanged: (value) => setState(() => gender = value),
-                ),
-                const SizedBox(height: 16),
-                _buildDropdown(
-                  'Select Day of the Week',
-                  ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-                  value: selectedDay,
-                  onChanged: (value) => setState(() {
-                    selectedDay = value!;
-                    exercises = List<Map<String, dynamic>>.from(days[selectedDay] ?? []);
-                  }),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: _deleteAllExercises,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text('Delete All Exercises', style: TextStyle(color: Colors.white)),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => _showAddExerciseDialog(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF7BB0E),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text('Add Exercise', style: TextStyle(color: Colors.black)),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                _buildExerciseCards(), // Updated to use exercise cards
-                const SizedBox(height: 24),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: _submitPlan,
+        padding: const EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildTextField('Client ID', onChanged: (value) => clientID = value),
+              const SizedBox(height: 16),
+              _buildTextField('Client Name', onChanged: (value) => clientName = value),
+              const SizedBox(height: 16),
+              _buildDropdown(
+                'Select Difficulty',
+                ['Beginner', 'Intermediate', 'Advanced'],
+                value: difficulty,
+                onChanged: (value) => setState(() => difficulty = value),
+              ),
+              const SizedBox(height: 16),
+              _buildDropdown(
+                'Select Workout Type',
+                ['Full Body', 'One Muscle Group Per Day', 'Two Muscle Groups Per Day', 'Push Pull Legs', 'Upper Lower'],
+                value: workoutType,
+                onChanged: (value) => setState(() => workoutType = value),
+              ),
+              const SizedBox(height: 16),
+              _buildDropdown(
+                'Select Gender',
+                ['Male', 'Female'],
+                value: gender,
+                onChanged: (value) => setState(() => gender = value),
+              ),
+              const SizedBox(height: 16),
+              _buildDropdown(
+                'Select Day of the Week',
+                ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                value: selectedDay,
+                onChanged: (value) => setState(() {
+                  selectedDay = value!;
+                  exercises = List<Map<String, dynamic>>.from(days[selectedDay] ?? []);
+                }),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: _deleteAllExercises,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF7BB0E),
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                      backgroundColor: Colors.redAccent,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
-                      'Submit Plan',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                    child: const Text('Delete All Exercises', style: TextStyle(color: Colors.white)),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _showAddExerciseDialog(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFF7BB0E),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text('Add Exercise', style: TextStyle(color: Colors.black)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              _buildExerciseCards(),
+              const SizedBox(height: 24),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _submitPlan,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFF7BB0E),
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
+                  child: const Text(
+                    'Submit Plan',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-Widget _buildTextField(String label, {required ValueChanged<String> onChanged}) {
-  return TextField(
-    onChanged: onChanged,
-    decoration: InputDecoration(
-      labelText: label,
-      labelStyle: const TextStyle(color: Colors.white),
-      filled: true,
-      fillColor: const Color.fromARGB(255, 66, 66, 66),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12), // Keep the corners rounded
-        borderSide: BorderSide.none, // No outline when enabled
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12), // Keep the corners rounded
-        borderSide: BorderSide.none, // No outline when focused
-      ),
-    ),
-    style: const TextStyle(color: Colors.white),
-    cursorColor: const Color(0xFFF7BB0E),
-  );
-}
-
-Widget _buildDropdown(
-    String hint,
-    List<String> items, {
-    String? value,
-    required ValueChanged<String?> onChanged,
-}) {
-  return DropdownButtonFormField<String>(
-    value: value,
-    decoration: InputDecoration(
-      filled: true,
-      fillColor: const Color.fromARGB(255, 66, 66, 66),
-      labelText: hint,
-      labelStyle: const TextStyle(color: Colors.white),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12), // Keep the corners rounded
-        borderSide: BorderSide.none, // No outline
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12), // Keep the corners rounded
-        borderSide: BorderSide.none, // No outline when enabled
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12), // Keep the corners rounded
-        borderSide: BorderSide.none, // No outline when focused
-      ),
-    ),
-    dropdownColor: const Color.fromARGB(255, 66, 66, 66),
-    style: const TextStyle(color: Colors.white),
-    items: items.map((item) {
-      return DropdownMenuItem<String>(
-        value: item,
-        child: Text(item, style: const TextStyle(color: Colors.white)),
-      );
-    }).toList(),
-    onChanged: onChanged,
-  );
-}
-   // Function to create the exercise cards
-  Widget _buildExerciseCards() {
-    if (exercises.isEmpty) {
-      return const Center(
-        child: Text(
-          'No exercises added for this day.',
-          style: TextStyle(color: Colors.white, fontSize: 16),
+  Widget _buildTextField(String label, {required ValueChanged<String> onChanged}) {
+    return TextField(
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.white),
+        filled: true,
+        fillColor: const Color.fromARGB(255, 66, 66, 66),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
         ),
-      );
-    }
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+      ),
+      style: const TextStyle(color: Colors.white),
+      cursorColor: const Color(0xFFF7BB0E),
+    );
+  }
 
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(), // Disable scrolling for the list
-      itemCount: exercises.length,
-      itemBuilder: (context, index) {
-        final exercise = exercises[index];
+  Widget _buildDropdown(
+      String hint,
+      List<String> items, {
+      String? value,
+      required ValueChanged<String?> onChanged,
+    }) {
+    return DropdownButtonFormField<String>(
+      value: value,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: const Color.fromARGB(255, 66, 66, 66),
+        labelText: hint,
+        labelStyle: const TextStyle(color: Colors.white),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+      ),
+      dropdownColor: const Color.fromARGB(255, 66, 66, 66),
+      onChanged: onChanged,
+      items: items.map((String item) {
+        return DropdownMenuItem<String>(
+          value: item,
+          child: Text(item, style: const TextStyle(color: Colors.white)),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildExerciseCards() {
+    return Column(
+      children: exercises.asMap().entries.map((entry) {
+        int index = entry.key;
+        Map<String, dynamic> exercise = entry.value;
         return Card(
           color: const Color.fromARGB(255, 66, 66, 66),
-          margin: const EdgeInsets.symmetric(vertical: 8),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  exercise['name'],
-                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      exercise['name'],
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '${exercise['reps']} reps, ${exercise['weight']}kg, ${exercise['restTime']} seconds rest',
+                      style: const TextStyle(fontSize: 14, color: Colors.white),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Reps: ${exercise['reps']}',
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
-                ),
-                Text(
-                  'Weight: ${exercise['weight']} kg',
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
-                ),
-                Text(
-                  'Rest Time: ${exercise['restTime']} sec',
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
-                ),
-                const SizedBox(height: 8),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => _deleteExercise(index),
-                  ),
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.redAccent),
+                  onPressed: () => _deleteExercise(index),
                 ),
               ],
             ),
           ),
         );
-      },
+      }).toList(),
     );
   }
 
-  // Function to show dialog for adding a new exercise
   void _showAddExerciseDialog(BuildContext context) {
     String exerciseName = '';
     int reps = 0;
-    double weight = 0.0;
+    double weight = 0;
     int restTime = 0;
 
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Add Exercise'),
+          backgroundColor: const Color.fromARGB(255, 66, 66, 66),
+          title: const Text('Add Exercise', style: TextStyle(color: Colors.white)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildTextField('Exercise Name', onChanged: (value) => exerciseName = value),
-              const SizedBox(height: 16),
-              _buildTextField('Reps', onChanged: (value) => reps = int.tryParse(value) ?? 0),
-              const SizedBox(height: 16),
-              _buildTextField('Weight (kg)', onChanged: (value) => weight = double.tryParse(value) ?? 0.0),
-              const SizedBox(height: 16),
-              _buildTextField('Rest Time (sec)', onChanged: (value) => restTime = int.tryParse(value) ?? 0),
+              TextField(
+  onChanged: (value) => exerciseName = value,
+  decoration: InputDecoration(
+    labelText: 'Exercise Name',
+    labelStyle: const TextStyle(color: Colors.white),
+    filled: true, // Fills the background color
+    fillColor: Colors.grey[800], // Sets the background to grey 800
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(20), // Rounder corners
+      borderSide: BorderSide.none, // Removes the underline (output line)
+    ),
+    contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+  ),
+  style: const TextStyle(color: Colors.white),
+),
+
+              TextField(
+  onChanged: (value) => reps = int.tryParse(value) ?? 0,
+  decoration: InputDecoration(
+    labelText: 'Reps',
+    labelStyle: const TextStyle(color: Colors.white),
+    filled: true, // Fills the background color
+    fillColor: Colors.grey[800], // Sets the background to grey 800
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(20), // Rounder corners
+      borderSide: BorderSide.none, // Removes the underline (output line)
+    ),
+    contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+  ),
+  style: const TextStyle(color: Colors.white),
+),
+
+              TextField(
+  onChanged: (value) => weight = double.tryParse(value) ?? 0,
+  decoration: InputDecoration(
+    labelText: 'Weight (kg)',
+    labelStyle: const TextStyle(color: Colors.white),
+    filled: true, // Fills the background color
+    fillColor: Colors.grey[800], // Sets the background to grey 800
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(20), // Rounder corners
+      borderSide: BorderSide.none, // Removes the underline (output line)
+    ),
+    contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+  ),
+  style: const TextStyle(color: Colors.white),
+),
+
+              TextField(
+  onChanged: (value) => restTime = int.tryParse(value) ?? 0,
+  decoration: InputDecoration(
+    labelText: 'Rest Time',
+    labelStyle: const TextStyle(color: Colors.white),
+    filled: true, // Fills the background color
+    fillColor: Colors.grey[800], // Sets the background to grey 800
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(20), // Rounder corners
+      borderSide: BorderSide.none, // Removes the underline (output line)
+    ),
+    contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+  ),
+  style: const TextStyle(color: Colors.white),
+),
             ],
           ),
           actions: [
-            TextButton(
+            ElevatedButton(
   onPressed: () {
     Navigator.of(context).pop();
   },
-  style: TextButton.styleFrom(
-    backgroundColor: const Color.fromARGB(255, 0, 0, 0), // Set the text color
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 255, 0, 0), // Background color
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20), // Rounded corners
+    ),
+    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
   ),
-  child: const Text('Cancel'),
+  child: const Text(
+    'Cancel',
+    style: TextStyle(color: Colors.white),
+  ),
 ),
 
-            ElevatedButton(
+            TextButton(
   onPressed: () {
     _addExercise(exerciseName, reps, weight, restTime);
     Navigator.of(context).pop();
   },
-  style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFFF7BB0E), // Set the background color
-    foregroundColor: const Color.fromARGB(255, 0, 0, 0), // Set the text color
+  style: TextButton.styleFrom(
+    backgroundColor: Color(0xFFF7BB0E), // Background color
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20), // Rounded corners
+    ),
+    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
   ),
-  child: const Text('Add'),
+  child: const Text(
+    'Add',
+    style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)), // Text color
+  ),
 ),
 
           ],
@@ -391,4 +432,3 @@ Widget _buildDropdown(
     );
   }
 }
-
