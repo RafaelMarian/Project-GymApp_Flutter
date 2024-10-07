@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart'; // Import provider package
+import 'package:pedometer/pedometer.dart';
 import 'login_page.dart'; // Import your login page
 
 void main() async {
@@ -13,44 +15,43 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Gym Buddies',
-      theme: ThemeData(
-        // Remove the ColorScheme.fromSeed to prevent automatic color generation
-        colorScheme: const ColorScheme.dark(
-          primary: Colors.black, // Primary color for app
-          onPrimary: Colors.white, // Color for text/icons on primary background
-          surface: Colors.black, // Background color for surfaces like cards
-          onSurface: Colors.white, // Text color on surface backgrounds
-        ),
-        useMaterial3: true,
-
-        // Input decoration for TextFields across the app
-        inputDecorationTheme: const InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.grey, // Background color of the TextField
-          labelStyle: TextStyle(color: Colors.white), // Label color
-          hintStyle: TextStyle(color: Colors.white), // Hint text color
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white), // Border when not focused
+    return MultiProvider(
+      providers: [
+        Provider(create: (_) => Pedometer()), // Use Provider instead of ChangeNotifierProvider
+      ],
+      child: MaterialApp(
+        title: 'Gym Buddies',
+        theme: ThemeData(
+          colorScheme: const ColorScheme.dark(
+            primary: Colors.black,
+            onPrimary: Colors.white,
+            surface: Colors.black,
+            onSurface: Colors.white,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white), // Border when focused
+          useMaterial3: true,
+          inputDecorationTheme: const InputDecorationTheme(
+            filled: true,
+            fillColor: Colors.grey,
+            labelStyle: TextStyle(color: Colors.white),
+            hintStyle: TextStyle(color: Colors.white),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+          ),
+          textTheme: const TextTheme(
+            bodyMedium: TextStyle(color: Colors.white),
+          ),
+          textSelectionTheme: const TextSelectionThemeData(
+            cursorColor: Colors.white,
+            selectionColor: Colors.tealAccent,
+            selectionHandleColor: Colors.teal,
           ),
         ),
-
-        // Ensure all text input uses white text by default
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(color: Colors.white), // Default text style for input text
-        ),
-        
-        textSelectionTheme: const TextSelectionThemeData(
-          cursorColor: Colors.white, // Cursor color
-          selectionColor: Colors.tealAccent, // Highlight color for selected text
-          selectionHandleColor: Colors.teal, // Handle color for text selection
-        ),
+        home: const SplashScreen(), // Set SplashScreen as the initial screen
       ),
-      home: const SplashScreen(), // Set SplashScreen as the initial screen
     );
   }
 }
@@ -72,7 +73,8 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => const LoginPage()), // Navigate to LoginPage
+          builder: (context) => const LoginPage(), // Navigate to LoginPage
+        ),
       );
     });
   }

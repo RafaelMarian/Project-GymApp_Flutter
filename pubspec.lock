@@ -277,6 +277,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.0+1"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   path:
     dependency: transitive
     description:
@@ -309,6 +317,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  pedometer:
+    dependency: "direct dev"
+    description:
+      name: pedometer
+      sha256: "11cfba2de961893d79e65b7773b9462bc53979626b49a86972d63b40217969ee"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.2"
   platform:
     dependency: transitive
     description:
@@ -325,6 +341,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  provider:
+    dependency: "direct dev"
+    description:
+      name: provider
+      sha256: c8a055ee5ce3fd98d6fc872478b03823ffdb448699c6ebdbbc71d59b596fd48c
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.2"
   shared_preferences:
     dependency: "direct dev"
     description:

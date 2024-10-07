@@ -42,6 +42,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
       'description': exercise['description'],
       'image': exercise['image'] ?? '',
       'timestamp': FieldValue.serverTimestamp(),
+      'completed':false,
     });
 
     // Optionally navigate to CreateYourWorkoutPage

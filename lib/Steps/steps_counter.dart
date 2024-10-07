@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'custom_circle_for_steps.dart';
+import 'package:gym_buddies/Steps/custom_circle_for_steps.dart';
+import 'pedometer.dart'; // Import the pedometer service
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StepsCounterPage extends StatefulWidget {
   const StepsCounterPage({super.key});
@@ -9,18 +12,48 @@ class StepsCounterPage extends StatefulWidget {
   _StepsCounterPageState createState() => _StepsCounterPageState();
 }
 
-class _StepsCounterPageState extends State<StepsCounterPage> {
+class _StepsCounterPageState extends State<StepsCounterPage> with WidgetsBindingObserver {
   final TextEditingController _stepsController = TextEditingController();
   int _stepsToday = 0;
   int _goal = 10000; // Default goal
   double _progress = 0;
   double _caloriesBurned = 0;
   List<Map<String, dynamic>> _stepsHistory = []; // To store history data
+  PedometerService _pedometerService = PedometerService();
+  bool _isCounting = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this); // Add observer
     _fetchData();
+    _loadIsCountingState(); // Load the counting state
+  }
+
+  // Load counting state from SharedPreferences
+  Future<void> _loadIsCountingState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _isCounting = prefs.getBool('isCounting') ?? false; // Default to false
+    if (_isCounting) {
+      _startCountingSteps(); // Resume counting if it was active
+    }
+  }
+
+  // Ensure counting is managed properly on app lifecycle events
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      _stopCountingSteps();
+    } else if (state == AppLifecycleState.resumed) {
+      _loadIsCountingState(); // Load state when resumed
+    }
+  }
+
+  @override
+  void dispose() {
+    _stopCountingSteps(); // Ensure counting stops when disposed
+    WidgetsBinding.instance.removeObserver(this); // Remove observer
+    super.dispose();
   }
 
   Future<void> _fetchData() async {
@@ -46,7 +79,6 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
             'date': '${timestamp.year}-${timestamp.month}-${timestamp.day}',
             'steps': steps,
           });
-          // Update latestSteps with the most recent entry
           latestSteps = steps;
         }
       }
@@ -61,12 +93,50 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
     }
   }
 
-  void _updateSteps() {
+  // Handle starting and stopping pedometer counting
+  void _startCountingSteps() async {
+    if (!_isCounting) {
+      setState(() {
+        _isCounting = true;
+      });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isCounting', true); // Save state to SharedPreferences
+
+      _pedometerService.startListeningToSteps((newStepCount) {
+        setState(() {
+          _stepsToday = newStepCount;
+          _progress = _stepsToday / _goal;
+          _caloriesBurned = _stepsToday * 0.04; // Calories calculation
+        });
+
+        // Save steps to Firestore
+        FirebaseFirestore.instance.collection('steps_data').add({
+          'steps': _stepsToday,
+          'timestamp': Timestamp.now(),
+        });
+      });
+    }
+  }
+
+  void _stopCountingSteps() async {
+    if (_isCounting) {
+      setState(() {
+        _isCounting = false;
+      });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isCounting', false); // Save state to SharedPreferences
+
+      _pedometerService.stopListeningToSteps();
+    }
+  }
+
+  // Manually add steps from the input block
+  void _addStepsFromInput() {
     final steps = int.tryParse(_stepsController.text) ?? 0;
     setState(() {
-      _stepsToday = steps;
+      _stepsToday += steps;
       _progress = _stepsToday / _goal;
-      _caloriesBurned = _stepsToday * 0.04; // Example calculation: 0.04 calories per step
+      _caloriesBurned = _stepsToday * 0.04;
     });
 
     FirebaseFirestore.instance.collection('steps_data').add({
@@ -98,11 +168,11 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Confirm Deletion", style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
-          content: const Text("Are you sure you want to clear all data? This action cannot be undone.", style: TextStyle(color: Color(0xFF322D29))),
+          title: const Text("Confirm Deletion"),
+          content: const Text("Are you sure you want to clear all data? This action cannot be undone."),
           actions: [
             TextButton(
-              child: const Text("Cancel", style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
+              child: const Text("Cancel"),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
@@ -125,57 +195,58 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
       appBar: AppBar(
         title: const Text(
           'Steps Counter',
-          style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)), // Very light cream
+          style: TextStyle(color: Colors.white), // Light text color
         ),
-        backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark teal
-        centerTitle: true, // Center the title
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark background
+        centerTitle: true,
       ),
       body: Container(
-        color: const Color.fromARGB(255, 40, 39, 41), // Lighter beige
+        color: const Color.fromARGB(255, 40, 39, 41), // Dark background
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // Circular Progress Widget (Unchanged)
               CustomCircularProgress(
                 progress: _progress.clamp(0.0, 1.0),
-                size: 150, // Smaller size
+                size: 150,
                 backgroundColor: const Color(0xFFD9D9D9), // Light grey
                 progressColor: const Color(0xFFFFC400), // Yellow
               ),
               const SizedBox(height: 20),
               Text(
                 '$_stepsToday steps',
-                style: const TextStyle(fontSize: 36, color: Color.fromARGB(255, 255, 255, 255)), // Dark teal
+                style: const TextStyle(fontSize: 36, color: Colors.white),
               ),
               const SizedBox(height: 20),
-             Container(
-  decoration: BoxDecoration(
-    color: const Color.fromARGB(255, 0, 0, 0), // Change this to your desired background color
-    borderRadius: BorderRadius.circular(8.0), // Optional: rounded corners for the container
-  ),
-  child: TextField(
-    controller: _stepsController,
-    keyboardType: TextInputType.number,
-    decoration: const InputDecoration(
-      border: OutlineInputBorder(),
-      labelText: 'Enter Steps Today',
-      labelStyle: TextStyle(
-        color: Color.fromARGB(255, 255, 255, 255), // Label color
-      ),
-      filled: true,
-      fillColor: Colors.transparent, // No fill color inside the TextField to see the container background
-    ),
-  ),
-),
-
+              // Steps entry (Unchanged)
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.black, // Black background for input field
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: TextField(
+                  controller: _stepsController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Enter Steps Today',
+                    labelStyle: TextStyle(
+                      color: Colors.white, // Light text color
+                    ),
+                    filled: true,
+                    fillColor: Colors.transparent,
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
               DropdownButton<int>(
                 value: _goal,
                 items: [5000, 10000, 15000, 20000].map((int value) {
                   return DropdownMenuItem<int>(
                     value: value,
-                    child: Text('$value steps', style: const TextStyle(color:Color.fromARGB(255, 255, 255, 255))), // Dark teal
+                    child: Text('$value steps', style: const TextStyle(color: Colors.white)),
                   );
                 }).toList(),
                 onChanged: (newValue) {
@@ -183,60 +254,38 @@ class _StepsCounterPageState extends State<StepsCounterPage> {
                     _goal = newValue ?? _goal;
                   });
                 },
-                hint: const Text('Select your goal', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))), // Dark teal
               ),
               const SizedBox(height: 20),
-              Text(
-                'Goal Progress: ${(_progress * 100).toStringAsFixed(1)}%',
-                style: const TextStyle(fontSize: 18, color: Color.fromARGB(255, 255, 255, 255)), // Dark teal
-              ),
-              Text(
-                'Calories Burned: ${_caloriesBurned.toStringAsFixed(1)} kcal',
-                style: const TextStyle(fontSize: 18, color: Color.fromARGB(255, 255, 255, 255)), // Dark teal
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: _isCounting ? null : _startCountingSteps,
+                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFC400)),
+                    child: Text(_isCounting ? 'Counting...' : 'Start Counting'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _isCounting ? _stopCountingSteps : null,
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    child: const Text('Stop Counting'),
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _stepsHistory.length,
-                  itemBuilder: (context, index) {
-                    final entry = _stepsHistory[index];
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 5),
-                      child: ListTile(
-                        title: Text(
-                          'Date: ${entry['date']}',
-                          style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)), // Very light cream
-                        ),
-                        subtitle: Text(
-                          'Steps: ${entry['steps']}',
-                          style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)), // Very light cream
-                        ),
-                        tileColor: const Color(0xFF322D29), // Dark teal
-                        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                      ),
-                    );
-                  },
-                ),
+              ElevatedButton(
+                onPressed: _addStepsFromInput,
+                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFC400)),
+                child: const Text('Add Steps'),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _clearData,
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: const Text('Clear Data'),
               ),
             ],
           ),
         ),
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: _clearData,
-            backgroundColor: Colors.red,
-            child: const Icon(Icons.remove),
-          ),
-          const SizedBox(height: 10),
-          FloatingActionButton(
-            onPressed: _updateSteps,
-            backgroundColor: const Color(0xFFFFC400),
-            child: const Icon(Icons.add), // Yellow
-          ),
-        ],
       ),
     );
   }

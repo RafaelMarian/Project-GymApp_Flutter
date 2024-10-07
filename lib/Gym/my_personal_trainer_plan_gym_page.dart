@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gym_buddies/Create_Yout_Workout_Day.dart';
 
 class MyPersonalTrainerPlanPageGym extends StatefulWidget {
   const MyPersonalTrainerPlanPageGym({super.key});
@@ -48,7 +49,6 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
   }
 
   Future<void> _confirmDeleteTrainingPlan(String planID) async {
-    // Show a confirmation dialog
     final shouldDelete = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -76,7 +76,6 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
       },
     );
 
-    // If confirmed, proceed with deletion
     if (shouldDelete == true) {
       await _deleteTrainingPlan(planID);
     }
@@ -88,14 +87,32 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Training plan deleted successfully')),
       );
-
-      // Re-fetch the plans after deletion to update the list
       _fetchAllPlans();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error deleting plan: $e')),
       );
     }
+  }
+
+  Future<void> _addToWorkout(Map<String, dynamic> plan) async {
+    // Add selected training plan to the workout page
+    await FirebaseFirestore.instance.collection('user-workout-programs').add({
+      'clientName': plan['clientName'],
+      'days': plan['days'],
+      'workoutType': plan['workoutType'],
+      'difficulty': plan['difficulty'],
+      'timestamp': FieldValue.serverTimestamp(),
+      'isTrainingPlan': true, // Mark this as a training plan
+      'completed': false,  // Default the "completed" field to false
+    });
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CreateYourWorkoutDay(), // Redirect to the workout page
+      ),
+    );
   }
 
   @override
@@ -113,62 +130,91 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
                   itemCount: plans.length,
                   itemBuilder: (context, index) {
                     final plan = plans[index];
-                    final planID = plan.id;
-                    final clientName = plan['clientName'] ?? 'Unknown Client';
-                    final difficulty = plan['difficulty'] ?? 'No Difficulty';
-                    final workoutType = plan['workoutType'] ?? 'No Workout Type';
+                    final clientName = plan['clientName']?.toString() ?? 'Unknown Client';
+                    final difficulty = plan['difficulty']?.toString() ?? 'No Difficulty';
+                    final workoutType = plan['workoutType']?.toString() ?? 'No Workout Type';
                     final days = plan['days'] as Map<String, dynamic>? ?? {};
 
                     return Card(
-                      margin: const EdgeInsets.all(8.0),
-                      child: ExpansionTile(
-                        title: Text(
-                          ' $clientName',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text('Workout Type: $workoutType, Difficulty: $difficulty'),
-                        children: [
-                          ...days.keys.map((day) {
-                            final exercises = days[day] as List<dynamic>? ?? [];
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    '$day:',
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                ...exercises.map((exercise) {
-                                  return ListTile(
-                                    title: Text(exercise['name'] ?? 'Unnamed Exercise'),
-                                    subtitle: Text(
-                                      'Reps: ${exercise['reps']}, Weight: ${exercise['weight']}kg, Rest: ${exercise['restTime']}s',
-                                    ),
-                                  );
-                                }),
-                              ],
-                            );
-                          }),
-                          ElevatedButton(
-                            onPressed: () => _confirmDeleteTrainingPlan(planID),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
+                      color: Colors.grey[900],
+                      margin: const EdgeInsets.all(10.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              clientName,
+                              style: const TextStyle(
+                                color: Color(0xFFF7BB0E),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            child: const Text('Delete Plan'),
-                          ),
-                        ],
+                            const SizedBox(height: 8),
+                            Text(
+                              'Workout Type: $workoutType, Difficulty: $difficulty',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            const SizedBox(height: 8),
+                            ...days.keys.map((day) {
+                              final exercises = days[day] as List<dynamic>? ?? [];
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '$day:',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    ...exercises.map((exercise) {
+                                      final completed = exercise['completed'] ?? false;  // Handle the "completed" field
+                                      return Padding(
+                                        padding: const EdgeInsets.only(left: 8.0),
+                                        child: Text(
+                                          '${exercise['name']}: Reps: ${exercise['reps']}, Weight: ${exercise['weight']}kg, Rest: ${exercise['restTime']}s,',
+                                          style: const TextStyle(color: Colors.white70),
+                                        ),
+                                      );
+                                    }),
+                                  ],
+                                ),
+                              );
+                            }),
+                            const SizedBox(height: 10),
+                            ElevatedButton(
+                              onPressed: () => _addToWorkout(plan.data()),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFF7BB0E),
+                                foregroundColor: Colors.black,
+                              ),
+                              child: const Text('➕ Add to Workout'),
+                            ),
+                            const SizedBox(height: 10),
+                            ElevatedButton(
+                              onPressed: () => _confirmDeleteTrainingPlan(plan.id),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                              ),
+                              child: const Text('Delete Plan'),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
                 )
               : Center(
                   child: Text(
-                    errorMessage.isNotEmpty
-                        ? errorMessage
-                        : 'No training plans available.',
-                    style: const TextStyle(fontSize: 16),
+                    errorMessage.isNotEmpty ? errorMessage : 'No training plans available.',
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
     );

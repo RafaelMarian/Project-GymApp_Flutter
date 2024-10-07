@@ -81,6 +81,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
         'reps': reps,
         'weight': weight,
         'restTime': restTime,
+        'completed': false, // Adding the default value for 'completed'
       });
       days[selectedDay] = exercises;
       _saveExercises();
