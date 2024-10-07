@@ -22,7 +22,6 @@ class _SleepInputPageState extends State<SleepInputPage> {
   }
 
   Future<void> _checkLastInputTime() async {
-    // Fetch the last sleep entry time from Firestore or locally
     final snapshot = await FirebaseFirestore.instance
         .collection('sleep_data')
         .orderBy('timestamp', descending: true)
@@ -67,7 +66,6 @@ class _SleepInputPageState extends State<SleepInputPage> {
   Future<void> _saveSleepData() async {
     if (sleepTime != null && wakeUpTime != null) {
       final sleepDuration = calculateSleepDuration(sleepTime!, wakeUpTime!);
-      // Confirm dialog before saving
       bool confirmed = await _confirmSaveDialog(sleepDuration);
 
       if (confirmed) {
@@ -133,7 +131,16 @@ class _SleepInputPageState extends State<SleepInputPage> {
         backgroundColor: const Color(0xFF29282C),
       ),
       backgroundColor: const Color(0xFF29282C),
-      body: canInput ? _buildInputForm(context) : _buildCooldownMessage(),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF29282C), Color(0xFF000000)], // Gradient effect
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: canInput ? _buildInputForm(context) : _buildCooldownMessage(),
+      ),
     );
   }
 
@@ -142,28 +149,55 @@ class _SleepInputPageState extends State<SleepInputPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ElevatedButton(
-            onPressed: () => _selectSleepTime(context),
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF7BB0E)),
-            child: Text(
-              sleepTime == null ? 'Set Sleep Time' : 'Sleep Time: ${sleepTime?.format(context)}',
-            ),
+          _buildTimeButton(
+            context,
+            'Set Sleep Time',
+            () => _selectSleepTime(context),
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () => _selectWakeUpTime(context),
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF7BB0E)),
-            child: Text(
-              wakeUpTime == null ? 'Set Wake Up Time' : 'Wake Up Time: ${wakeUpTime?.format(context)}',
-            ),
+          const SizedBox(height: 10), // Reduced spacing
+          _buildTimeButton(
+            context,
+            'Set Wake Up Time',
+            () => _selectWakeUpTime(context),
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _saveSleepData,
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF7BB0E)),
-            child: const Text('Save Sleep Data'),
+          const SizedBox(height: 10), // Reduced spacing
+          _buildTimeButton(
+            context,
+            'Save Sleep Data',
+            _saveSleepData,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTimeButton(BuildContext context, String title, VoidCallback onPressed) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0), // Padding for button
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12), // Rounded corners for card
+          ),
+          color: const Color(0xFFF7BB0E), // Custom button color
+          elevation: 5, // Elevation for depth effect
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0), // Reduced vertical padding for shorter buttons
+            child: SizedBox(
+              width: double.infinity, // Make the button full width
+              child: Text(
+                title,
+                textAlign: TextAlign.center, // Center text
+                style: const TextStyle(
+                  color: Colors.black, // Black text color
+                  fontSize: 16, // Adjusted font size
+                  fontWeight: FontWeight.bold, // Bold font weight
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
