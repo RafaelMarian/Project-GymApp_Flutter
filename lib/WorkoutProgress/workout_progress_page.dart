@@ -174,8 +174,8 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
         // Set checked days for the month
         setState(() {
           _checkedDays = checkedDays;
-          _points = data['points']; // Load points for the month
-          _cases = data['cases']; // Load cases for the month
+          _points = (data['points'] ?? 0) as int; // Load points for the month
+          _cases = (data['cases'] ?? 0) as int; // Load cases for the month
         });
       } else {
         // Reset for the new month if no document exists
@@ -198,7 +198,7 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
       if (snapshot.exists) {
         final data = snapshot.data()!;
         setState(() {
-          _totalPoints = data['totalPoints'] ?? 0; // Load total points from Firebase
+          _totalPoints = (data['totalPoints'] ?? 0) as int; // Cast to int
         });
       }
     } catch (e) {
@@ -214,7 +214,7 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
       if (snapshot.exists) {
         final data = snapshot.data()!;
         setState(() {
-          _totalCases = data['totalCases'] ?? 0; // Load total cases from Firebase
+          _totalCases = (data['totalCases'] ?? 0) as int; // Cast to int
         });
       }
     } catch (e) {
@@ -236,19 +236,44 @@ class _WorkoutProgressPageState extends State<WorkoutProgressPage> {
     }
   }
 
+  Future<void> _updateTotalPoints() async {
+    final totalDoc = FirebaseFirestore.instance.collection('workout_data').doc('total_data');
+
+    try {
+      // Re-fetch all monthly points to recalculate total points
+      int totalPoints = 0;
+      final querySnapshot = await FirebaseFirestore.instance.collection('workout_data').get();
+      for (var doc in querySnapshot.docs) {
+        final data = doc.data();
+        totalPoints += (data['points'] ?? 0) as int; // Cast to int
+      }
+
+      // Update total points in Firestore
+      await totalDoc.update({'totalPoints': totalPoints}); // Update total points in Firestore
+      setState(() {
+        _totalPoints = totalPoints; // Update local total points
+      });
+    } catch (e) {
+      print('Error updating total points: $e');
+    }
+  }
+
   Future<void> _saveCheckedDays() async {
     final docId = '${_selectedDate.year}_${_selectedDate.month}';
     final workoutDoc = FirebaseFirestore.instance.collection('workout_data').doc(docId);
 
     try {
-      // Save the new points and checked days for the month
+      // Save the new points, cases, and checked days for the month
       await workoutDoc.set({
         'checkedDays': _checkedDays,
-        'points': _points, // Save the new points
-        'cases': _cases,   // Save cases for the month
+        'points': _points,
+        'cases': _cases,
       });
+
+      // Update total points and cases after saving current month's data
+      await _updateTotalPoints(); // Update total points after saving current month's data
     } catch (e) {
-      print('Error saving workout data: $e');
+      print('Error saving checked days: $e');
     }
   }
 }

@@ -98,15 +98,41 @@ class _InventoryPageState extends State<InventoryPage> {
       return; // Exit the method if no cases are available
     }
 
+    // Check if user has enough points
+    if (_totalPoints < 5) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Insufficient Points'),
+            content: const Text('You need at least 5 points to open a case.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return; // Exit if not enough points
+    }
+
     // Proceed with opening the case
     _openCase();
   }
 
   void _openCase() {
-    // Decrease the total case count
+    // Decrease the total case count and points
     setState(() {
       _totalCases -= 1;
+      _totalPoints -= 5; // Deduct 5 points
     });
+
+    // Update total points in Firestore
+    _updateTotalPointsInFirestore();
 
     Navigator.push(
       context,
@@ -148,7 +174,16 @@ class _InventoryPageState extends State<InventoryPage> {
     }
   }
 
-  // New method to show dialog for earning more points/cases
+  void _updateTotalPointsInFirestore() async {
+    final totalDoc = FirebaseFirestore.instance.collection('workout_data').doc('total_data');
+
+    try {
+      await totalDoc.update({'totalPoints': _totalPoints}); // Update total points in Firestore
+    } catch (e) {
+      print('Error updating total points: $e');
+    }
+  }
+
   void _showEarnDialog() {
     showDialog(
       context: context,

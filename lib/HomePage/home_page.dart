@@ -150,7 +150,7 @@ Widget _buildInventoryBox() {
             Row(
               children: [
                 Expanded(
-                  child: _buildBox('Calories Burned', 'Track and set your calories', () {
+                  child: _buildBox('Sleep Tracking', 'Track and set your sleep', () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const SleepInputPage()),
