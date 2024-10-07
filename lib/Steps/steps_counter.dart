@@ -201,7 +201,16 @@ class _StepsCounterPageState extends State<StepsCounterPage> with WidgetsBinding
         centerTitle: true,
       ),
       body: Container(
-        color: const Color.fromARGB(255, 40, 39, 41), // Dark background
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 40, 39, 41),
+              Color.fromARGB(255, 0, 0, 0),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -254,37 +263,68 @@ class _StepsCounterPageState extends State<StepsCounterPage> with WidgetsBinding
                     _goal = newValue ?? _goal;
                   });
                 },
+                dropdownColor: const Color(0xFF212121), // Dark dropdown
               ),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
-                    onPressed: _isCounting ? null : _startCountingSteps,
-                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFC400)),
-                    child: Text(_isCounting ? 'Counting...' : 'Start Counting'),
+                  _buildActionButton(
+                    title: 'Add Steps',
+                    onPressed: _addStepsFromInput,
                   ),
-                  ElevatedButton(
-                    onPressed: _isCounting ? _stopCountingSteps : null,
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                    child: const Text('Stop Counting'),
+                  _buildActionButton(
+                    title: _isCounting ? 'Stop Counting' : 'Start Counting',
+                    onPressed: _isCounting ? _stopCountingSteps : _startCountingSteps,
                   ),
                 ],
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _addStepsFromInput,
-                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFFC400)),
-                child: const Text('Add Steps'),
+                onPressed: _clearData,
+                child: const Text('Clear Data', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red, // Red button color
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _clearData,
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Text('Clear Data'),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _stepsHistory.length,
+                  itemBuilder: (context, index) {
+                    final stepEntry = _stepsHistory[index];
+                    return ListTile(
+                      title: Text(stepEntry['date'], style: const TextStyle(color: Colors.white)),
+                      trailing: Text('${stepEntry['steps']} steps', style: const TextStyle(color: Colors.white)),
+                    );
+                  },
+                ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  // Updated button style method
+  Widget _buildActionButton({
+    required String title,
+    required VoidCallback onPressed,
+  }) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(title),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color.fromARGB(255, 255, 196, 0), // Yellow color
+        foregroundColor: Colors.black, // Black text color
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );
