@@ -97,15 +97,31 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
 
   Future<void> _addToWorkout(Map<String, dynamic> plan) async {
     // Add selected training plan to the workout page
-    await FirebaseFirestore.instance.collection('user-workout-programs').add({
+    final trainingPlanRef = await FirebaseFirestore.instance.collection('user-workout-programs').add({
       'clientName': plan['clientName'],
-      'days': plan['days'],
       'workoutType': plan['workoutType'],
       'difficulty': plan['difficulty'],
       'timestamp': FieldValue.serverTimestamp(),
       'isTrainingPlan': true, // Mark this as a training plan
       'completed': false,  // Default the "completed" field to false
     });
+
+    // Add exercises for each day to the user's workout program
+    for (var day in plan['days'].keys) {
+      final exercises = plan['days'][day];
+      for (var exercise in exercises) {
+        await FirebaseFirestore.instance.collection('user-workout-programs').add({
+          'name': exercise['name'],
+          'reps': exercise['reps'],
+          'weight': exercise['weight'],
+          'restTime': exercise['restTime'],
+          'day': day, // Include day information
+          'trainingPlanId': trainingPlanRef.id, // Link back to the training plan
+          'completed': false, // Default completed status
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
+    }
 
     Navigator.push(
       context,
@@ -175,11 +191,10 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
                                       ),
                                     ),
                                     ...exercises.map((exercise) {
-                                      final completed = exercise['completed'] ?? false;  // Handle the "completed" field
                                       return Padding(
                                         padding: const EdgeInsets.only(left: 8.0),
                                         child: Text(
-                                          '${exercise['name']}: Reps: ${exercise['reps']}, Weight: ${exercise['weight']}kg, Rest: ${exercise['restTime']}s,',
+                                          '${exercise['name']}: Reps: ${exercise['reps']}, Weight: ${exercise['weight']}kg, Rest: ${exercise['restTime']}s',
                                           style: const TextStyle(color: Colors.white70),
                                         ),
                                       );
