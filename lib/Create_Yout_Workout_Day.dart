@@ -66,18 +66,6 @@ class _CreateYourWorkoutDayState extends State<CreateYourWorkoutDay> {
                 totalExercises = exercises.length;
                 completedExercises = exercises.where((doc) => doc['completed'] == true).length;
 
-                // Group exercises by day
-                Map<String, List<Map<String, dynamic>>> groupedExercises = {};
-                for (var doc in exercises) {
-                  final exercise = doc.data() as Map<String, dynamic>;
-                  final day = exercise['day'] ?? 'Unknown';
-
-                  if (!groupedExercises.containsKey(day)) {
-                    groupedExercises[day] = [];
-                  }
-                  groupedExercises[day]!.add(exercise);
-                }
-
                 return Column(
                   children: [
                     Padding(
@@ -88,7 +76,7 @@ class _CreateYourWorkoutDayState extends State<CreateYourWorkoutDay> {
                         valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
                       ),
                     ),
-                    groupedExercises.isEmpty
+                    exercises.isEmpty
                         ? const Center(
                             child: Text(
                               'No exercises added',
@@ -98,99 +86,84 @@ class _CreateYourWorkoutDayState extends State<CreateYourWorkoutDay> {
                         : ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: groupedExercises.keys.length,
+                            itemCount: exercises.length,
                             itemBuilder: (context, index) {
-                              final day = groupedExercises.keys.elementAt(index);
-                              final exercisesForDay = groupedExercises[day]!;
+                              final exercise = exercises[index].data() as Map<String, dynamic>;
+                              final docId = exercises[index].id;
+                              final bool isCompleted = exercise['completed'] ?? false;
 
                               return Padding(
                                 padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      day,
-                                      style: const TextStyle(
-                                        color: Color(0xFFF7BB0E),
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Column(
-                                      children: exercisesForDay.map((exercise) {
-                                        final docId = exercise['id'];
-                                        final bool isCompleted = exercise['completed'] ?? false;
-
-                                        return Card(
-                                          color: Colors.grey[850],
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                if (exercise['image'] != null)
-                                                  Center(
-                                                    child: SizedBox(
-                                                      height: 200,
-                                                      child: Image.asset(
-                                                        'assets/${exercise['name']?.toLowerCase()?.replaceAll(' ', '_') ?? 'default_image'}.png',
-                                                        fit: BoxFit.cover,
-                                                        errorBuilder: (context, error, stackTrace) {
-                                                          return const Center(
-                                                            child: Text('No Image', style: TextStyle(color: Colors.white)),
-                                                          );
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ),
-                                                Text(
-                                                  exercise['name'] ?? 'Unnamed Exercise',
-                                                  style: const TextStyle(
-                                                    color: Color(0xFFF7BB0E),
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Text(
-                                                  'Reps: ${exercise['reps']?.toString() ?? '0'}',
-                                                  style: const TextStyle(color: Colors.white),
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Text(
-                                                  'Weight: ${exercise['weight']?.toString() ?? '0'} kg',
-                                                  style: const TextStyle(color: Colors.white),
-                                                ),
-                                                const SizedBox(height: 10),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    ElevatedButton(
-                                                      onPressed: () => _deleteExercise(docId),
-                                                      style: ElevatedButton.styleFrom(
-                                                        backgroundColor: Colors.red,
-                                                        foregroundColor: Colors.white,
-                                                      ),
-                                                      child: const Text('Delete'),
-                                                    ),
-                                                    ElevatedButton(
-                                                      onPressed: () => _markAsComplete(docId, isCompleted),
-                                                      style: ElevatedButton.styleFrom(
-                                                        backgroundColor: isCompleted ? Colors.grey : Colors.green,
-                                                        foregroundColor: Colors.white,
-                                                      ),
-                                                      child: Text(isCompleted ? 'Completed' : 'Mark as Done'),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
+                                child: Card(
+                                  color: Colors.grey[850],
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        if (exercise['image'] != null)
+                                          Center(
+                                            child: SizedBox(
+                                              height: 200,
+                                              child: Image.asset(
+                                                'assets/${exercise['name']?.toLowerCase()?.replaceAll(' ', '_') ?? 'default_image'}.png',
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error, stackTrace) {
+                                                  return const Center(
+                                                    child: Text('No Image', style: TextStyle(color: Colors.white)),
+                                                  );
+                                                },
+                                              ),
                                             ),
                                           ),
-                                        );
-                                      }).toList(),
+                                        Text(
+                                          exercise['name'] ?? 'Unnamed Exercise',
+                                          style: const TextStyle(
+                                            color: Color(0xFFF7BB0E),
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          'Reps: ${exercise['reps']?.toString() ?? '0'}',
+                                          style: const TextStyle(color: Colors.white),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          'Weight: ${exercise['weight']?.toString() ?? '0'} kg',
+                                          style: const TextStyle(color: Colors.white),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          'Day: ${exercise['day'] ?? 'Unknown'}',
+                                          style: const TextStyle(color: Colors.white),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () => _deleteExercise(docId),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.red,
+                                                foregroundColor: Colors.white,
+                                              ),
+                                              child: const Text('Delete'),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () => _markAsComplete(docId, isCompleted),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: isCompleted ? Colors.grey : Colors.green,
+                                                foregroundColor: Colors.white,
+                                              ),
+                                              child: Text(isCompleted ? 'Completed' : 'Mark as Done'),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               );
                             },

@@ -97,15 +97,7 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
 
   Future<void> _addToWorkout(Map<String, dynamic> plan) async {
     // Add selected training plan to the workout page
-    final trainingPlanRef = await FirebaseFirestore.instance.collection('user-workout-programs').add({
-      'clientName': plan['clientName'],
-      'workoutType': plan['workoutType'],
-      'difficulty': plan['difficulty'],
-      'timestamp': FieldValue.serverTimestamp(),
-      'isTrainingPlan': true, // Mark this as a training plan
-      'completed': false,  // Default the "completed" field to false
-    });
-
+    final trainingPlanId = plan['id']; // Access the document ID directly from the plan
     // Add exercises for each day to the user's workout program
     for (var day in plan['days'].keys) {
       final exercises = plan['days'][day];
@@ -116,7 +108,7 @@ class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanPageGym> {
           'weight': exercise['weight'],
           'restTime': exercise['restTime'],
           'day': day, // Include day information
-          'trainingPlanId': trainingPlanRef.id, // Link back to the training plan
+          'trainingPlanId': trainingPlanId, // Link back to the training plan
           'completed': false, // Default completed status
           'timestamp': FieldValue.serverTimestamp(),
         });
