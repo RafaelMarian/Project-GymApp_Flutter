@@ -415,7 +415,7 @@ class _CreateTrainingPlanPageState extends State<CreateTrainingPlanPageGym> {
     Navigator.of(context).pop();
   },
   style: TextButton.styleFrom(
-    backgroundColor: Color(0xFFF7BB0E), // Background color
+    backgroundColor: const Color(0xFFF7BB0E), // Background color
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(20), // Rounded corners
     ),

@@ -4,6 +4,8 @@ import 'package:gym_buddies/Steps/custom_circle_for_steps.dart';
 import 'pedometer.dart'; // Import the pedometer service
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_charts/charts.dart'; // Import Syncfusion chart package
+import 'package:intl/intl.dart'; // For date formatting
 
 class StepsCounterPage extends StatefulWidget {
   const StepsCounterPage({super.key});
@@ -19,8 +21,11 @@ class _StepsCounterPageState extends State<StepsCounterPage> with WidgetsBinding
   double _progress = 0;
   double _caloriesBurned = 0;
   List<Map<String, dynamic>> _stepsHistory = []; // To store history data
-  PedometerService _pedometerService = PedometerService();
+  final PedometerService _pedometerService = PedometerService();
   bool _isCounting = false;
+
+  // Declare tooltip behavior for the chart
+  TooltipBehavior _tooltipBehavior = TooltipBehavior(enable: true);
 
   @override
   void initState() {
@@ -168,19 +173,34 @@ class _StepsCounterPageState extends State<StepsCounterPage> with WidgetsBinding
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Confirm Deletion"),
-          content: const Text("Are you sure you want to clear all data? This action cannot be undone."),
+          backgroundColor: const Color(0xFF333333), // Set background color for the dialog
+          title: const Text(
+            "Confirm Deletion",
+            style: TextStyle(color: Colors.white), // Text color for the title
+          ),
+          content: const Text(
+            "Are you sure you want to clear all data? This action cannot be undone.",
+            style: TextStyle(color: Colors.white), // Text color for the content
+          ),
           actions: [
             TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: const Color(0xFF4CAF50), // Set background color for 'Cancel' button
+                foregroundColor: Colors.white, // Set text color
+              ),
               child: const Text("Cancel"),
               onPressed: () {
-                Navigator.of(context).pop(false);
+                Navigator.of(context).pop(false); // Close the dialog without deleting
               },
             ),
             TextButton(
-              child: const Text("Delete", style: TextStyle(color: Colors.red)),
+              style: TextButton.styleFrom(
+                backgroundColor: const Color(0xFFFF0000), // Set background color for 'Delete' button
+                foregroundColor: Colors.white, // Set text color
+              ),
+              child: const Text("Delete"),
               onPressed: () {
-                Navigator.of(context).pop(true);
+                Navigator.of(context).pop(true); // Close the dialog and confirm deletion
               },
             ),
           ],
@@ -200,131 +220,148 @@ class _StepsCounterPageState extends State<StepsCounterPage> with WidgetsBinding
         backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Dark background
         centerTitle: true,
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 40, 39, 41),
-              Color.fromARGB(255, 0, 0, 0),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromARGB(255, 40, 39, 41),
+                Color.fromARGB(255, 0, 0, 0),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Circular Progress Widget (Unchanged)
-              CustomCircularProgress(
-                progress: _progress.clamp(0.0, 1.0),
-                size: 150,
-                backgroundColor: const Color(0xFFD9D9D9), // Light grey
-                progressColor: const Color(0xFFFFC400), // Yellow
-              ),
-              const SizedBox(height: 20),
-              Text(
-                '$_stepsToday steps',
-                style: const TextStyle(fontSize: 36, color: Colors.white),
-              ),
-              const SizedBox(height: 20),
-              // Steps entry (Unchanged)
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black, // Black background for input field
-                  borderRadius: BorderRadius.circular(8.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Circular Progress Widget (Unchanged)
+                CustomCircularProgress(
+                  progress: _progress.clamp(0.0, 1.0),
+                  size: 150,
+                  backgroundColor: const Color(0xFFD9D9D9), // Light grey
+                  progressColor: const Color(0xFFFFC400), // Yellow
                 ),
-                child: TextField(
-                  controller: _stepsController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Enter Steps Today',
-                    labelStyle: TextStyle(
-                      color: Colors.white, // Light text color
-                    ),
-                    filled: true,
-                    fillColor: Colors.transparent,
-                  ),
+                const SizedBox(height: 20),
+                Text(
+                  '$_stepsToday steps',
+                  style: const TextStyle(fontSize: 36, color: Colors.white),
                 ),
-              ),
-              const SizedBox(height: 20),
-              DropdownButton<int>(
-                value: _goal,
-                items: [5000, 10000, 15000, 20000].map((int value) {
-                  return DropdownMenuItem<int>(
-                    value: value,
-                    child: Text('$value steps', style: const TextStyle(color: Colors.white)),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
-                  setState(() {
-                    _goal = newValue ?? _goal;
-                  });
-                },
-                dropdownColor: const Color(0xFF212121), // Dark dropdown
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildActionButton(
-                    title: 'Add Steps',
-                    onPressed: _addStepsFromInput,
-                  ),
-                  _buildActionButton(
-                    title: _isCounting ? 'Stop Counting' : 'Start Counting',
-                    onPressed: _isCounting ? _stopCountingSteps : _startCountingSteps,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _clearData,
-                child: const Text('Clear Data', style: TextStyle(color: Colors.white)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red, // Red button color
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                  shape: RoundedRectangleBorder(
+                const SizedBox(height: 20),
+                // Steps entry (Unchanged)
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black, // Black background for input field
                     borderRadius: BorderRadius.circular(10),
                   ),
+                  child: TextField(
+                    controller: _stepsController,
+                    style: const TextStyle(color: Colors.white),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    decoration: const InputDecoration(
+                      hintText: 'Enter steps',
+                      hintStyle: TextStyle(color: Colors.white),
+                      contentPadding: EdgeInsets.all(10),
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _stepsHistory.length,
-                  itemBuilder: (context, index) {
-                    final stepEntry = _stepsHistory[index];
-                    return ListTile(
-                      title: Text(stepEntry['date'], style: const TextStyle(color: Colors.white)),
-                      trailing: Text('${stepEntry['steps']} steps', style: const TextStyle(color: Colors.white)),
-                    );
-                  },
+                const SizedBox(height: 20),
+                // Calories burned (Unchanged)
+                Text(
+                  '$_caloriesBurned calories burned',
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                // Add steps button (Unchanged)
+                ElevatedButton(
+                  onPressed: _addStepsFromInput,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green, // Green button color
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text('Add Steps', style: TextStyle(color: Colors.white)),
+                ),
+                const SizedBox(height: 20),
+                // Start/Stop Counting button
+                ElevatedButton(
+                  onPressed: _isCounting ? _stopCountingSteps : _startCountingSteps,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _isCounting ? Colors.red : Color(0xFFF7BB0E), // Red for stop, blue for start
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(
+                    _isCounting ? 'Stop Counting' : 'Start Counting',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Clear Data button
+                ElevatedButton(
+                  onPressed: _clearData,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red, // Red button color
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text('Clear Data', style: TextStyle(color: Colors.white)),
+                ),
+                const SizedBox(height: 20),
+                // Chart widget added here
+                SfCartesianChart(
+                  primaryXAxis: DateTimeAxis(
+                    dateFormat: DateFormat.MMMd(), // Format date as Month-Day
+                    title: AxisTitle(text: 'Date'),
+                  ),
+                  primaryYAxis: NumericAxis(
+                    title: AxisTitle(text: 'Steps'),
+                  ),
+                  title: ChartTitle(text: 'Steps History'),
+                  legend: Legend(isVisible: true),
+                  tooltipBehavior: _tooltipBehavior,
+                  series: <ChartSeries>[
+                    LineSeries<Map<String, dynamic>, DateTime>(
+                      dataSource: _stepsHistory,
+                      xValueMapper: (Map<String, dynamic> data, _) {
+                        final dateParts = data['date'].split('-');
+                        return DateTime(int.parse(dateParts[0]), int.parse(dateParts[1]), int.parse(dateParts[2]));
+                      },
+                      yValueMapper: (Map<String, dynamic> data, _) => data['steps'],
+                      dataLabelSettings: const DataLabelSettings(isVisible: true),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 20),
+                // Steps history list (Unchanged)
+                SizedBox(
+                  height: 200, // Prevent overflow by setting a height
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _stepsHistory.length,
+                    itemBuilder: (context, index) {
+                      final history = _stepsHistory[index];
+                      return ListTile(
+                        title: Text(
+                          '${history['date']}: ${history['steps']} steps',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
-
-  // Updated button style method
-  Widget _buildActionButton({
-    required String title,
-    required VoidCallback onPressed,
-  }) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      child: Text(title),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 255, 196, 0), // Yellow color
-        foregroundColor: Colors.black, // Black text color
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );
