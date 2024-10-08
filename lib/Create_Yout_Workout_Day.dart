@@ -12,24 +12,63 @@ class _CreateYourWorkoutDayState extends State<CreateYourWorkoutDay> {
   int totalExercises = 0;
   int completedExercises = 0;
 
+  // Track active training plan IDs
+  List<String> activeTrainingPlanIds = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the active training plan IDs from Firestore
+    _loadActiveTrainingPlans();
+  }
+
+  // Method to load active training plans from Firestore
+  Future<void> _loadActiveTrainingPlans() async {
+    final snapshot = await FirebaseFirestore.instance.collection('training-plans').get();
+    setState(() {
+      activeTrainingPlanIds = snapshot.docs.map((doc) => doc.id).toList();
+    });
+  }
+
   // Method to delete an exercise
-  void _deleteExercise(String docId) {
-    FirebaseFirestore.instance.collection('user-workout-programs').doc(docId).delete();
+  Future<void> _deleteExercise(String docId) async {
+    try {
+      await FirebaseFirestore.instance.collection('user-workout-programs').doc(docId).delete();
+      // Refresh the state after deletion
+      setState(() {});
+    } catch (e) {
+      // Handle error, e.g., show a message
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error deleting exercise: $e')));
+    }
   }
 
   // Method to mark an exercise as complete/incomplete
-  void _markAsComplete(String docId, bool isCompleted) {
-    FirebaseFirestore.instance.collection('user-workout-programs').doc(docId).update({'completed': !isCompleted});
+  Future<void> _markAsComplete(String docId, bool isCompleted) async {
+    try {
+      await FirebaseFirestore.instance.collection('user-workout-programs').doc(docId).update({'completed': !isCompleted});
+      // Refresh the state after updating
+      setState(() {});
+    } catch (e) {
+      // Handle error, e.g., show a message
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error updating exercise: $e')));
+    }
   }
 
-  // Method to delete a training plan
-  void _deleteTrainingPlan(String docId) {
-    FirebaseFirestore.instance.collection('training-plans').doc(docId).delete();
+  // Method to remove a training plan from the displayed list
+  void _removeTrainingPlanFromView(String docId) {
+    setState(() {
+      activeTrainingPlanIds.remove(docId); // Remove the ID from the active list only for view
+    });
   }
 
   // Method to mark a training plan as complete/incomplete
-  void _markTrainingPlanAsComplete(String docId, bool isCompleted) {
-    FirebaseFirestore.instance.collection('training-plans').doc(docId).update({'completed': !isCompleted});
+  Future<void> _markTrainingPlanAsComplete(String docId, bool? isCompleted) async {
+    try {
+      await FirebaseFirestore.instance.collection('training-plans').doc(docId).update({'completed': !(isCompleted ?? false)});
+      setState(() {});
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error updating training plan: $e')));
+    }
   }
 
   @override
@@ -55,7 +94,10 @@ class _CreateYourWorkoutDayState extends State<CreateYourWorkoutDay> {
                 }
 
                 // List of exercises from Firestore
-                final exercises = snapshot.data!.docs;
+                final exercises = snapshot.data!.docs.where((doc) {
+                  final exercise = doc.data() as Map<String, dynamic>;
+                  return exercise['name'] != null && exercise['name'].isNotEmpty; // Filter out unnamed exercises
+                }).toList();
                 totalExercises = exercises.length;
                 completedExercises = exercises.where((doc) => doc['completed'] == true).length;
 
@@ -195,13 +237,6 @@ class _CreateYourWorkoutDayState extends State<CreateYourWorkoutDay> {
 
                       final trainingPlans = trainingPlanSnapshot.data!.docs;
 
-                      if (trainingPlans.isEmpty) {
-                        return const Text(
-                          'No training plans available.',
-                          style: TextStyle(color: Colors.white),
-                        );
-                      }
-
                       return ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -210,16 +245,25 @@ class _CreateYourWorkoutDayState extends State<CreateYourWorkoutDay> {
                           final plan = trainingPlans[index].data() as Map<String, dynamic>;
                           final docId = trainingPlans[index].id;
 
+                          // Skip rendering if the training plan has been marked as removed
+                          if (!activeTrainingPlanIds.contains(docId)) {
+                            return SizedBox.shrink(); // Render nothing for removed plans
+                          }
+
                           // Extract and format days of the week
-                          List<String> days = [];
+                          List<Widget> dayWidgets = [];
                           plan['days'].forEach((key, value) {
-                            if (value is List) {
-                              days.add('$key: ${value.map((e) => e['name'] ?? 'Unnamed Exercise').join(', ')}');
+                            if (value.isNotEmpty) {
+                              dayWidgets.add(Text(
+                                '$key: ${value.map((e) => '${e['reps']} reps of ${e['name']} (${e['weight']} kg)').join(', ')}',
+                                style: const TextStyle(color: Colors.white),
+                              ));
                             }
                           });
 
                           return Card(
                             color: Colors.grey[850],
+                            margin: const EdgeInsets.symmetric(vertical: 8),
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Column(
@@ -234,40 +278,26 @@ class _CreateYourWorkoutDayState extends State<CreateYourWorkoutDay> {
                                     ),
                                   ),
                                   const SizedBox(height: 10),
-                                  Text(
-                                    'Workout Type: ${plan['workoutType'] ?? 'N/A'}',
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
+                                  ...dayWidgets,
                                   const SizedBox(height: 10),
-                                  Text(
-                                    'Difficulty: ${plan['difficulty'] ?? 'N/A'}',
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'Days:\n${days.join('\n')}', // Display the formatted days
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  // Buttons to delete and mark training plan as complete
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       ElevatedButton(
-                                        onPressed: () => _deleteTrainingPlan(docId),
+                                        onPressed: () => _removeTrainingPlanFromView(docId),
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.red,
                                           foregroundColor: Colors.white,
                                         ),
-                                        child: const Text('Delete'),
+                                        child: const Text('Remove Plan'),
                                       ),
                                       ElevatedButton(
-                                        onPressed: () => _markTrainingPlanAsComplete(docId, false), // Assuming false as default completion
+                                        onPressed: () => _markTrainingPlanAsComplete(docId, plan['completed']),
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.green,
+                                          backgroundColor: (plan['completed'] ?? false) ? Colors.grey : Colors.green,
                                           foregroundColor: Colors.white,
                                         ),
-                                        child: const Text('Mark as Done'),
+                                        child: Text((plan['completed'] ?? false) ? 'Completed' : 'Mark as Done'),
                                       ),
                                     ],
                                   ),
