@@ -20,38 +20,43 @@ class MyApp extends StatelessWidget {
         Provider(create: (_) => Pedometer()), // Use Provider instead of ChangeNotifierProvider
       ],
       child: MaterialApp(
-        title: 'Gym Buddies',
-        theme: ThemeData(
-          colorScheme: const ColorScheme.dark(
-            primary: Colors.black,
-            onPrimary: Colors.white,
-            surface: Colors.black,
-            onSurface: Colors.white,
-          ),
-          useMaterial3: true,
-          inputDecorationTheme: const InputDecorationTheme(
-            filled: true,
-            fillColor: Colors.grey,
-            labelStyle: TextStyle(color: Colors.white),
-            hintStyle: TextStyle(color: Colors.white),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white),
-            ),
-          ),
-          textTheme: const TextTheme(
-            bodyMedium: TextStyle(color: Colors.white),
-          ),
-          textSelectionTheme: const TextSelectionThemeData(
-            cursorColor: Colors.white,
-            selectionColor: Colors.tealAccent,
-            selectionHandleColor: Colors.teal,
-          ),
-        ),
-        home: const SplashScreen(), // Set SplashScreen as the initial screen
+  title: 'Gym Buddies',
+  theme: ThemeData(
+    colorScheme: const ColorScheme.dark(
+      primary: Colors.black,
+      onPrimary: Colors.white,
+      surface: Colors.black,
+      onSurface: Colors.white,
+    ),
+    useMaterial3: true,
+    inputDecorationTheme: const InputDecorationTheme(
+      filled: true,
+      fillColor: Colors.grey,
+      labelStyle: TextStyle(color: Colors.white),
+      hintStyle: TextStyle(color: Colors.white),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white),
       ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white),
+      ),
+    ),
+    textTheme: const TextTheme(
+      bodyMedium: TextStyle(color: Colors.white),
+    ),
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: Colors.white,
+      selectionColor: Colors.tealAccent,
+      selectionHandleColor: Colors.teal,
+    ),
+    buttonTheme: ButtonThemeData(
+      buttonColor: Colors.grey, // Default button background color
+      textTheme: ButtonTextTheme.primary, // Default text color
+    ),
+  ),
+  home: const SplashScreen(), // Set SplashScreen as the initial screen
+),
+
     );
   }
 }

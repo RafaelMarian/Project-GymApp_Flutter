@@ -94,25 +94,36 @@ class _SleepInputPageState extends State<SleepInputPage> {
     }
   }
 
-  Future<bool> _confirmSaveDialog(String duration) async {
-    return await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Sleep Data'),
-        content: Text('You slept for $duration. Is this correct?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+Future<bool> _confirmSaveDialog(String duration) async {
+  return await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Confirm Sleep Data'),
+      content: Text('You slept for $duration. Is this correct?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.red, // Background color for Cancel
+            foregroundColor: Colors.white, // Text color for Cancel
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Confirm'),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, true),
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.green, // Background color for Confirm
+            foregroundColor: Colors.white, // Text color for Confirm
           ),
-        ],
-      ),
-    ) ?? false;
-  }
+          child: const Text('Confirm'),
+        ),
+      ],
+    ),
+  ) ?? false;
+}
+
+
+
 
   String calculateSleepDuration(TimeOfDay sleep, TimeOfDay wakeUp) {
     final now = DateTime.now();
