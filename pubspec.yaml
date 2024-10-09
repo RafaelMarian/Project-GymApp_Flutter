@@ -98,7 +98,13 @@ flutter:
     - assets/custom-page/swimming-program.png
     - assets/custom-page/home-workout-program.png
     - assets/custom-page/boxing-program.png
-
+    #YogaProgramSelectionPage--------------------------------------------------------------------------------------------
+    - assets/yoga/yoga-first-page/hatha-yoga.png
+    - assets/yoga/yoga-first-page/vinyasa-yoga.png
+    - assets/yoga/yoga-first-page/ashtanga-yoga.png
+    - assets/yoga/yoga-first-page/yin-yoga.png
+    - assets/yoga/yoga-first-page/restorative-yoga.png
+    - assets/yoga/yoga-first-page/power-yoga.png
 
 
   #   - images/a_dot_ham.jpeg

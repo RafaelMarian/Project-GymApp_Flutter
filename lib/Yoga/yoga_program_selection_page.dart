@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gym_buddies/Gym/add_exercise_page_gym.dart';
+import 'package:gym_buddies/Yoga/AddExercisesYogaPage.dart';
 import 'package:gym_buddies/Yoga/CreateTrainingPlanPageYoga.dart';
-import 'package:gym_buddies/Yoga/custom_yoga_program_page.dart';
+import 'package:gym_buddies/Yoga/Custom_Program_Yoga/custom_yoga_program_page.dart';
 import 'package:gym_buddies/Yoga/my_personal_trainer_plan_yoga_page.dart';
 import 'package:gym_buddies/Yoga/planned_yoga_programs_page.dart';
 
@@ -66,7 +66,7 @@ class _YogaProgramSelectionPageState extends State<YogaProgramSelectionPage> {
                   context,
                   'Add Exercise',
                   Icons.add,
-                  const AddExerciseGymPage(),
+                  const AddExerciseYogaPage(),
                 ),
                 _buildProgramButton(
                   context,
