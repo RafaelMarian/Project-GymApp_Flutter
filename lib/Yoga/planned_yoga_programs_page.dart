@@ -11,28 +11,24 @@ class PlannedYogaProgramsPage extends StatefulWidget {
 class _PlannedYogaProgramsPageState extends State<PlannedYogaProgramsPage> {
   String? selectedDifficulty;
   String? selectedWorkoutType;
-  String? selectedGender;
-  Map<String, dynamic>? workoutRoutine;
+  Map<String, dynamic>? yogaRoutine;
 
-  // Fetch workout plan based on selected criteria
-  Future<void> _fetchWorkoutPlan() async {
-    if (selectedDifficulty != null &&
-        selectedWorkoutType != null &&
-        selectedGender != null) {
+  // Fetch yoga plan based on selected criteria
+  Future<void> _fetchYogaPlan() async {
+    if (selectedDifficulty != null && selectedWorkoutType != null) {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('planned_yoga_programs')
           .where('difficulty', isEqualTo: selectedDifficulty)
           .where('workout_type', isEqualTo: selectedWorkoutType)
-          .where('gender', isEqualTo: selectedGender)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         setState(() {
-          workoutRoutine = querySnapshot.docs.first.data();
+          yogaRoutine = querySnapshot.docs.first.data();
         });
       } else {
         setState(() {
-          workoutRoutine = null;
+          yogaRoutine = null;
         });
       }
     }
@@ -66,28 +62,16 @@ class _PlannedYogaProgramsPageState extends State<PlannedYogaProgramsPage> {
             _buildDropdown(
               'Select Workout Type',
               selectedWorkoutType,
-              ['Hatha ', 'Vinyasa ', 'Ashtanga', 'Iyengar ', 'Bikram ','Kundalini ','Yin','Restorative','Power','Jivamukti', 'Custom'],
+              ['Full Body', 'Relaxing', 'Power Yoga', 'Custom'],
               (newValue) {
                 setState(() {
                   selectedWorkoutType = newValue;
                 });
               },
             ),
-            const SizedBox(height: 16),
-            // Dropdown for gender
-            _buildDropdown(
-              'Select Gender',
-              selectedGender,
-              ['Male', 'Female'],
-              (newValue) {
-                setState(() {
-                  selectedGender = newValue;
-                });
-              },
-            ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: _fetchWorkoutPlan,
+              onPressed: _fetchYogaPlan,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFF7BB0E),
                 shape: RoundedRectangleBorder(
@@ -96,20 +80,22 @@ class _PlannedYogaProgramsPageState extends State<PlannedYogaProgramsPage> {
                 padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
               ),
               child: const Text(
-                'Fetch Workout Plan',
+                'Fetch Yoga Plan',
                 style: TextStyle(fontSize: 16, color: Colors.black),
               ),
             ),
             const SizedBox(height: 24),
             Expanded(
-              child: workoutRoutine != null
+              child: yogaRoutine != null && yogaRoutine!['days'] != null
                   ? ListView.builder(
-                      itemCount: workoutRoutine!['days'].length,
+                      itemCount: (yogaRoutine!['days'] as Map).length,
                       itemBuilder: (context, index) {
                         // Get the day name and its details
-                        String dayName = workoutRoutine!['days'].keys.elementAt(index);
-                        final day = workoutRoutine!['days'][dayName];
-                        final List exercises = day['exercises'] as List;
+                        String dayName = yogaRoutine!['days'].keys.elementAt(index);
+                        final day = yogaRoutine!['days'][dayName] as Map?;
+                        final exercises = day != null && day['exercises'] != null
+                            ? day['exercises'] as List
+                            : [];
 
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 8),
@@ -124,7 +110,7 @@ class _PlannedYogaProgramsPageState extends State<PlannedYogaProgramsPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '$dayName: ${day['muscle_groups'].join(', ')}',
+                                  dayName,
                                   style: const TextStyle(
                                     fontSize: 18,
                                     color: Color(0xFFF7BB0E),
@@ -136,7 +122,7 @@ class _PlannedYogaProgramsPageState extends State<PlannedYogaProgramsPage> {
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: 4.0),
                                     child: Text(
-                                      '${exercise['name']} - ${exercise['time']} time',
+                                      '${exercise['name']} - ${exercise['time']} minutes',
                                       style: const TextStyle(color: Colors.white),
                                     ),
                                   );
@@ -149,7 +135,7 @@ class _PlannedYogaProgramsPageState extends State<PlannedYogaProgramsPage> {
                     )
                   : const Center(
                       child: Text(
-                        'No workout plan selected.',
+                        'No yoga plan found for the selected criteria.',
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
