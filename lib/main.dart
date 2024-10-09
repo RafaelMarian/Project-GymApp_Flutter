@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
       selectionColor: Colors.tealAccent,
       selectionHandleColor: Colors.teal,
     ),
-    buttonTheme: ButtonThemeData(
+    buttonTheme: const ButtonThemeData(
       buttonColor: Colors.grey, // Default button background color
       textTheme: ButtonTextTheme.primary, // Default text color
     ),

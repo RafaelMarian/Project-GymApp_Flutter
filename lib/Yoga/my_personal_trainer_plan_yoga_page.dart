@@ -1,67 +1,227 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gym_buddies/Create_Yout_Workout_Day.dart';
 
 class MyPersonalTrainerPlanYogaPage extends StatefulWidget {
   const MyPersonalTrainerPlanYogaPage({super.key});
 
   @override
-  _MyPersonalTrainerPlanYogaPageState createState() =>
-      _MyPersonalTrainerPlanYogaPageState();
+  _AllTrainingPlansPageState createState() => _AllTrainingPlansPageState();
 }
 
-class _MyPersonalTrainerPlanYogaPageState
-    extends State<MyPersonalTrainerPlanYogaPage> {
+class _AllTrainingPlansPageState extends State<MyPersonalTrainerPlanYogaPage> {
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> plans = [];
+  bool isLoading = true;
+  String errorMessage = '';
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Personal Trainer Plan (Yoga)'),
-        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
-      ),
-      backgroundColor: const Color.fromARGB(255, 40, 39, 41),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Personalized Yoga Plan',
-              style: TextStyle(fontSize: 24, color: Colors.yellow),
+  void initState() {
+    super.initState();
+    _fetchAllPlans();
+  }
+
+  Future<void> _fetchAllPlans() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
+
+    try {
+      final querySnapshot = await FirebaseFirestore.instance.collection('yoga-training-plans').get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        setState(() {
+          plans = querySnapshot.docs;
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          errorMessage = 'No training plans found in the database.';
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Error fetching plans: $e';
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _confirmDeleteTrainingPlan(String planID) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Plan'),
+          content: const Text('Are you sure you want to delete this training plan? This action cannot be undone.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Cancel deletion
+              },
+              child: const Text('Cancel'),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'Here is your personalized yoga routine to help you with flexibility and mindfulness.',
-              style: TextStyle(fontSize: 16, color: Colors.white),
-            ),
-            const SizedBox(height: 30),
-            Expanded(
-              child: ListView(
-                children: [
-                  _buildWorkoutItem('Morning Flow', '10 mins of Sun Salutations'),
-                  _buildWorkoutItem('Core Strengthening', '15 mins of Boat Pose'),
-                  _buildWorkoutItem('Relaxation', '5 mins of Child\'s Pose'),
-                  // Add more yoga exercises
-                ],
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Confirm deletion
+              },
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
               ),
             ),
           ],
-        ),
+        );
+      },
+    );
+
+    if (shouldDelete == true) {
+      await _deleteTrainingPlan(planID);
+    }
+  }
+
+  Future<void> _deleteTrainingPlan(String planID) async {
+    try {
+      await FirebaseFirestore.instance.collection('yoga-training-plans').doc(planID).delete();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Training plan deleted successfully')),
+      );
+      _fetchAllPlans();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error deleting plan: $e')),
+      );
+    }
+  }
+
+  Future<void> _addToWorkout(Map<String, dynamic> plan) async {
+    // Add selected training plan to the workout page
+    final trainingPlanId = plan['id']; // Access the document ID directly from the plan
+    // Add exercises for each day to the user's workout program
+    for (var day in plan['days'].keys) {
+      final exercises = plan['days'][day];
+      for (var exercise in exercises) {
+        await FirebaseFirestore.instance.collection('user-workout-programs').add({
+          'name': exercise['name'],
+          'restTime': exercise['restTime'],
+          'day': day, // Include day information
+          'trainingPlanId': trainingPlanId, // Link back to the training plan
+          'completed': false, // Default completed status
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CreateYourWorkoutDay(), // Redirect to the workout page
       ),
     );
   }
 
-  Widget _buildWorkoutItem(String workoutName, String details) {
-    return Card(
-      color: const Color.fromARGB(255, 40, 39, 41),
-      child: ListTile(
-        title: Text(
-          workoutName,
-          style: const TextStyle(color: Color(0xFFF7BB0E), fontSize: 18),
-        ),
-        subtitle: Text(
-          details,
-          style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 16),
-        ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('All Training Plans'),
+        backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
+      backgroundColor: const Color.fromARGB(255, 40, 39, 41), // Set your background color here
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : plans.isNotEmpty
+              ? ListView.builder(
+                  itemCount: plans.length,
+                  itemBuilder: (context, index) {
+                    final plan = plans[index];
+                    final clientName = plan['clientName']?.toString() ?? 'Unknown Client';
+                    final difficulty = plan['difficulty']?.toString() ?? 'No Difficulty';
+                    final workoutType = plan['workoutType']?.toString() ?? 'No Workout Type';
+                    final days = plan['days'] as Map<String, dynamic>? ?? {};
+
+                    return Card(
+                      color: Colors.grey[900],
+                      margin: const EdgeInsets.all(10.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              clientName,
+                              style: const TextStyle(
+                                color: Color(0xFFF7BB0E),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Workout Type: $workoutType, Difficulty: $difficulty',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            const SizedBox(height: 8),
+                            ...days.keys.map((day) {
+                              final exercises = days[day] as List<dynamic>? ?? [];
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '$day:',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    ...exercises.map((exercise) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(left: 8.0),
+                                        child: Text(
+                                          '${exercise['name']}: Rest: ${exercise['restTime']}s',
+                                          style: const TextStyle(color: Colors.white70),
+                                        ),
+                                      );
+                                    }),
+                                  ],
+                                ),
+                              );
+                            }),
+                            const SizedBox(height: 10),
+                            ElevatedButton(
+                              onPressed: () => _addToWorkout(plan.data()),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFF7BB0E),
+                                foregroundColor: Colors.black,
+                              ),
+                              child: const Text('➕ Add to Workout'),
+                            ),
+                            const SizedBox(height: 10),
+                            ElevatedButton(
+                              onPressed: () => _confirmDeleteTrainingPlan(plan.id),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                              ),
+                              child: const Text('Delete Plan'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : Center(
+                  child: Text(
+                    errorMessage.isNotEmpty ? errorMessage : 'No training plans available.',
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
     );
   }
 }

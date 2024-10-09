@@ -17,7 +17,7 @@ class StepsCounterPage extends StatefulWidget {
 class _StepsCounterPageState extends State<StepsCounterPage> with WidgetsBindingObserver {
   final TextEditingController _stepsController = TextEditingController();
   int _stepsToday = 0;
-  int _goal = 10000; // Default goal
+  final int _goal = 10000; // Default goal
   double _progress = 0;
   double _caloriesBurned = 0;
   List<Map<String, dynamic>> _stepsHistory = []; // To store history data
@@ -25,7 +25,7 @@ class _StepsCounterPageState extends State<StepsCounterPage> with WidgetsBinding
   bool _isCounting = false;
 
   // Declare tooltip behavior for the chart
-  TooltipBehavior _tooltipBehavior = TooltipBehavior(enable: true);
+  final TooltipBehavior _tooltipBehavior = TooltipBehavior(enable: true);
 
   @override
   void initState() {
@@ -62,41 +62,42 @@ class _StepsCounterPageState extends State<StepsCounterPage> with WidgetsBinding
   }
 
   Future<void> _fetchData() async {
-    final now = DateTime.now();
-    final startDate = now.subtract(const Duration(days: 7));
+  final now = DateTime.now();
+  final startDate = now.subtract(const Duration(days: 7));
 
-    try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('steps_data')
-          .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
-          .orderBy('timestamp', descending: true)
-          .get();
+  try {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('steps_data')
+        .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+        .orderBy('timestamp', descending: true)
+        .get();
 
-      List<Map<String, dynamic>> history = [];
-      int latestSteps = 0; // Variable to store the most recent steps data
+    List<Map<String, dynamic>> history = [];
+    int totalSteps = 0; // Variable to store the total steps
 
-      for (var doc in snapshot.docs) {
-        final data = doc.data();
-        final steps = data['steps'] as int?;
-        final timestamp = (data['timestamp'] as Timestamp).toDate();
-        if (steps != null) {
-          history.add({
-            'date': '${timestamp.year}-${timestamp.month}-${timestamp.day}',
-            'steps': steps,
-          });
-          latestSteps = steps;
-        }
+    for (var doc in snapshot.docs) {
+      final data = doc.data();
+      final steps = data['steps'] as int?;
+      final timestamp = (data['timestamp'] as Timestamp).toDate();
+      if (steps != null) {
+        history.add({
+          'date': '${timestamp.year}-${timestamp.month}-${timestamp.day}',
+          'steps': steps,
+        });
+        totalSteps += steps; // Accumulate total steps
       }
-      setState(() {
-        _stepsHistory = history;
-        _stepsToday = latestSteps; // Set the latest steps as today's steps
-        _progress = _stepsToday / _goal;
-        _caloriesBurned = _stepsToday * 0.04; // Example calculation: 0.04 calories per step
-      });
-    } catch (e) {
-      print('Error fetching steps data: $e');
     }
+    setState(() {
+      _stepsHistory = history;
+      _stepsToday = totalSteps; // Set total steps as today's steps
+      _progress = _stepsToday / _goal;
+      _caloriesBurned = _stepsToday * 0.04; // Example calculation: 0.04 calories per step
+    });
+  } catch (e) {
+    print('Error fetching steps data: $e');
   }
+}
+
 
   // Handle starting and stopping pedometer counting
   void _startCountingSteps() async {
@@ -136,19 +137,27 @@ class _StepsCounterPageState extends State<StepsCounterPage> with WidgetsBinding
   }
 
   // Manually add steps from the input block
-  void _addStepsFromInput() {
-    final steps = int.tryParse(_stepsController.text) ?? 0;
+  // Manually add steps from the input block
+void _addStepsFromInput() {
+  final steps = int.tryParse(_stepsController.text) ?? 0;
+  if (steps > 0) { // Only add if the input is greater than zero
     setState(() {
-      _stepsToday += steps;
-      _progress = _stepsToday / _goal;
-      _caloriesBurned = _stepsToday * 0.04;
+      _stepsToday += steps; // Add steps to the existing total
+      _progress = _stepsToday / _goal; // Update progress
+      _caloriesBurned = _stepsToday * 0.04; // Update calories burned
     });
 
+    // Save steps to Firestore
     FirebaseFirestore.instance.collection('steps_data').add({
       'steps': _stepsToday,
       'timestamp': Timestamp.now(),
     });
+
+    // Clear the text field after adding steps
+    _stepsController.clear();
   }
+}
+
 
   Future<void> _clearData() async {
     bool confirmDelete = await _showConfirmationDialog();
@@ -292,7 +301,7 @@ class _StepsCounterPageState extends State<StepsCounterPage> with WidgetsBinding
                 ElevatedButton(
                   onPressed: _isCounting ? _stopCountingSteps : _startCountingSteps,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _isCounting ? Colors.red : Color(0xFFF7BB0E), // Red for stop, blue for start
+                    backgroundColor: _isCounting ? Colors.red : const Color(0xFFF7BB0E), // Red for stop, blue for start
                     padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -318,29 +327,31 @@ class _StepsCounterPageState extends State<StepsCounterPage> with WidgetsBinding
                 ),
                 const SizedBox(height: 20),
                 // Chart widget added here
-                SfCartesianChart(
-                  primaryXAxis: DateTimeAxis(
-                    dateFormat: DateFormat.MMMd(), // Format date as Month-Day
-                    title: AxisTitle(text: 'Date'),
-                  ),
-                  primaryYAxis: NumericAxis(
-                    title: AxisTitle(text: 'Steps'),
-                  ),
-                  title: ChartTitle(text: 'Steps History'),
-                  legend: Legend(isVisible: true),
-                  tooltipBehavior: _tooltipBehavior,
-                  series: <ChartSeries>[
-                    LineSeries<Map<String, dynamic>, DateTime>(
-                      dataSource: _stepsHistory,
-                      xValueMapper: (Map<String, dynamic> data, _) {
-                        final dateParts = data['date'].split('-');
-                        return DateTime(int.parse(dateParts[0]), int.parse(dateParts[1]), int.parse(dateParts[2]));
-                      },
-                      yValueMapper: (Map<String, dynamic> data, _) => data['steps'],
-                      dataLabelSettings: const DataLabelSettings(isVisible: true),
-                    )
-                  ],
-                ),
+                // Chart widget added here
+SfCartesianChart(
+  primaryXAxis: DateTimeAxis(
+    dateFormat: DateFormat.MMMd(), // Format date as Month-Day
+    title: AxisTitle(text: 'Date'),
+  ),
+  primaryYAxis: NumericAxis(
+    title: AxisTitle(text: 'Steps'),
+  ),
+  title: ChartTitle(text: 'Steps History'),
+  legend: Legend(isVisible: true),
+  tooltipBehavior: _tooltipBehavior,
+  series: <CartesianSeries>[
+    LineSeries<Map<String, dynamic>, DateTime>(
+      dataSource: _stepsHistory,
+      xValueMapper: (Map<String, dynamic> data, _) {
+        final dateParts = data['date'].split('-');
+        return DateTime(int.parse(dateParts[0]), int.parse(dateParts[1]), int.parse(dateParts[2]));
+      },
+      yValueMapper: (Map<String, dynamic> data, _) => data['steps'],
+      dataLabelSettings: const DataLabelSettings(isVisible: true),
+    ),
+  ],
+),
+
                 const SizedBox(height: 20),
                 // Steps history list (Unchanged)
                 SizedBox(
