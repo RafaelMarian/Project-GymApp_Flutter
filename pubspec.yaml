@@ -105,6 +105,10 @@ flutter:
     - assets/yoga/yoga-first-page/yin-yoga.png
     - assets/yoga/yoga-first-page/restorative-yoga.png
     - assets/yoga/yoga-first-page/power-yoga.png
+    #CyclingImages-----------------------------------------------------------------------------------------------------------
+    - assets/cycling/cycling-outdoor.png
+    - assets/cycling/cycling-indoor.png
+
 
 
   #   - images/a_dot_ham.jpeg
