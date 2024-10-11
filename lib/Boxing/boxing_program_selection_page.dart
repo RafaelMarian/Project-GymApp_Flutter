@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gym_buddies/Boxing/Custom_Program_Boxing/custom_Boxing_program_page.dart';
+import 'package:gym_buddies/Boxing/Custom_Program_Boxing/custom_boxing_program_page.dart';
 import 'package:gym_buddies/Boxing/add_exercise_page_boxing.dart';
 import 'package:gym_buddies/Boxing/create_training_plan_boxing.dart';
 import 'package:gym_buddies/Boxing/my_personal_trainer_plab_boxing.dart';

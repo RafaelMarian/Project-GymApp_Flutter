@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gym_buddies/Caliesthenics/Custom_Program_Calisthenics/custom_Calisthenics_program_page.dart';
 import 'package:gym_buddies/Caliesthenics/add_exercise_page_calisthenics.dart';
-import 'package:gym_buddies/Caliesthenics/create_training_plan_boxing.dart';
-import 'package:gym_buddies/Caliesthenics/my_personal_trainer_plab_boxing.dart';
-import 'package:gym_buddies/Caliesthenics/planned_boxing_programs_page.dart';
+import 'package:gym_buddies/Caliesthenics/create_training_plan_calisthenics.dart';
+import 'package:gym_buddies/Caliesthenics/my_personal_trainer_plab_calisthenics.dart';
+import 'package:gym_buddies/Caliesthenics/planned_calisthenics_programs_page.dart';
 
 
 

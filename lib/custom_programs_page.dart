@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_buddies/Boxing/boxing_program_selection_page.dart';
 import 'package:gym_buddies/Caliesthenics/calisthenics_program_selection_page.dart';
-import 'package:gym_buddies/Swimming/boxing_program_selection_page.dart';
+import 'package:gym_buddies/Swimming/swimming_program_selection_page.dart';
 import 'Gym/gym_program_selection_page.dart';
 import 'Yoga/yoga_program_selection_page.dart';
 import 'Cycling/cycling_program_selection_page.dart';
