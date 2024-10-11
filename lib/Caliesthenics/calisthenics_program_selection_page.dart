@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:gym_buddies/Jogging/Custom_Program_Jogging/custom_Boxing_program_page.dart';
-import 'package:gym_buddies/Jogging/add_exercise_page_jogging.dart';
-import 'package:gym_buddies/Jogging/create_training_plan_boxing.dart';
-import 'package:gym_buddies/Jogging/my_personal_trainer_plab_boxing.dart';
-import 'package:gym_buddies/Jogging/planned_jogging_programs_page.dart';
+import 'package:gym_buddies/Caliesthenics/Custom_Program_Calisthenics/custom_Calisthenics_program_page.dart';
+import 'package:gym_buddies/Caliesthenics/add_exercise_page_calisthenics.dart';
+import 'package:gym_buddies/Caliesthenics/create_training_plan_boxing.dart';
+import 'package:gym_buddies/Caliesthenics/my_personal_trainer_plab_boxing.dart';
+import 'package:gym_buddies/Caliesthenics/planned_boxing_programs_page.dart';
 
 
 
 
-class JoggingProgramSelectionPage extends StatefulWidget {
-  const JoggingProgramSelectionPage({super.key});
+class CalisthenicsProgramSelectionPage extends StatefulWidget {
+  const CalisthenicsProgramSelectionPage({super.key});
 
   @override
-  _JoggingProgramSelectionPageState createState() =>
-      _JoggingProgramSelectionPageState();
+  _CalisthenicsProgramSelectionPageState createState() =>
+      _CalisthenicsProgramSelectionPageState();
 }
 
-class _JoggingProgramSelectionPageState extends State<JoggingProgramSelectionPage> {
+class _CalisthenicsProgramSelectionPageState extends State<CalisthenicsProgramSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,31 +50,31 @@ class _JoggingProgramSelectionPageState extends State<JoggingProgramSelectionPag
                   context,
                   'Custom Programs',
                   Icons.fitness_center,
-                  const CustomJoggingProgramPage(),
+                  const CustomCalisthenicsProgramPage(),
                 ),
                 _buildProgramButton(
                   context,
                   'Planned Programs',
                   Icons.calendar_today,
-                  const PlannedJoggingProgramsPage(),
+                  const PlannedCalisthenicsProgramsPage(),
                 ),
                 _buildProgramButton(
                   context,
                   'My Personal Trainer Plan',
                   Icons.person,
-                  const MyPersonalTrainerPlanPageJogging(),
+                  const MyPersonalTrainerPlanPageCalisthenics(),
                 ),
                 _buildProgramButton(
                   context,
                   'Add Exercise',
                   Icons.add,
-                  const AddExerciseJoggingPage(),
+                  const AddExerciseCalisthenicsPage(),
                 ),
                 _buildProgramButton(
                   context,
                   'Create Training Plan',
                   Icons.create,
-                  const CreateTrainingPlanPageJogging(),
+                  const CreateTrainingPlanPageCalisthenics(),
                 ),
               ],
             ),

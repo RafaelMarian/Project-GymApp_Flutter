@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:gym_buddies/Jogging/Custom_Program_Jogging/custom_Boxing_program_page.dart';
-import 'package:gym_buddies/Jogging/add_exercise_page_jogging.dart';
-import 'package:gym_buddies/Jogging/create_training_plan_boxing.dart';
-import 'package:gym_buddies/Jogging/my_personal_trainer_plab_boxing.dart';
-import 'package:gym_buddies/Jogging/planned_jogging_programs_page.dart';
+import 'package:gym_buddies/Boxing/Custom_Program_Boxing/custom_Boxing_program_page.dart';
+import 'package:gym_buddies/Boxing/add_exercise_page_boxing.dart';
+import 'package:gym_buddies/Boxing/create_training_plan_boxing.dart';
+import 'package:gym_buddies/Boxing/my_personal_trainer_plab_boxing.dart';
+import 'package:gym_buddies/Boxing/planned_boxing_programs_page.dart';
 
 
 
-
-class JoggingProgramSelectionPage extends StatefulWidget {
-  const JoggingProgramSelectionPage({super.key});
+class BoxingProgramSelectionPage extends StatefulWidget {
+  const BoxingProgramSelectionPage({super.key});
 
   @override
-  _JoggingProgramSelectionPageState createState() =>
-      _JoggingProgramSelectionPageState();
+  _BoxingProgramSelectionPageState createState() =>
+      _BoxingProgramSelectionPageState();
 }
 
-class _JoggingProgramSelectionPageState extends State<JoggingProgramSelectionPage> {
+class _BoxingProgramSelectionPageState extends State<BoxingProgramSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,31 +49,31 @@ class _JoggingProgramSelectionPageState extends State<JoggingProgramSelectionPag
                   context,
                   'Custom Programs',
                   Icons.fitness_center,
-                  const CustomJoggingProgramPage(),
+                  const CustomBoxingProgramPage(),
                 ),
                 _buildProgramButton(
                   context,
                   'Planned Programs',
                   Icons.calendar_today,
-                  const PlannedJoggingProgramsPage(),
+                  const PlannedBoxingProgramsPage(),
                 ),
                 _buildProgramButton(
                   context,
                   'My Personal Trainer Plan',
                   Icons.person,
-                  const MyPersonalTrainerPlanPageJogging(),
+                  const MyPersonalTrainerPlanPageBoxing(),
                 ),
                 _buildProgramButton(
                   context,
                   'Add Exercise',
                   Icons.add,
-                  const AddExerciseJoggingPage(),
+                  const AddExerciseBoxingPage(),
                 ),
                 _buildProgramButton(
                   context,
                   'Create Training Plan',
                   Icons.create,
-                  const CreateTrainingPlanPageJogging(),
+                  const CreateTrainingPlanPageBoxing(),
                 ),
               ],
             ),

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gym_buddies/Boxing/boxing_program_selection_page.dart';
+import 'package:gym_buddies/Caliesthenics/calisthenics_program_selection_page.dart';
 import 'Gym/gym_program_selection_page.dart';
 import 'Yoga/yoga_program_selection_page.dart';
 import 'Cycling/cycling_program_selection_page.dart';
 import 'Jogging/jogging_program_selection_page.dart';
-import 'Caliesthenics/calisthenics_program_page.dart';
 import 'Swimming/swimming_program_page.dart';
 import 'Home-Workout/home_workout_page.dart';
-import 'Boxing/boxing_program_page.dart';
+
 
 class CustomProgramsPage extends StatelessWidget {
   const CustomProgramsPage({super.key});
@@ -27,10 +28,10 @@ class CustomProgramsPage extends StatelessWidget {
             _buildProgramButton(context, 'Yoga Program', 'assets/custom-page/yoga-program.png', const YogaProgramSelectionPage()),
             _buildProgramButton(context, 'Cycling Program', 'assets/custom-page/cycling-program.png', const CyclingProgramSelectionPage()),
             _buildProgramButton(context, 'Jogging Program', 'assets/custom-page/jogging-program.png', const JoggingProgramSelectionPage()),
-            _buildProgramButton(context, 'Calisthenics Program', 'assets/custom-page/caliesthenics-program.png', const CalisthenicsProgramPage()),
+            _buildProgramButton(context, 'Calisthenics Program', 'assets/custom-page/caliesthenics-program.png', const CalisthenicsProgramSelectionPage()),
             _buildProgramButton(context, 'Swimming Program', 'assets/custom-page/swimming-program.png', const SwimmingProgramPage()),
             _buildProgramButton(context, 'Home Workout Program', 'assets/custom-page/home-workout-program.png', const HomeWorkoutPage()),
-            _buildProgramButton(context, 'Boxing Program', 'assets/custom-page/boxing-program.png', const BoxingProgramPage()),
+            _buildProgramButton(context, 'Boxing Program', 'assets/custom-page/boxing-program.png', const BoxingProgramSelectionPage()),
           ],
         ),
       ),

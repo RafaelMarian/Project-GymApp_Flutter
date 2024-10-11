@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class PlannedJoggingProgramsPage extends StatefulWidget {
-  const PlannedJoggingProgramsPage({super.key});
+class PlannedCalisthenicsProgramsPage extends StatefulWidget {
+  const PlannedCalisthenicsProgramsPage({super.key});
 
   @override
-  _PlannedJoggingProgramsPageState createState() => _PlannedJoggingProgramsPageState();
+  _PlannedCalisthenicsProgramsPageState createState() => _PlannedCalisthenicsProgramsPageState();
 }
 
-class _PlannedJoggingProgramsPageState extends State<PlannedJoggingProgramsPage> {
+class _PlannedCalisthenicsProgramsPageState extends State<PlannedCalisthenicsProgramsPage> {
   String? selectedDifficulty;
   String? selectedWorkoutType;
   String? selectedGender;
