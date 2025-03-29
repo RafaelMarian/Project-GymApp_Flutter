@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gym_buddies/Swimming/Custom_Program_Swimming/custom_swimming_program_page.dart';
-import 'package:gym_buddies/Swimming/add_exercise_page_boxing.dart';
+import 'package:gym_buddies/Swimming/add_exercise_page_swimming.dart';
 import 'package:gym_buddies/Swimming/create_training_plan_swimming.dart';
-import 'package:gym_buddies/Swimming/my_personal_trainer_plab_boxing.dart';
-import 'package:gym_buddies/Swimming/planned_boxing_programs_page.dart';
+import 'package:gym_buddies/Swimming/my_personal_trainer_plab_swimming.dart';
+import 'package:gym_buddies/Swimming/planned_swimming_programs_page.dart';
+
 
 
 

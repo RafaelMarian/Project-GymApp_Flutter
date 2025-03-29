@@ -44,71 +44,73 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
- Future<void> _fetchSleepData() async {
-  setState(() {
-    _sleepDuration = '6.5'; // You may keep this for fetching purposes
-    _sleepRating = 81.0; // This can be removed if not needed
-  });
-}
+  Future<void> _fetchSleepData() async {
+    setState(() {
+      _sleepDuration = '6.5'; // You may keep this for fetching purposes
+      _sleepRating = 81.0; // This can be removed if not needed
+    });
+  }
 
-Widget _buildInventoryBox() {
-  return GestureDetector(
-    onTap: () async {
-      final updatedData = await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const InventoryPage()),
-      );
+  Widget _buildInventoryBox() {
+    return GestureDetector(
+      onTap: () async {
+        final updatedData = await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const InventoryPage()),
+        );
 
-      if (updatedData != null) {
-        setState(() {
-          _sleepDuration = updatedData['duration'] ?? '0';
-          _sleepRating = updatedData['rating'] ?? 0.0; // This can be removed if not needed
-        });
-        _fetchSleepData();
-      }
-    },
-    child: Container(
-      width: 300, // Set the desired width
-      height: 140, // Set the desired height
-      decoration: BoxDecoration(
-        image: const DecorationImage(
-          image: AssetImage('assets/Inventory.png'), // Update the path to your background image
-          fit: BoxFit.cover, // Adjusts the image to cover the container
+        if (updatedData != null) {
+          setState(() {
+            _sleepDuration = updatedData['duration'] ?? '0';
+            _sleepRating = updatedData['rating'] ??
+                0.0; // This can be removed if not needed
+          });
+          _fetchSleepData();
+        }
+      },
+      child: Container(
+        width: 300, // Set the desired width
+        height: 140, // Set the desired height
+        decoration: BoxDecoration(
+          image: const DecorationImage(
+            image: AssetImage(
+                'assets/Inventory.png'), // Update the path to your background image
+            fit: BoxFit.cover, // Adjusts the image to cover the container
+          ),
+          borderRadius: BorderRadius.circular(16.0), // Set rounded corners
         ),
-        borderRadius: BorderRadius.circular(16.0), // Set rounded corners
-      ),
-      child: ClipRRect( // Use ClipRRect to apply borderRadius to the card as well
-        borderRadius: BorderRadius.circular(16.0),
-        child: const Card(
-          color: Colors.transparent, // Make the card background transparent
-          elevation: 4, // Add some elevation if desired
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Inventory',
-                  style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 255, 255, 255)),
-                ),
-                SizedBox(height: 10),
-                // Add any additional content here
-              ],
+        child: ClipRRect(
+          // Use ClipRRect to apply borderRadius to the card as well
+          borderRadius: BorderRadius.circular(16.0),
+          child: const Card(
+            color: Colors.transparent, // Make the card background transparent
+            elevation: 4, // Add some elevation if desired
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Inventory',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 255, 255, 255)),
+                  ),
+                  SizedBox(height: 10),
+                  // Add any additional content here
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
-  );
-}
-
-
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        
         backgroundColor: const Color.fromARGB(255, 40, 39, 41),
       ),
       backgroundColor: const Color.fromARGB(255, 40, 39, 41),
@@ -124,8 +126,10 @@ Widget _buildInventoryBox() {
                 ),
                 const SizedBox(width: 10),
                 SizedBox(
-                  width: 60, // Set a fixed width for the ID box (or your desired width)
-                  child: _buildShowUserIdBox(), // ID button moved next to Workout Progress
+                  width:
+                      60, // Set a fixed width for the ID box (or your desired width)
+                  child:
+                      _buildShowUserIdBox(), // ID button moved next to Workout Progress
                 ),
               ],
             ),
@@ -133,10 +137,12 @@ Widget _buildInventoryBox() {
             Row(
               children: [
                 Expanded(
-                  child: _buildBox('Steps Counted', 'Set and Track your steps', () {
+                  child: _buildBox('Steps Counted', 'Set and Track your steps',
+                      () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const StepsCounterPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const StepsCounterPage()),
                     );
                   }),
                 ),
@@ -150,19 +156,23 @@ Widget _buildInventoryBox() {
             Row(
               children: [
                 Expanded(
-                  child: _buildBox('Sleep Tracking', 'Track and set your sleep', () {
+                  child: _buildBox('Sleep Tracking', 'Track and set your sleep',
+                      () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const SleepInputPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const SleepInputPage()),
                     );
                   }),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: _buildBox('Water Tracking', 'Track your water intake', () {
+                  child: _buildBox('Water Tracking', 'Track your water intake',
+                      () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const WaterTrackingPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const WaterTrackingPage()),
                     );
                   }),
                 ),
@@ -204,27 +214,26 @@ Widget _buildInventoryBox() {
   }
 
 // New "ID" box next to "Workout Progress" with reduced width (left to right)
-Widget _buildShowUserIdBox() {
-  return GestureDetector(
-    onTap: _showUserId,
-    child: const SizedBox(
-      width: 60, // Set a fixed width for the ID box
-      child: Card(
-        color: Color(0xFFF7BB0E),
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Center(
-            child: Text(
-              'ID',
-              style: TextStyle(fontSize: 18, color: Colors.black),
+  Widget _buildShowUserIdBox() {
+    return GestureDetector(
+      onTap: _showUserId,
+      child: const SizedBox(
+        width: 60, // Set a fixed width for the ID box
+        child: Card(
+          color: Color(0xFFF7BB0E),
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Center(
+              child: Text(
+                'ID',
+                style: TextStyle(fontSize: 18, color: Colors.black),
+              ),
             ),
           ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildBox(String title, String details, VoidCallback onTap) {
     return GestureDetector(
@@ -265,60 +274,65 @@ Widget _buildShowUserIdBox() {
     );
   }
 
-Widget _buildWorkoutSlide(bool active, int index) {
-  final workouts = [
-    'Gym Program',
-    'Yoga Program',
-    'Cycling Program',
-    'Jogging Program',
-    'Custom Programs'
-  ];
-  
-  final pages = [
-    const GymProgramSelectionPage(),
-    const YogaProgramSelectionPage(),
-    const CyclingProgramSelectionPage(),
-    const JoggingProgramSelectionPage(),
-    const CustomProgramsPage(),
-  ];
+  Widget _buildWorkoutSlide(bool active, int index) {
+    final workouts = [
+      'Gym Program',
+      'Yoga Program',
+      'Cycling Program',
+      'Jogging Program',
+      'Custom Programs'
+    ];
 
-  final double blur = active ? 20 : 0;
-  final double scale = active ? 1.0 : 0.9;
+    final pages = [
+      const GymProgramSelectionPage(),
+      const YogaProgramSelectionPage(),
+      const CyclingProgramSelectionPage(),
+      const JoggingProgramSelectionPage(),
+      const CustomProgramsPage(),
+    ];
 
-  // List of image paths corresponding to each workout type
-  final List<String> workoutImages = [
-    'assets/gym.png',
-    'assets/yoga.png',
-    'assets/cycling.png',
-    'assets/jogging.png',
-    'assets/custom_programs.png',
-  ];
+    final double blur = active ? 20 : 0;
+    final double scale = active ? 1.0 : 0.9;
 
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => pages[index]));
-    },
-    child: AnimatedContainer(
-      duration: const Duration(milliseconds: 500),
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-      transform: Matrix4.identity()..scale(scale),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black87, blurRadius: blur)],
-        image: DecorationImage(
-          image: AssetImage(workoutImages[index]), // Use the image for background
-          fit: BoxFit.cover, // Cover the entire box
+    // List of image paths corresponding to each workout type
+    final List<String> workoutImages = [
+      'assets/gym.png',
+      'assets/yoga.png',
+      'assets/cycling.png',
+      'assets/jogging.png',
+      'assets/custom_programs.png',
+    ];
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => pages[index]));
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 500),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        transform: Matrix4.identity()..scale(scale),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [BoxShadow(color: Colors.black87, blurRadius: blur)],
+          image: DecorationImage(
+            image: AssetImage(
+                workoutImages[index]), // Use the image for background
+            fit: BoxFit.cover, // Cover the entire box
+          ),
+        ),
+        child: Center(
+          child: Text(
+            workouts[index],
+            style: const TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+            ), // Changed to white for better visibility
+          ),
         ),
       ),
-      child: Center(
-        child: Text(
-          workouts[index],
-          style: const TextStyle(fontSize: 18, color: Colors.white,), // Changed to white for better visibility
-        ),
-      ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildLargeBoxes() {
     return Row(
@@ -328,7 +342,7 @@ Widget _buildWorkoutSlide(bool active, int index) {
         ),
         const SizedBox(width: 6),
         Expanded(
-          child: _buildLargeBox('Diet', const NutritionPage()),
+        child: _buildLargeBox('Diet', const NutritionPage()),
         ),
         const SizedBox(width: 6),
         Expanded(
@@ -392,7 +406,9 @@ Widget _buildWorkoutSlide(bool active, int index) {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage(userProfile: widget.userProfile)),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        HomePage(userProfile: widget.userProfile)),
               );
             },
           ),
@@ -401,7 +417,8 @@ Widget _buildWorkoutSlide(bool active, int index) {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  const CreateYourWorkoutDay()),
+                MaterialPageRoute(
+                    builder: (context) => const CreateYourWorkoutDay()),
               );
             },
           ),
@@ -410,16 +427,17 @@ Widget _buildWorkoutSlide(bool active, int index) {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AchievementsPage()),
+                MaterialPageRoute(
+                    builder: (context) => const AchievementsPage()),
               );
             },
           ),
           IconButton(
             icon: const Icon(Icons.restaurant, color: Color(0xFFF7BB0E)),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NutritionPage()),
+               Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const NutritionPage()),
               );
             },
           ),

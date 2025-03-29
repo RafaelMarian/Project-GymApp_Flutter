@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gym_buddies/Jogging/Custom_Program_Jogging/custom_Boxing_program_page.dart';
+import 'package:gym_buddies/Jogging/Custom_Program_Jogging/custom_jogging_program_page.dart';
 import 'package:gym_buddies/Jogging/add_exercise_page_jogging.dart';
-import 'package:gym_buddies/Jogging/create_training_plan_boxing.dart';
-import 'package:gym_buddies/Jogging/my_personal_trainer_plab_boxing.dart';
+import 'package:gym_buddies/Jogging/create_training_plan_jogging.dart';
+import 'package:gym_buddies/Jogging/my_personal_trainer_plab_jogging.dart';
 import 'package:gym_buddies/Jogging/planned_jogging_programs_page.dart';
 
 

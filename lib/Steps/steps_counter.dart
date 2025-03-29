@@ -331,13 +331,13 @@ void _addStepsFromInput() {
 SfCartesianChart(
   primaryXAxis: DateTimeAxis(
     dateFormat: DateFormat.MMMd(), // Format date as Month-Day
-    title: AxisTitle(text: 'Date'),
+    title: const AxisTitle(text: 'Date'),
   ),
-  primaryYAxis: NumericAxis(
+  primaryYAxis: const NumericAxis(
     title: AxisTitle(text: 'Steps'),
   ),
-  title: ChartTitle(text: 'Steps History'),
-  legend: Legend(isVisible: true),
+  title: const ChartTitle(text: 'Steps History'),
+  legend: const Legend(isVisible: true),
   tooltipBehavior: _tooltipBehavior,
   series: <CartesianSeries>[
     LineSeries<Map<String, dynamic>, DateTime>(
