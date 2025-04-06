@@ -328,7 +328,7 @@ Widget _buildWorkoutSlide(bool active, int index) {
         ),
         const SizedBox(width: 6),
         Expanded(
-          child: _buildLargeBox('Diet', const NutritionPage()),
+          child: _buildLargeBox('Diet', NutritionPage()),
         ),
         const SizedBox(width: 6),
         Expanded(
@@ -401,7 +401,7 @@ Widget _buildWorkoutSlide(bool active, int index) {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  CreateYourWorkoutDay()),
+                MaterialPageRoute(builder: (context) =>  const CreateYourWorkoutDay()),
               );
             },
           ),
@@ -419,7 +419,7 @@ Widget _buildWorkoutSlide(bool active, int index) {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const NutritionPage()),
+                MaterialPageRoute(builder: (context) => NutritionPage()),
               );
             },
           ),

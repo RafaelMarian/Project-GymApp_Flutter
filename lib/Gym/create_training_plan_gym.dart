@@ -290,7 +290,7 @@ Widget _buildDropdown(
 
     return ListView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(), // Disable scrolling for the list
+      physics: const NeverScrollableScrollPhysics(), // Disable scrolling for the list
       itemCount: exercises.length,
       itemBuilder: (context, index) {
         final exercise = exercises[index];
@@ -379,7 +379,7 @@ Widget _buildDropdown(
     Navigator.of(context).pop();
   },
   style: ElevatedButton.styleFrom(
-    backgroundColor: Color(0xFFF7BB0E), // Set the background color
+    backgroundColor: const Color(0xFFF7BB0E), // Set the background color
     foregroundColor: const Color.fromARGB(255, 0, 0, 0), // Set the text color
   ),
   child: const Text('Add'),

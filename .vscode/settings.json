@@ -1,0 +1,7 @@
+{
+  "java.configuration.updateBuildConfiguration": "disabled",
+  "java.import.gradle.enabled": false,
+  "java.import.gradle.wrapper.enabled": false,
+  "java.configuration.runtimes": [],
+  "java.format.settings.url": "eclipse-formatter.xml"
+}
